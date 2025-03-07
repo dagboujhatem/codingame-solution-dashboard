@@ -23,6 +23,7 @@ import {
 } from '@coreui/angular';
 
 import { IconDirective } from '@coreui/icons-angular';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
     selector: 'app-default-header',
@@ -32,6 +33,7 @@ import { IconDirective } from '@coreui/icons-angular';
 export class DefaultHeaderComponent extends HeaderComponent {
 
   readonly #colorModeService = inject(ColorModeService);
+  readonly #authService= inject(AuthService);
   readonly colorMode = this.#colorModeService.colorMode;
 
   readonly colorModes = [
@@ -126,4 +128,7 @@ export class DefaultHeaderComponent extends HeaderComponent {
     { id: 4, title: 'Angular Version', value: 100, color: 'success' }
   ];
 
+  logout(){
+    this.#authService.logout();
+  }
 }
