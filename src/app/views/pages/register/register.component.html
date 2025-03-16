@@ -47,6 +47,15 @@
                 <small *ngIf="signupForm.get('passwordConfirmation')?.hasError('minlength')">Password confirmation must be at least 6 characters</small>
                 <small *ngIf="signupForm.get('passwordConfirmation')?.hasError('passwordMismatch')">Passwords must match</small>
               </div>
+              <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="acceptTerms" formControlName="acceptTerms" name="acceptTerms" required />
+                <label class="form-check-label" for="acceptTerms">
+                  I accept the <a [routerLink]="['/privacy-policy']">terms of use</a> and the <a [routerLink]="['/privacy-policy']">privacy policy</a>.
+                </label>
+                <div *ngIf="signupForm.get('acceptTerms')?.invalid && signupForm.get('acceptTerms')?.touched" class="text-danger">
+                  You must accept the terms.
+                </div>
+              </div>
               <div class="d-grid">
                 <button cButton color="success" type="submit" [disabled]="signupForm.invalid" class="text-white">Create Account</button>
               </div>
