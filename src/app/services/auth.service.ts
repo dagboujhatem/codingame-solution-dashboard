@@ -6,22 +6,29 @@ import { Auth,
   confirmPasswordReset,
   signOut } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import { from, Observable } from 'rxjs';
+import { from } from 'rxjs';
+import { Firestore, doc, setDoc, getDoc } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor(private auth: Auth, private router: Router) {}
+  constructor(private auth: Auth,
+    private router: Router,
+    private firestore: Firestore) {}
 
   login(email: string, password: string) {
     return from(signInWithEmailAndPassword(this.auth, email, password));
   }
 
   register(username: string, email: string, password: string) {
-   // You can add username to the Firestore user document after registration
-    return from(createUserWithEmailAndPassword(this.auth, email, password));
+    return from(createUserWithEmailAndPassword(this.auth, email, password)
+    .then(async (userCredential) => {
+      const user = userCredential.user;
+      await setDoc(doc(this.firestore, 'users', user.uid), { email, username, role: 'user' });
+      return user;
+    }));
   }
 
   forgotPassword(email: string){
@@ -44,8 +51,12 @@ export class AuthService {
     return this.auth.currentUser;
   }
 
-  // isAuthenticated(): Observable<boolean> {
-  //   return this.auth.authState.pipe(map(user => !!user));
-  // }
+  async getUserRole(userId: string): Promise<string | null> {
+    const userDoc = await getDoc(doc(this.firestore, 'users', userId));
+    return userDoc.exists() ? userDoc.data()["role"] : null;
+  }
 
+  hasRole(role: string): boolean {
+    return localStorage.getItem('userRole') === role;
+  }
 }

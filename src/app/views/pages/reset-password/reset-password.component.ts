@@ -27,7 +27,7 @@ export class ResetPasswordComponent implements OnInit {
  ngOnInit(): void {
     this.resetPasswordForm = new FormGroup({
       newPassword: new FormControl('', [Validators.required, Validators.minLength(6)]),
-      confirmPassword: new FormControl('', [Validators.required, this.passwordMatchValidator.bind(this)]),
+      confirmPassword: new FormControl('', [Validators.required, /*this.passwordMatchValidator.bind(this)*/]),
     });
     this.oobCode = this.route.snapshot.queryParams['oobCode'];
   }
