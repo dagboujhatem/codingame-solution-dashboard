@@ -1,58 +1,54 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, addDoc, updateDoc, doc, deleteDoc, getDocs } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, updateDoc, doc, deleteDoc, getDocs, setDoc, docData } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+
+export interface Subscription {
+  id: string;
+  name: string;
+  credits?: number;
+  unlimited?: boolean;
+  price: number;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class SubscriptionService {
-  
-  private subscriptionsCollection;
+  private collectionName = 'subscriptions';
 
-  constructor(private firestore: Firestore) {
-    // Initialize Firestore collection reference
-    this.subscriptionsCollection = collection(this.firestore, 'subscriptions');
+  constructor(private firestore: Firestore) {}
+
+  getAll(): Observable<Subscription[]> {
+    const collectionRef = collection(this.firestore, this.collectionName);
+    return new Observable((observer) => {
+      getDocs(collectionRef).then((snapshot) => {
+        const data = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as Subscription[];
+        observer.next(data);
+        observer.complete();
+      });
+    });
   }
 
-  // Récupérer les abonnements depuis Firestore
-  async getSubscriptionsFromFirestore(): Promise<any[]> {
-    const querySnapshot = await getDocs(this.subscriptionsCollection);
-    const subscriptionsList = querySnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
-    return subscriptionsList;
+  getById(id: string): Observable<Subscription | undefined> {
+    const docRef = doc(this.firestore, this.collectionName, id);
+    return docData(docRef, { idField: 'id' }) as Observable<Subscription>;
   }
 
-  // Ajouter un abonnement à Firestore
-  async addSubscription(subscription: any): Promise<void> {
-    try {
-      const docRef = await addDoc(this.subscriptionsCollection, subscription);
-      console.log("Abonnement ajouté avec ID: ", docRef.id);
-    } catch (e) {
-      console.error("Erreur d'ajout de l'abonnement: ", e);
-    }
+  create(subscription: Subscription): Promise<void> {
+    const docRef = doc(this.firestore, this.collectionName, subscription.id);
+    return setDoc(docRef, subscription);
   }
 
-  // Mettre à jour un abonnement dans Firestore
-  async updateSubscription(subscriptionId: string, updatedData: any): Promise<void> {
-    try {
-      const subscriptionDocRef = doc(this.firestore, 'subscriptions', subscriptionId);
-      await updateDoc(subscriptionDocRef, updatedData);
-      console.log("Abonnement mis à jour avec succès!");
-    } catch (e) {
-      console.error("Erreur de mise à jour de l'abonnement: ", e);
-    }
+  update(id: string, subscription: Partial<Subscription>): Promise<void> {
+    const docRef = doc(this.firestore, this.collectionName, id);
+    return updateDoc(docRef, subscription);
   }
 
-  // Supprimer un abonnement de Firestore
-  async deleteSubscription(subscriptionId: string): Promise<void> {
-    try {
-      const subscriptionDocRef = doc(this.firestore, 'subscriptions', subscriptionId);
-      await deleteDoc(subscriptionDocRef);
-      console.log("Abonnement supprimé avec succès!");
-    } catch (e) {
-      console.error("Erreur de suppression de l'abonnement: ", e);
-    }
+  delete(id: string): Promise<void> {
+    const docRef = doc(this.firestore, this.collectionName, id);
+    return deleteDoc(docRef);
   }
 }
