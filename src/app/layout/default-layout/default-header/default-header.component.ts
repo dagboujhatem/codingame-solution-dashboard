@@ -25,11 +25,11 @@ import {
 import { IconDirective } from '@coreui/icons-angular';
 import { AuthService } from 'src/app/services/auth.service';
 // import unused
-// NavLinkDirective, RouterLinkActive
+// NavLinkDirective, RouterLinkActive; NavItemComponent, BadgeComponent, DropdownDividerDirective
 @Component({
     selector: 'app-default-header',
     templateUrl: './default-header.component.html',
-  imports: [ContainerComponent, HeaderTogglerDirective, SidebarToggleDirective, IconDirective, HeaderNavComponent, NavItemComponent, RouterLink, NgTemplateOutlet, BreadcrumbRouterComponent, DropdownComponent, DropdownToggleDirective, AvatarComponent, DropdownMenuDirective, DropdownHeaderDirective, DropdownItemDirective, BadgeComponent, DropdownDividerDirective]
+  imports: [ContainerComponent, HeaderTogglerDirective, SidebarToggleDirective, IconDirective, HeaderNavComponent, RouterLink, NgTemplateOutlet, BreadcrumbRouterComponent, DropdownComponent, DropdownToggleDirective, AvatarComponent, DropdownMenuDirective, DropdownHeaderDirective, DropdownItemDirective]
 })
 export class DefaultHeaderComponent extends HeaderComponent {
 

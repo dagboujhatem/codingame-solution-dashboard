@@ -28,6 +28,13 @@ export const routes: Routes = [
         }
       },
       {
+        path: 'subscriptions',
+        loadComponent: () => import('./views/pages/subscription/subscription.component').then((c) => c.SubscriptionComponent),
+        data: {
+          title: 'Subscriptions'
+        }
+      },
+      {
         path: 'theme',
         loadChildren: () => import('./views/theme/routes').then((m) => m.routes)
       },

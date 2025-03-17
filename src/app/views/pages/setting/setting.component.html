@@ -3,7 +3,7 @@
 
   <!-- Add Setting Form -->
   <div class="card p-3 mb-3">
-    <h4>Add a New Setting</h4>
+    <h4>Setting Data</h4>
     <div class="row">
       <div class="col-md-5">
         <input [(ngModel)]="newSetting.key" class="form-control" placeholder="Key" />
@@ -12,7 +12,9 @@
         <input [(ngModel)]="newSetting.value" class="form-control" placeholder="Value" />
       </div>
       <div class="col-md-2">
-        <button class="btn btn-success w-100 text-white" (click)="addSetting()">Add</button>
+        <button class="btn btn-success w-100 text-white" (click)="saveSetting()">
+          {{ isUpdate ? 'Update' : 'Add' }}
+        </button>
       </div>
     </div>
   </div>
@@ -33,7 +35,7 @@
           <td>{{ setting.key }}</td>
           <td>{{ setting.value }}</td>
           <td>
-            <button class="btn btn-primary btn-sm me-2 text-white" (click)="updateSetting(setting.id)">
+            <button class="btn btn-primary btn-sm me-2 text-white" (click)="showUpdateForm(setting.id)">
               Update
             </button>
             <button class="btn btn-danger btn-sm text-white" (click)="deleteSetting(setting.id)">
