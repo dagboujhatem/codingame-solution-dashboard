@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class PaymentService {
+export class CheckoutService {
   private stripePromise: Promise<Stripe | null>;
   private apiUrl = 'https://us-central1-YOUR_PROJECT_ID.cloudfunctions.net/api';
 

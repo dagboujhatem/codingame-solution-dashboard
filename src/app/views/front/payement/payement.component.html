@@ -1,16 +1,69 @@
-<front-header></front-header>
+<front-header> - Pricing Plans </front-header>
 <main>
-  <h6 class="text-center">You can choose between a defined number of tokens or an unlimited number of tokens.</h6>
+  <h6 class="text-center">You can choose between a <strong>defined number of tokens</strong> or an <strong>unlimited number of tokens</strong>.</h6>
+  <div class="section-title text-center">
+    <h2 class="plan">Pricing Plans</h2>
+  </div>
   <c-tabs>
-    <c-tab title="Token" active>
-      <p>Token</p>
+    <c-tab title="Tokens" active>
+      <section id="pricing" class="pricing-content section-padding">
+        <div class="container-fluid">
+          <div class="row text-center">
+            <div *ngFor="let subscription of limitedSubscriptions()" class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.1s" data-wow-offset="0" style="visibility: visible; animation-duration: 1s; animation-delay: 0.1s; animation-name: fadeInUp;">
+              <ng-container *ngTemplateOutlet="subscriptionTemplate; context: { $implicit: subscription }"></ng-container>
+            </div>
+          </div>
+        </div>
+      </section>
     </c-tab>
-    <c-tab title="Profile">
-      <p>Profile Content</p>
-    </c-tab>
-    <c-tab title="Contact">
-      <p>Contact Content</p>
+    <c-tab title="Unlimited Tokens">
+      <section id="pricing" class="pricing-content section-padding">
+        <div class="container-fluid">
+          <div class="row text-center">
+            <div *ngFor="let subscription of unlimitedSubscriptions()" class="col-lg-4 col-sm-6 col-xs-12 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.1s" data-wow-offset="0" style="visibility: visible; animation-duration: 1s; animation-delay: 0.1s; animation-name: fadeInUp;">
+              <ng-container *ngTemplateOutlet="subscriptionTemplate; context: { $implicit: subscription }"></ng-container>
+            </div>
+          </div>
+        </div>
+      </section>
     </c-tab>
   </c-tabs>
+  <section>
+    <div>
+      <h3 class="text-center note-text">Notes</h3>
+      <p class="notes">
+        {{ appName() }} allows you to <strong>pass your Codingame tests by bypassing the anti-cheat system</strong>.
+        You can contact us by E-mail (on this mail : {{ supportMail() }}) to test our extension for free. What's more, if you don't score enough in your test, you'll get a <strong>full refund</strong> in tokens.
+        Payments are secured via <strong>Stripe</strong>. If you choose the <strong>unlimited tokens offer</strong>, your current tokens remain intact even after a purchase.
+        If you have tokens, or you want a discount because you can't afford it, it's your first job or you're a student, contact us. Account sharing is not prohibited.
+      </p>
+    </div>
+  </section>
 </main>
 <front-footer></front-footer>
+
+
+<!-- Define the template -->
+<ng-template #subscriptionTemplate let-subscription>
+  <div class="pricing_design">
+    <div class="single-pricing">
+      <div class="price-head">
+        <h2>{{ subscription.name }}</h2>
+        <h1>Price: {{ subscription.price | currency:'EUR':'symbol':'1.2' }}</h1>
+        <span *ngIf="subscription.credits">1 question = 1 token</span>
+      </div>
+      <ul>
+        <li *ngIf="subscription.credits">
+          <b>Credits:</b> {{ subscription.credits }} tokens
+        </li>
+        <li *ngIf="subscription.unlimited">
+          This subscription is <b>Unlimited</b>!
+        </li>
+      </ul>
+      <div class="pricing-price">
+
+      </div>
+      <a [routerLink]="['/checkout', subscription.uid]" class="price_btn">Order Now</a>
+    </div>
+  </div>
+</ng-template>

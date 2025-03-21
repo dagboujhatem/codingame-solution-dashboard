@@ -80,8 +80,12 @@ export const routes: Routes = [
     loadComponent: () => import('./views/front/privacy-policy/privacy-policy.component').then(m => m.PrivacyPolicyComponent),
   },
   {
-    path: 'payement',
+    path: 'payment',
     loadComponent: () => import('./views/front/payement/payement.component').then(m => m.PayementComponent),
+  },
+  {
+    path: 'checkout/:id',
+    loadComponent: () => import('./views/front/checkout/checkout.component').then(m => m.CheckoutComponent),
   },
   { path: '**', redirectTo: '404' }
 ];

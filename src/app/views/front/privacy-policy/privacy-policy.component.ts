@@ -5,7 +5,7 @@ import { StateService } from '../../../services/state.service';
 
 @Component({
   selector: 'app-privacy-policy',
-  imports: [HeaderComponent,FooterComponent],
+  imports: [HeaderComponent, FooterComponent],
   templateUrl: './privacy-policy.component.html',
   styleUrl: './privacy-policy.component.scss'
 })
