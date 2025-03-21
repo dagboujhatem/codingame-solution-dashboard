@@ -6,14 +6,17 @@ import { User } from '../../../models/user.interface';
 import { SweetAlertService } from '../../../services/sweet-alert.service';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
+import { IconDirective } from '@coreui/icons-angular';
+import { cilSave, cilActionUndo, cilTrash, cilPen } from '@coreui/icons';
 
 @Component({
   selector: 'app-users',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, IconDirective],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss'
 })
 export class UsersComponent {
+  icons = { cilSave, cilActionUndo, cilTrash, cilPen };
   userForm: FormGroup;
   users$!: Observable<User[]>;
   currentUserUId: string | null = null;
@@ -44,11 +47,13 @@ export class UsersComponent {
         this.userService
           .updateUser(this.currentUserUId, userData)
           .then(() => {
+            this.toastr.success('User updated successfully!');
             this.fetchUsers();
             this.clearForm();
           });
       } else {
         this.userService.addUser(userData).then(() => {
+          this.toastr.success('User added successfully!');
           this.fetchUsers();
           this.clearForm();
         });
@@ -65,6 +70,7 @@ export class UsersComponent {
     this.sweetAlert.deleteConfirmation().then((result: any) => {
       if (result.isConfirmed) {
         this.userService.deleteUser(uid).then(() => {
+          this.toastr.success('User deleted successfully!');
           this.fetchUsers();
         });
       } else {

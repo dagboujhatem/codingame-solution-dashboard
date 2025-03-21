@@ -5,23 +5,26 @@ import { SubscriptionService } from '../../../services/subscription.service';
 import { SweetAlertService } from '../../../services/sweet-alert.service';
 import { Subscription } from '../../../models/subscription.interface';
 import { ToastrService } from 'ngx-toastr';
+import { IconDirective } from '@coreui/icons-angular';
+import { cilSave, cilActionUndo, cilTrash, cilPen } from '@coreui/icons';
 
 @Component({
   selector: 'app-subscription',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, IconDirective],
   templateUrl: './subscription.component.html',
   styleUrl: './subscription.component.scss'
 })
 export class SubscriptionComponent implements OnInit {
+  icons = { cilSave, cilActionUndo, cilTrash, cilPen };
   subscriptionForm: FormGroup;
   subscriptions: Subscription[] = [];
-  currentSubscriptionId: string | null = null;
+  currentSubscriptionUId: string | null = null;
 
   constructor(private subscriptionService: SubscriptionService,
     private sweetAlert: SweetAlertService,
     private toastr: ToastrService) {
     this.subscriptionForm = new FormGroup({
-      id: new FormControl(''),
+      uid: new FormControl(''),
       name: new FormControl('', Validators.required),
       credits: new FormControl(0),
       unlimited: new FormControl(false),
@@ -42,9 +45,9 @@ export class SubscriptionComponent implements OnInit {
   onSubmit(): void {
     if (this.subscriptionForm.valid) {
       const subscriptionData: Subscription = this.subscriptionForm.value;
-      if (this.currentSubscriptionId) {
+      if (this.currentSubscriptionUId) {
         this.subscriptionService
-          .update(this.currentSubscriptionId, subscriptionData)
+          .update(this.currentSubscriptionUId, subscriptionData)
           .then(() => {
             this.fetchSubscriptions();
             this.clearForm();
@@ -59,14 +62,14 @@ export class SubscriptionComponent implements OnInit {
   }
 
   onEdit(subscription: Subscription): void {
-    this.currentSubscriptionId = subscription.id;
+    this.currentSubscriptionUId = subscription.uid;
     this.subscriptionForm.patchValue(subscription);
   }
 
-  onDelete(id: string): void {
+  onDelete(uid: string): void {
     this.sweetAlert.deleteConfirmation().then((result:any) => {
       if (result.isConfirmed) {
-        this.subscriptionService.delete(id).then(() => {
+        this.subscriptionService.delete(uid).then(() => {
           this.fetchSubscriptions();
         });
       }else{
@@ -77,6 +80,6 @@ export class SubscriptionComponent implements OnInit {
 
   clearForm(): void {
     this.subscriptionForm.reset();
-    this.currentSubscriptionId = null;
+    this.currentSubscriptionUId = null;
   }
 }

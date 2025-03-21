@@ -19,13 +19,16 @@
           <option value="Admin">Admin</option>
         </select>
       </div>
-      <div class="col-md-12">
-        <button type="submit" cButton color="success" [disabled]="!userForm.valid">
-          Save
+      <div class="col-md-12 mt-2 d-flex justify-content-end">
+        <button type="button" class="btn btn-secondary me-2 text-white" (click)="clearForm()">
+          <svg [cIcon]="icons.cilActionUndo"></svg>
+          Clear
         </button>
-        <button type="button" cButton color="secondary" (click)="clearForm()">Clear</button>
+        <button type="submit" class="btn btn-success text-white" [disabled]="!userForm.valid">
+          <svg [cIcon]="icons.cilSave"></svg>
+          {{ currentUserUId  ? 'Update' : 'Add' }}
+        </button>
       </div>
-      <button type="submit" [disabled]="userForm.invalid">Create User</button>
     </form>
   </div>
   <!-- Users List -->
@@ -47,10 +50,10 @@
           <td>{{ user.role }}</td>
           <td>
             <button class="btn btn-primary btn-sm me-2 text-white" (click)="onEdit(user)">
-              Edit
+              <svg [cIcon]="icons.cilPen"></svg> Edit
             </button>
             <button class="btn btn-danger btn-sm text-white" (click)="onDelete(user.uid)">
-              Delete
+              <svg [cIcon]="icons.cilTrash"></svg> Delete
             </button>
           </td>
         </tr>

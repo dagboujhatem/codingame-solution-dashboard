@@ -1,5 +1,5 @@
 export interface Subscription {
-  id: string;
+  uid: string;
   name: string;
   credits?: number;
   unlimited?: boolean;

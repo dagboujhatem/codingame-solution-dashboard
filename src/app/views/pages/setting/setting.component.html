@@ -13,7 +13,8 @@
       </div>
       <div class="col-md-2">
         <button class="btn btn-success w-100 text-white" (click)="saveSetting()">
-          {{ settingId  ? 'Update' : 'Add' }}
+          <svg [cIcon]="icons.cilSave"></svg>
+          {{ settingUId  ? 'Update' : 'Add' }}
         </button>
       </div>
     </div>
@@ -35,11 +36,11 @@
           <td>{{ setting.key }}</td>
           <td>{{ setting.value }}</td>
           <td>
-            <button class="btn btn-primary btn-sm me-2 text-white" (click)="showUpdateForm(setting.id)">
-              Update
+            <button class="btn btn-primary btn-sm me-2 text-white" (click)="showUpdateForm(setting)">
+              <svg [cIcon]="icons.cilPen"></svg> Update
             </button>
-            <button class="btn btn-danger btn-sm text-white" (click)="deleteSetting(setting.id)">
-              Delete
+            <button class="btn btn-danger btn-sm text-white" (click)="deleteSetting(setting.uid)">
+              <svg [cIcon]="icons.cilTrash"></svg> Delete
             </button>
           </td>
         </tr>

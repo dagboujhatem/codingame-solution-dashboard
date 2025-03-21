@@ -4,17 +4,21 @@ import { ToastrService } from 'ngx-toastr';
 import { SettingsService } from '../../../services/settings.service';
 import { SweetAlertService } from '../../../services/sweet-alert.service';
 import { CommonModule } from '@angular/common';
+import { IconDirective } from '@coreui/icons-angular';
+import { cilSave, cilActionUndo, cilTrash, cilPen } from '@coreui/icons';
+import { Setting } from '../../../models/setting.interface';
 
 @Component({
   selector: 'app-setting',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, IconDirective],
   templateUrl: './setting.component.html',
   styleUrl: './setting.component.scss'
 })
 export class SettingComponent implements OnInit {
+  icons = { cilSave, cilActionUndo, cilTrash, cilPen };
   settings: any[] = [];
-  newSetting = { key: '', value: '' };
-  settingId: any;
+  newSetting: Setting = { key: '', value: '' };
+  settingUId: any;
 
   constructor(private settingsService: SettingsService,
     private sweetAlert: SweetAlertService,
@@ -32,8 +36,8 @@ export class SettingComponent implements OnInit {
 
   saveSetting() {
     if (!this.newSetting.key || !this.newSetting.value) return;
-    if (this.settingId) {
-      this.settingsService.updateSetting(this.settingId, this.newSetting)
+    if (this.settingUId) {
+      this.settingsService.updateSetting(this.settingUId, this.newSetting)
       .then(() => {
         this.toastr.success('Setting updated successfully!');
         this.clearForm();
@@ -48,17 +52,15 @@ export class SettingComponent implements OnInit {
     }
   }
 
-  showUpdateForm(settingId: string) {
-    this.settingId = settingId;
-    this.settingsService.getSettingById(settingId).subscribe((data:any)=> {
-      this.newSetting = { key: data['key'], value: data['value']};
-    })
+  showUpdateForm(setting: Setting) {
+    this.settingUId = setting.uid;
+    this.newSetting = { key: setting['key'], value: setting['value']};
   }
 
-  deleteSetting(settingId: string) {
+  deleteSetting(uid: string) {
     this.sweetAlert.deleteConfirmation().then((result:any) => {
       if (result.isConfirmed) {
-        this.settingsService.deleteSetting(settingId).then(() => {
+        this.settingsService.deleteSetting(uid).then(() => {
           this.toastr.success('Setting deleted successfully!');
         });
       }else{
@@ -69,6 +71,6 @@ export class SettingComponent implements OnInit {
 
   clearForm(): void {
     this.newSetting = { key: '', value: '' };
-    this.settingId = null;
+    this.settingUId = null;
   }
 }
