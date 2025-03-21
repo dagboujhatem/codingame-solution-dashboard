@@ -5,10 +5,11 @@ import { TabsModule } from '@coreui/angular';
 import { StateService } from '../../../services/state.service';
 import { Subscription } from 'src/app/models/subscription.interface';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-payement',
-  imports: [CommonModule, HeaderComponent, FooterComponent, TabsModule],
+  imports: [CommonModule, RouterModule, HeaderComponent, FooterComponent, TabsModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './payement.component.html',
   styleUrl: './payement.component.scss'
