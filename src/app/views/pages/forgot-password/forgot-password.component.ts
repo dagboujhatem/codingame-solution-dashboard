@@ -1,5 +1,5 @@
 import { NgIf, NgStyle } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -7,6 +7,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { CommonComponent } from '../common/common.component';
 import { ContainerComponent, RowComponent, ColComponent, CardGroupComponent, TextColorDirective, CardComponent, CardBodyComponent, FormDirective, InputGroupComponent, InputGroupTextDirective, FormControlDirective, ButtonDirective } from '@coreui/angular';
 import { IconDirective } from '@coreui/icons-angular';
+import { StateService } from '../../../services/state.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -16,10 +17,14 @@ import { IconDirective } from '@coreui/icons-angular';
 })
 export class ForgotPasswordComponent implements OnInit {
   forgotPasswordForm!: FormGroup;
+  appName: Signal<string>;
 
   constructor(private authService: AuthService,
     private toastr: ToastrService,
-  ) { }
+    private stateService: StateService,
+  ) {
+    this.appName = this.stateService?.appName;
+  }
 
   ngOnInit(): void {
     this.forgotPasswordForm = new FormGroup({

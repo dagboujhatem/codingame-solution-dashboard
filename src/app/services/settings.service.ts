@@ -15,9 +15,9 @@ export class SettingsService {
     return addDoc(settingsRef, setting);
   }
 
-  getSettings(): Observable<any[]> {
+  getSettings(): Observable<Setting[]> {
     const settingsRef = collection(this.firestore, 'settings');
-    return collectionData(settingsRef, { idField: 'uid' });
+    return collectionData(settingsRef, { idField: 'uid' }) as Observable<Setting[]>;
   }
 
   updateSetting(uid: string, updatedData: Partial<Setting>) {

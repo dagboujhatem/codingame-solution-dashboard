@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, effect } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
@@ -7,6 +7,7 @@ import { delay, filter, map, tap } from 'rxjs/operators';
 import { ColorModeService } from '@coreui/angular';
 import { IconSetService } from '@coreui/icons-angular';
 import { iconSubset } from './icons/icon-subset';
+import { StateService } from './services/state.service';
 
 @Component({
     selector: 'app-root',
@@ -14,8 +15,6 @@ import { iconSubset } from './icons/icon-subset';
     imports: [RouterOutlet]
 })
 export class AppComponent implements OnInit {
-  title = 'Codingame Solutions';
-
   readonly #destroyRef: DestroyRef = inject(DestroyRef);
   readonly #activatedRoute: ActivatedRoute = inject(ActivatedRoute);
   readonly #router = inject(Router);
@@ -24,8 +23,11 @@ export class AppComponent implements OnInit {
   readonly #colorModeService = inject(ColorModeService);
   readonly #iconSetService = inject(IconSetService);
 
-  constructor() {
-    this.#titleService.setTitle(this.title);
+  constructor(private stateService: StateService) {
+    effect(() => {
+      const appName = this.stateService?.appName();
+      this.#titleService.setTitle(appName);
+    });
     // iconSet singleton
     this.#iconSetService.icons = { ...iconSubset };
     this.#colorModeService.localStorageItemName.set('coreui-free-angular-admin-template-theme-default');

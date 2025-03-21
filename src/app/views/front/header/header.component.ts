@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Signal } from '@angular/core';
+import { StateService } from '../../../services/state.service';
 
 @Component({
   selector: 'front-header',
@@ -7,5 +8,9 @@ import { Component } from '@angular/core';
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
+  appName: Signal<string>;
 
+  constructor(private stateService: StateService) {
+    this.appName = this.stateService?.appName;
+  }
 }

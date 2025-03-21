@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Signal } from '@angular/core';
 import { IconDirective } from '@coreui/icons-angular';
 import { ContainerComponent, RowComponent, ColComponent, TextColorDirective, CardComponent, CardBodyComponent, FormDirective, InputGroupComponent, InputGroupTextDirective, FormControlDirective, ButtonDirective } from '@coreui/angular';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -6,6 +6,7 @@ import { AuthService } from '../../../services/auth.service';
 import { NgIf } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { Router, RouterLink } from '@angular/router';
+import { StateService } from '../../../services/state.service';
 
 @Component({
     selector: 'app-register',
@@ -15,9 +16,14 @@ import { Router, RouterLink } from '@angular/router';
 })
 export class RegisterComponent implements OnInit {
   signupForm!: FormGroup;
+  appName: Signal<string>;
+
   constructor(private authService: AuthService,
+      private stateService: StateService,
       private toastr: ToastrService,
-      private router: Router) { }
+      private router: Router) {
+        this.appName = this.stateService?.appName;
+      }
 
   ngOnInit(): void {
     this.signupForm = new FormGroup({

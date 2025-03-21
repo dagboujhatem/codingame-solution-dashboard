@@ -1,5 +1,6 @@
 export const environment = {
   production: false,
+  stripePublicKey: '',
   firebaseConfig: {
     apiKey: "AIzaSyC1JqXvclSr7Gl01aSf9oUyQ6H6KD-IfgQ",
     authDomain: "codingame-solution.firebaseapp.com",

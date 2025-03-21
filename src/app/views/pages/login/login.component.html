@@ -52,7 +52,7 @@
           <c-card [ngStyle]="{'minWidth.%': 44}" class="text-white bg-primary py-5">
             <c-card-body class="text-center">
               <div>
-                <h2>Codingame Solutions</h2>
+                <h2>{{ appName() }}</h2>
                 <app-common/>
                 <button [active]="true" cButton class="mt-3" color="primary" routerLink="/register">
                   Register Now!

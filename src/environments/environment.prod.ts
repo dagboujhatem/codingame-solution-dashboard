@@ -1,5 +1,6 @@
 export const environment = {
   production: true,
+  stripePublicKey: '',
   firebaseConfig: {
     apiKey: "AIzaSyXXXXX",
     authDomain: "your-app.firebaseapp.com",

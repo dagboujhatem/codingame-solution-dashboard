@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Signal } from '@angular/core';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
+import { StateService } from '../../../services/state.service';
 
 @Component({
   selector: 'app-privacy-policy',
@@ -9,5 +10,9 @@ import { FooterComponent } from '../footer/footer.component';
   styleUrl: './privacy-policy.component.scss'
 })
 export class PrivacyPolicyComponent {
+  supportMail: Signal<string>;
 
+  constructor(private stateService: StateService) {
+    this.supportMail = this.stateService?.supportMail;
+  }
 }

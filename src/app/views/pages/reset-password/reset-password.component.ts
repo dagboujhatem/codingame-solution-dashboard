@@ -1,5 +1,5 @@
 import { NgIf, NgStyle } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ContainerComponent, RowComponent, ColComponent, CardGroupComponent, TextColorDirective, CardComponent, CardBodyComponent, FormDirective, InputGroupComponent, InputGroupTextDirective, FormControlDirective, ButtonDirective } from '@coreui/angular';
@@ -7,6 +7,7 @@ import { IconDirective } from '@coreui/icons-angular';
 import { CommonComponent } from '../common/common.component';
 import { AuthService } from 'src/app/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { StateService } from '../../../services/state.service';
 
 @Component({
   selector: 'app-reset-password',
@@ -17,12 +18,16 @@ import { ToastrService } from 'ngx-toastr';
 export class ResetPasswordComponent implements OnInit {
   resetPasswordForm!: FormGroup;
   oobCode!: string;
+  appName: Signal<string>;
 
   constructor(private authService: AuthService,
+  private stateService: StateService,
   private toastr: ToastrService,
   private router: Router,
   private route: ActivatedRoute,
-  ) { }
+  ) {
+    this.appName = this.stateService?.appName;
+  }
 
  ngOnInit(): void {
     this.resetPasswordForm = new FormGroup({

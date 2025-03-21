@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Signal } from '@angular/core';
 import { NgIf, NgStyle } from '@angular/common';
 import { IconDirective } from '@coreui/icons-angular';
 import { ContainerComponent, RowComponent, ColComponent, CardGroupComponent, TextColorDirective, CardComponent, CardBodyComponent, FormDirective, InputGroupComponent, InputGroupTextDirective, FormControlDirective, ButtonDirective } from '@coreui/angular';
@@ -7,6 +7,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router, RouterLink } from '@angular/router';
 import { CommonComponent } from '../common/common.component';
+import { StateService } from '../../../services/state.service';
 
 @Component({
     selector: 'app-login',
@@ -16,11 +17,15 @@ import { CommonComponent } from '../common/common.component';
 })
 export class LoginComponent implements OnInit {
   signInForm!: FormGroup;
+  appName: Signal<string>;
 
   constructor(private authService: AuthService,
     private toastr: ToastrService,
+    private stateService: StateService,
     private router: Router,
-  ) { }
+  ) {
+    this.appName = this.stateService?.appName;
+  }
 
   ngOnInit(): void {
     this.signInForm = new FormGroup({
