@@ -14,7 +14,6 @@ import { CommonModule } from '@angular/common';
 export class SettingComponent implements OnInit {
   settings: any[] = [];
   newSetting = { key: '', value: '' };
-  isUpdate: boolean = false;
   settingId: any;
 
   constructor(private settingsService: SettingsService,
@@ -33,23 +32,23 @@ export class SettingComponent implements OnInit {
 
   saveSetting() {
     if (!this.newSetting.key || !this.newSetting.value) return;
-    if (this.isUpdate) {
+    if (this.settingId) {
       this.settingsService.updateSetting(this.settingId, this.newSetting)
       .then(() => {
         this.toastr.success('Setting updated successfully!');
-        this.newSetting = { key: '', value: '' };
-        this.isUpdate = false;
+        this.clearForm();
+        this.fetchSettings();
       });
     } else {
       this.settingsService.addSetting(this.newSetting).then(() => {
         this.toastr.success('Setting added successfully!');
-        this.newSetting = { key: '', value: '' };
+        this.clearForm();
+        this.fetchSettings();
       });
     }
   }
 
   showUpdateForm(settingId: string) {
-    this.isUpdate = true;
     this.settingId = settingId;
     this.settingsService.getSettingById(settingId).subscribe((data:any)=> {
       this.newSetting = { key: data['key'], value: data['value']};
@@ -66,5 +65,10 @@ export class SettingComponent implements OnInit {
         this.toastr.warning('Deletion cancelled!');
       }
     });
+  }
+
+  clearForm(): void {
+    this.newSetting = { key: '', value: '' };
+    this.settingId = null;
   }
 }

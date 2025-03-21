@@ -1,14 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Firestore, collection, addDoc, updateDoc, doc, deleteDoc, getDocs, setDoc, docData } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-
-export interface Subscription {
-  id: string;
-  name: string;
-  credits?: number;
-  unlimited?: boolean;
-  price: number;
-}
+import { Subscription } from '../models/subscription.interface';
 
 @Injectable({
   providedIn: 'root'

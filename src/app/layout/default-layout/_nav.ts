@@ -5,14 +5,15 @@ export const navItems: INavData[] = [
     name: 'Dashboard',
     url: '/dashboard',
     iconComponent: { name: 'cil-speedometer' },
-    badge: {
-      color: 'info',
-      text: 'NEW'
-    }
   },
   {
     title: true,
     name: 'Menu'
+  },
+  {
+    name: 'Users',
+    url: '/users',
+    iconComponent: { name: 'cil-user' }
   },
   {
     name: 'Settings',
@@ -49,14 +50,5 @@ export const navItems: INavData[] = [
         icon: 'nav-icon-bullet'
       }
     ]
-  },
-  {
-    name: 'Widgets',
-    url: '/widgets',
-    iconComponent: { name: 'cil-calculator' },
-    badge: {
-      color: 'info',
-      text: 'NEW'
-    }
-  },
+  }
 ];

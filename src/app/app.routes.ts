@@ -11,7 +11,7 @@ export const routes: Routes = [
   {
     path: '',
     component: DefaultLayoutComponent,
-    canActivate: [authGuard],
+    // canActivate: [authGuard],
     data: {
       title: 'Home'
     },
@@ -19,6 +19,13 @@ export const routes: Routes = [
       {
         path: 'dashboard',
         loadChildren: () => import('./views/dashboard/routes').then((m) => m.routes)
+      },
+      {
+        path: 'users',
+        loadComponent: () => import('./views/pages/users/users.component').then((c) => c.UsersComponent),
+        data: {
+          title: 'Users'
+        }
       },
       {
         path: 'settings',
@@ -41,14 +48,6 @@ export const routes: Routes = [
       {
         path: 'icons',
         loadChildren: () => import('./views/icons/routes').then((m) => m.routes)
-      },
-      {
-        path: 'widgets',
-        loadChildren: () => import('./views/widgets/routes').then((m) => m.routes)
-      },
-      {
-        path: 'pages',
-        loadChildren: () => import('./views/pages/routes').then((m) => m.routes)
       }
     ]
   },
@@ -78,7 +77,11 @@ export const routes: Routes = [
   },
   {
     path: 'privacy-policy',
-    loadComponent: () => import('./views/pages/privacy-policy/privacy-policy.component').then(m => m.PrivacyPolicyComponent),
+    loadComponent: () => import('./views/front/privacy-policy/privacy-policy.component').then(m => m.PrivacyPolicyComponent),
   },
-  { path: '**', redirectTo: 'dashboard' }
+  {
+    path: 'payement',
+    loadComponent: () => import('./views/front/payement/payement.component').then(m => m.PayementComponent),
+  },
+  { path: '**', redirectTo: '404' }
 ];

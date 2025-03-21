@@ -3,7 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SubscriptionService } from '../../../services/subscription.service';
 import { SweetAlertService } from '../../../services/sweet-alert.service';
-import { Subscription } from '../../../services/subscription.service';
+import { Subscription } from '../../../models/subscription.interface';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-subscription',
@@ -16,7 +17,9 @@ export class SubscriptionComponent implements OnInit {
   subscriptions: Subscription[] = [];
   currentSubscriptionId: string | null = null;
 
-  constructor(private subscriptionService: SubscriptionService) {
+  constructor(private subscriptionService: SubscriptionService,
+    private sweetAlert: SweetAlertService,
+    private toastr: ToastrService) {
     this.subscriptionForm = new FormGroup({
       id: new FormControl(''),
       name: new FormControl('', Validators.required),
@@ -61,8 +64,14 @@ export class SubscriptionComponent implements OnInit {
   }
 
   onDelete(id: string): void {
-    this.subscriptionService.delete(id).then(() => {
-      this.fetchSubscriptions();
+    this.sweetAlert.deleteConfirmation().then((result:any) => {
+      if (result.isConfirmed) {
+        this.subscriptionService.delete(id).then(() => {
+          this.fetchSubscriptions();
+        });
+      }else{
+        this.toastr.warning('Deletion cancelled!');
+      }
     });
   }
 
