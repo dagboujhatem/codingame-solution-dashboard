@@ -7,7 +7,7 @@
           <div class="col-md-6">
             <div>
               <label for="username">Username:</label>
-              <input id="username" type="text" class="form-control" formControlName="username"
+              <input id="username" type="text" class="form-control" formControlName="username" autocomplete="username"
               [ngClass]="{'is-invalid': userForm.get('username')?.invalid && userForm.get('username')?.touched, 'is-valid': userForm.get('username')?.valid && userForm.get('username')?.touched}"/>
               <div *ngIf="userForm.get('username')?.invalid && userForm.get('username')?.touched" class="invalid-feedback">
                 Username is required and must be at least 3 characters long.
@@ -15,10 +15,25 @@
             </div>
             <div>
               <label for="email">E-mail:</label>
-              <input id="email" type="email" class="form-control" formControlName="email"
+              <input id="email" type="email" class="form-control" formControlName="email" autocomplete="email"
               [ngClass]="{'is-invalid': userForm.get('email')?.invalid && userForm.get('email')?.touched, 'is-valid': userForm.get('email')?.valid && userForm.get('email')?.touched}"/>
               <div *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched" class="invalid-feedback">
                 Valid email is required.
+              </div>
+            </div>
+            <div>
+              <label for="password">Password:</label>
+              <input id="password" type="password" class="form-control" formControlName="password" autocomplete="new-password"
+                [ngClass]="{'is-invalid': userForm.get('password')?.invalid && userForm.get('password')?.touched,
+                            'is-valid': userForm.get('password')?.valid && userForm.get('password')?.touched}"/>
+
+              <div *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.touched" class="invalid-feedback">
+                <ng-container *ngIf="userForm.get('password')?.errors?.['required']">
+                  Password is required.
+                </ng-container>
+                <ng-container *ngIf="userForm.get('password')?.errors?.['minlength']">
+                  Password must be at least 6 characters long.
+                </ng-container>
               </div>
             </div>
           </div>

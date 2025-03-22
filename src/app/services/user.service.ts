@@ -2,14 +2,17 @@ import { Injectable } from '@angular/core';
 import { Firestore, collection, addDoc, doc, updateDoc, deleteDoc, collectionData } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { User } from '../models/user.interface';
+import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  constructor(private firestore: Firestore) { }
+  constructor(private firestore: Firestore, private auth: Auth) { }
 
-  addUser(user: User): Promise<any> {
+  async addUser(user: User): Promise<any> {
+    const userCredential = await createUserWithEmailAndPassword(this.auth, user.email, user.password);
+    user.uid = userCredential.user.uid;
     const usersRef = collection(this.firestore, 'users');
     return addDoc(usersRef, user);
   }

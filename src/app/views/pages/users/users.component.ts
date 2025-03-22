@@ -27,7 +27,7 @@ export class UsersComponent {
     this.userForm = new FormGroup({
       username: new FormControl('', [Validators.required, Validators.minLength(3)]),
       email: new FormControl('', [Validators.required, Validators.email]),
-      // password: new FormControl('', [Validators.required, Validators.minLength(6)]),
+      password: new FormControl('', [Validators.required, Validators.minLength(6)]),
       role: new FormControl('User', Validators.required),
       tokens: new FormControl(1, [Validators.required, Validators.min(0)]),
       unlimited: new FormControl(false)

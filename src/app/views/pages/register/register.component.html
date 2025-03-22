@@ -11,7 +11,7 @@
                 <span cInputGroupText>
                   <svg cIcon name="cilUser"></svg>
                 </span>
-                <input autoComplete="name" cFormControl placeholder="Username" formControlName="username" />
+                <input autoComplete="username" cFormControl placeholder="Username" formControlName="username" />
               </c-input-group>
               <div *ngIf="signupForm.get('username')?.invalid && signupForm.get('username')?.touched">
                 <small *ngIf="signupForm.get('username')?.hasError('required')">Username is required</small>
@@ -20,11 +20,11 @@
               </div>
               <c-input-group class="mb-3">
                 <span cInputGroupText>&#64;</span>
-                <input autoComplete="email" cFormControl placeholder="Email" formControlName="email" />
+                <input autoComplete="email" cFormControl placeholder="E-mail" formControlName="email" />
               </c-input-group>
               <div *ngIf="signupForm.get('email')?.invalid && signupForm.get('email')?.touched">
-                <small *ngIf="signupForm.get('email')?.hasError('required')">Email is required</small>
-                <small *ngIf="signupForm.get('email')?.hasError('email')">Please enter a valid email</small>
+                <small *ngIf="signupForm.get('email')?.hasError('required')">E-mail is required</small>
+                <small *ngIf="signupForm.get('email')?.hasError('email')">Please enter a valid e-mail</small>
               </div>
               <c-input-group class="mb-3">
                 <span cInputGroupText>

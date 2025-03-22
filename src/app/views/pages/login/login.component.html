@@ -15,7 +15,7 @@
                   <input autoComplete="email" cFormControl placeholder="E-mail" formControlName="email"/>
                 </c-input-group>
                 <div *ngIf="signInForm.get('email')?.invalid && signInForm.get('email')?.touched">
-                  <small *ngIf="signInForm.get('email')?.hasError('required')">Email is required.</small>
+                  <small *ngIf="signInForm.get('email')?.hasError('required')">E-mail is required.</small>
                   <small *ngIf="signInForm.get('email')?.hasError('email')">Please enter a valid email.</small>
                 </div>
                 <c-input-group class="mb-4">
