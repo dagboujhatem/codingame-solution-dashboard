@@ -8,6 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Router, RouterLink } from '@angular/router';
 import { CommonComponent } from '../common/common.component';
 import { StateService } from '../../../services/state.service';
+import { SideBarService } from '../../../services/side-bar.service';
 
 @Component({
     selector: 'app-login',
@@ -23,6 +24,7 @@ export class LoginComponent implements OnInit {
     private toastr: ToastrService,
     private stateService: StateService,
     private router: Router,
+    private sideBarService: SideBarService
   ) {
     this.appName = this.stateService?.appName;
   }
@@ -48,6 +50,7 @@ export class LoginComponent implements OnInit {
           }else{
             this.router.navigate(['/dashboard']);
           }
+          this.sideBarService.updateUserRole();
         },
         (error:any) => {
           if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {

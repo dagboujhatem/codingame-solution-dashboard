@@ -6,17 +6,17 @@ import {
 } from "@angular/common/http";
 import { inject } from "@angular/core";
 import { from, lastValueFrom } from "rxjs";
-import { Auth } from "@angular/fire/auth";
+import { AuthService } from "../services/auth.service";
+import { jwtDecode } from 'jwt-decode';
 
-// needs to add this function because getting the token is async
+
 const addBearerToken = async (
   req: HttpRequest<any>,
   next: HttpHandlerFn,
 ): Promise<HttpEvent<any>> => {
-  const angularFireAuth = inject(Auth);
-  const firebaseUser = await angularFireAuth.currentUser;
-  const token = await firebaseUser?.getIdToken();
-  if (token) {
+  const authService = inject(AuthService);
+  const token = await authService.getJWT();
+  if (isTokenValid(token)) {
     req = req.clone({
       setHeaders: { Authorization: `Bearer ${token}` },
     });
@@ -25,11 +25,20 @@ const addBearerToken = async (
 };
 
 export const bearerTokenInterceptor: HttpInterceptorFn = (req, next) => {
-  // only add the bearer token to requests to the backend
-  // Note that you can customize it to only add the bearer token to certain requests
-  if (true) {
+  if (req.url.includes('firebase')) {
     return from(addBearerToken(req, next));
   } else {
     return next(req);
+  }
+};
+
+const isTokenValid = (token: string | null | undefined): boolean => {
+  if (!token) return false;
+  try {
+    const decodedToken: any = jwtDecode(token);
+    const currentTime = Math.floor(Date.now() / 1000);
+    return decodedToken.exp && decodedToken.exp > currentTime;
+  } catch (error) {
+    return false;
   }
 };

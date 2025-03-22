@@ -21,20 +21,19 @@ export class ProfileComponent implements OnInit {
     private toastr: ToastrService,
     private router: Router) { }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.userForm = new FormGroup({
       username: new FormControl('', [Validators.required, Validators.minLength(3)]),
       email: new FormControl('', [Validators.required, Validators.email]),
     });
-    this.authService.getUserProfile()?.then((profile: any) => {
-      if(profile){
-        this.user = profile;
-        this.userForm.patchValue({
-          username: profile.username,
-          email: profile.email,
-        });
-      }
-    });
+    const profile = await this.authService.getUserProfile()
+    if(profile?.exists()){
+      this.user = profile.data();;
+      this.userForm.patchValue({
+        username: this.user.username,
+        email: this.user.email,
+      });
+    }
   }
 
   updateUserProfile(): void {

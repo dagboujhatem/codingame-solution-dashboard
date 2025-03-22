@@ -3,7 +3,7 @@ import { inject } from "@angular/core";
 import { AuthService } from "../services/auth.service";
 import { ToastrService } from 'ngx-toastr';
 
-export const authGuard: CanActivateFn = async (route, state) => {
+export const authenticationGuard: CanActivateFn = async (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
   const toastr =  inject(ToastrService);

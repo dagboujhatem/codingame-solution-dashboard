@@ -27,7 +27,7 @@ export class AuthService {
     return from(createUserWithEmailAndPassword(this.auth, email, password)
     .then(async (userCredential) => {
       const user = userCredential.user;
-      await setDoc(doc(this.firestore, 'users', user.uid), { email, username, role: 'User', tokens: 2});
+      await setDoc(doc(this.firestore, 'users', user.uid), { uid:  user.uid, email, username, role: 'User', tokens: 2});
       return user;
     }));
   }
@@ -64,8 +64,14 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    const user = this.auth.currentUser;
-    return !!user;
+    const currentUser = this.auth.currentUser;
+    return !!currentUser;
+  }
+
+  async getJWT() {
+    const currentUser = this.auth.currentUser;
+    const token = await currentUser?.getIdToken();
+    return token;
   }
 
   setRedirectUrl(url : string){
@@ -80,12 +86,20 @@ export class AuthService {
     localStorage.removeItem('redirectUrl');
   }
 
-  async getUserRole(userId: string): Promise<string | null> {
-    const userDoc = await getDoc(doc(this.firestore, 'users', userId));
-    return userDoc.exists() ? userDoc.data()["role"] : null;
+  getAuthUserRole(): Promise<string> {
+    return new Promise(async (resolve, reject) => {
+      const profile = await this.getUserProfile();
+      if(profile?.exists()){
+        const user : any =  profile.data();;
+        resolve(user.role)
+      }else{
+        resolve('User')
+      }
+    });
   }
 
-  hasRole(role: string): boolean {
-    return localStorage.getItem('userRole') === role;
+  async hasRole(role: string): Promise<boolean>  {
+    const authUserRole = await this.getAuthUserRole();
+    return authUserRole === role;
   }
 }

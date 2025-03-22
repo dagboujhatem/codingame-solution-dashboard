@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { DefaultLayoutComponent } from './layout';
-import { authGuard } from './guards/auth.guard';
+import { authenticationGuard } from './guards/authentication.guard';
+import { authorizationGuard } from './guards/authorization.guard';
 
 export const routes: Routes = [
   {
@@ -11,7 +12,8 @@ export const routes: Routes = [
   {
     path: '',
     component: DefaultLayoutComponent,
-    canActivate: [authGuard],
+    canActivate: [authenticationGuard],
+    canActivateChild: [authorizationGuard],
     data: {
       title: 'Home'
     },
@@ -92,7 +94,7 @@ export const routes: Routes = [
   },
   {
     path: 'checkout/:id',
-    canActivate: [authGuard],
+    canActivate: [authenticationGuard],
     loadComponent: () => import('./views/front/checkout/checkout.component').then(m => m.CheckoutComponent),
   },
   { path: '**', redirectTo: '404' }

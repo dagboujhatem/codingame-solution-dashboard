@@ -89,7 +89,11 @@
         <tr *ngFor="let user of users">
           <td>{{ user.username }}</td>
           <td>{{ user.email }}</td>
-          <td>{{ user.role }}</td>
+          <td>
+            <span class="badge" [ngClass]="{'text-bg-primary': user.role === 'User', 'text-bg-success text-white': user.role === 'Admin'}">
+              {{ user.role }}
+            </span>
+          </td>
           <td>
             <ng-container *ngIf="user.unlimited">
               Unlimited

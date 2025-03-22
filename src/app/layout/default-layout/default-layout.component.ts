@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, effect, Signal } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { NgScrollbar } from 'ngx-scrollbar';
 
@@ -14,16 +14,9 @@ import {
   SidebarToggleDirective,
   SidebarTogglerDirective
 } from '@coreui/angular';
-
+import { INavData } from '@coreui/angular';
 import { DefaultFooterComponent, DefaultHeaderComponent } from './';
-import { navItems } from './_nav';
-
-function isOverflown(element: HTMLElement) {
-  return (
-    element.scrollHeight > element.clientHeight ||
-    element.scrollWidth > element.clientWidth
-  );
-}
+import { SideBarService } from '../../services/side-bar.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -48,5 +41,13 @@ function isOverflown(element: HTMLElement) {
   ]
 })
 export class DefaultLayoutComponent {
-  public navItems = [...navItems];
+  public navItems : INavData [] = [];
+  navItemsSignal: Signal<INavData[]>;
+
+  constructor(private sideBarService: SideBarService){
+    this.navItemsSignal = this.sideBarService.getNavItemsSignal();
+    effect(() => {
+      this.navItems = this.navItemsSignal();
+    });
+  }
 }
