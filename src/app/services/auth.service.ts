@@ -27,7 +27,7 @@ export class AuthService {
     return from(createUserWithEmailAndPassword(this.auth, email, password)
     .then(async (userCredential) => {
       const user = userCredential.user;
-      await setDoc(doc(this.firestore, 'users', user.uid), { email, username, role: 'User' });
+      await setDoc(doc(this.firestore, 'users', user.uid), { email, username, role: 'User', tokens: 2});
       return user;
     }));
   }
