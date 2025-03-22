@@ -51,6 +51,23 @@ export class AuthService {
     return this.auth.currentUser;
   }
 
+  isAuthenticated(): boolean {
+    const user = this.auth.currentUser;
+    return !!user;
+  }
+
+  setRedirectUrl(url : string){
+    localStorage.setItem('redirectUrl', url);
+  }
+
+  getRedirectUrl(){
+    return localStorage.getItem('redirectUrl');
+  }
+
+  removeRedirectUrl(){
+    localStorage.removeItem('redirectUrl');
+  }
+
   async getUserRole(userId: string): Promise<string | null> {
     const userDoc = await getDoc(doc(this.firestore, 'users', userId));
     return userDoc.exists() ? userDoc.data()["role"] : null;

@@ -5,7 +5,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ContainerComponent, RowComponent, ColComponent, CardGroupComponent, TextColorDirective, CardComponent, CardBodyComponent, FormDirective, InputGroupComponent, InputGroupTextDirective, FormControlDirective, ButtonDirective } from '@coreui/angular';
 import { IconDirective } from '@coreui/icons-angular';
 import { CommonComponent } from '../common/common.component';
-import { AuthService } from 'src/app/services/auth.service';
+import { AuthService } from '../../../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { StateService } from '../../../services/state.service';
 

@@ -11,7 +11,7 @@ export const routes: Routes = [
   {
     path: '',
     component: DefaultLayoutComponent,
-    // canActivate: [authGuard],
+    canActivate: [authGuard],
     data: {
       title: 'Home'
     },

@@ -23,7 +23,7 @@ import {
 } from '@coreui/angular';
 
 import { IconDirective } from '@coreui/icons-angular';
-import { AuthService } from 'src/app/services/auth.service';
+import { AuthService } from '../../../services/auth.service';
 // import unused
 // NavLinkDirective, RouterLinkActive; NavItemComponent, BadgeComponent, DropdownDividerDirective
 @Component({

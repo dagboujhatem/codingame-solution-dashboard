@@ -84,7 +84,7 @@
       <div class="pricing-price">
 
       </div>
-      <a [routerLink]="['/checkout', subscription.uid]" class="price_btn">Order Now</a>
+      <a (click)="onOrderNowClick(subscription.uid)" class="price_btn">Order Now</a>
     </div>
   </div>
 </ng-template>

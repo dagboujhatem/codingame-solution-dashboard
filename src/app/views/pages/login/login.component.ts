@@ -3,7 +3,7 @@ import { NgIf, NgStyle } from '@angular/common';
 import { IconDirective } from '@coreui/icons-angular';
 import { ContainerComponent, RowComponent, ColComponent, CardGroupComponent, TextColorDirective, CardComponent, CardBodyComponent, FormDirective, InputGroupComponent, InputGroupTextDirective, FormControlDirective, ButtonDirective } from '@coreui/angular';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from 'src/app/services/auth.service';
+import { AuthService } from '../../../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router, RouterLink } from '@angular/router';
 import { CommonComponent } from '../common/common.component';
@@ -39,12 +39,17 @@ export class LoginComponent implements OnInit {
       const { email, password } = this.signInForm.value;
       this.authService.login(email, password).subscribe(
         (response:any) => {
-          // Handle successful signup
           this.toastr.success('You\'re logged in successfully', 'Welcome');
-          this.router.navigate(['/dashboard']);
+          // redirection process
+          const redirectUrl = this.authService.getRedirectUrl();
+          if (redirectUrl) {
+            this.authService.removeRedirectUrl();
+            this.router.navigate([redirectUrl]);
+          }else{
+            this.router.navigate(['/dashboard']);
+          }
         },
         (error:any) => {
-          // Handle error
           if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
             this.toastr.error('Invalid email or password. Please try again.', 'Sign In Failed');
           } else {
