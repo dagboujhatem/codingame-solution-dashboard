@@ -12,16 +12,16 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-payement',
+  selector: 'app-pricing-plans',
   imports: [CommonModule, RouterModule, HeaderComponent, FooterComponent, TabDirective,
     TabPanelComponent,
     TabsComponent,
     TabsContentComponent,
     TabsListComponent],
-  templateUrl: './payement.component.html',
-  styleUrl: './payement.component.scss'
+  templateUrl: './pricing-plans.component.html',
+  styleUrl: './pricing-plans.component.scss'
 })
-export class PayementComponent {
+export class PricingPlansComponent {
   appName: Signal<string>;
   supportMail: Signal<string>;
   unlimitedSubscriptions: Signal<Subscription[]>;

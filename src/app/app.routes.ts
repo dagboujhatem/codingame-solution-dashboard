@@ -80,8 +80,8 @@ export const routes: Routes = [
     loadComponent: () => import('./views/front/privacy-policy/privacy-policy.component').then(m => m.PrivacyPolicyComponent),
   },
   {
-    path: 'payment',
-    loadComponent: () => import('./views/front/payement/payement.component').then(m => m.PayementComponent),
+    path: 'plans',
+    loadComponent: () => import('./views/front/pricing-plans/pricing-plans.component').then(m => m.PricingPlansComponent),
   },
   {
     path: 'checkout/:id',
