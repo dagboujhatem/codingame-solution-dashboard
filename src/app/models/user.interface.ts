@@ -3,5 +3,6 @@ export interface User {
   username: string;
   email: string;
   role: string;
-  tokens: number;
+  tokens?: number;
+  unlimited?: boolean;
 }

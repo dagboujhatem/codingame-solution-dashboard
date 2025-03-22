@@ -27,7 +27,7 @@ export class AuthService {
     return from(createUserWithEmailAndPassword(this.auth, email, password)
     .then(async (userCredential) => {
       const user = userCredential.user;
-      await setDoc(doc(this.firestore, 'users', user.uid), { email, username, role: 'user' });
+      await setDoc(doc(this.firestore, 'users', user.uid), { email, username, role: 'User' });
       return user;
     }));
   }
@@ -49,7 +49,13 @@ export class AuthService {
   }
 
   getUserProfile() {
-    return this.auth.currentUser;
+    const user = this.auth.currentUser;
+    if(!user) {
+      return;
+    }
+    const uid = user.uid;
+    const userRef = doc(this.firestore, `users/${uid}`);
+    return getDoc(userRef);
   }
 
   updateUserProfile(uid: string, updatedUser: Partial<User>): Observable<any>{

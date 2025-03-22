@@ -81,6 +81,7 @@
           <th>Name</th>
           <th>E-mail</th>
           <th>Role</th>
+          <th>Tokens</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -89,6 +90,14 @@
           <td>{{ user.username }}</td>
           <td>{{ user.email }}</td>
           <td>{{ user.role }}</td>
+          <td>
+            <ng-container *ngIf="user.unlimited">
+              Unlimited
+            </ng-container>
+            <ng-container *ngIf="!user.unlimited">
+              {{ user.tokens || '0' }}
+            </ng-container>
+          </td>
           <td>
             <button class="btn btn-primary btn-sm me-2 text-white" (click)="onEdit(user)">
               <svg [cIcon]="icons.cilPen"></svg> Edit
