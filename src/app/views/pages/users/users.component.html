@@ -31,6 +31,19 @@
         </div>
       </div>
       <div class="col-md-6">
+        <label for="tokens">Tokens:</label>
+        <input id="tokens" class="form-control" type="number" formControlName="tokens"
+          [ngClass]="{'is-invalid': userForm.get('tokens')?.invalid && userForm.get('tokens')?.touched, 'is-valid': userForm.get('tokens')?.valid && userForm.get('tokens')?.touched}" />
+        <div *ngIf="userForm.get('tokens')?.invalid && userForm.get('tokens')?.touched" class="d-block invalid-feedback">
+          <ng-container *ngIf="userForm.get('tokens')?.errors?.['required']">
+            Tokens are required.
+          </ng-container>
+          <ng-container *ngIf="userForm.get('tokens')?.errors?.['min']">
+            Tokens must be a positive number.
+          </ng-container>
+        </div>
+      </div>
+      <div class="col-md-6">
         <label for="role">Role:</label>
         <select id="role" class="form-control" formControlName="role"
         [ngClass]="{'is-invalid': userForm.get('role')?.invalid && userForm.get('role')?.touched, 'is-valid': userForm.get('role')?.valid && userForm.get('role')?.touched}">
@@ -42,6 +55,10 @@
             Role is required.
           </ng-container>
         </div>
+      </div>
+      <div class="col-md-6">
+        <label for="unlimited">Unlimited Tokens:</label>
+        <input id="unlimited" type="checkbox" formControlName="unlimited" class="form-check-input" />
       </div>
       <div class="col-md-12 mt-2 d-flex justify-content-end">
         <button type="button" class="btn btn-secondary me-2 text-white" (click)="clearForm()">

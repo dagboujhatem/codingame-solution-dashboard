@@ -28,6 +28,13 @@ export const routes: Routes = [
         }
       },
       {
+        path: 'profile',
+        loadComponent: () => import('./views/pages/profile/profile.component').then((c) => c.ProfileComponent),
+        data: {
+          title: 'My Profile'
+        }
+      },
+      {
         path: 'settings',
         loadComponent: () => import('./views/pages/setting/setting.component').then((c) => c.SettingComponent),
         data: {

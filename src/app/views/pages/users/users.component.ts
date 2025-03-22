@@ -29,6 +29,16 @@ export class UsersComponent {
       email: new FormControl('', [Validators.required, Validators.email]),
       // password: new FormControl('', [Validators.required, Validators.minLength(6)]),
       role: new FormControl('User', Validators.required),
+      tokens: new FormControl(1, [Validators.required, Validators.min(0)]),
+      unlimited: new FormControl(false)
+    });
+    this.userForm.get('unlimited')?.valueChanges.subscribe(value => {
+      const tokensControl = this.userForm.get('tokens');
+      if (value) {
+        tokensControl?.disable();
+      } else {
+        tokensControl?.enable();
+      }
     });
   }
 

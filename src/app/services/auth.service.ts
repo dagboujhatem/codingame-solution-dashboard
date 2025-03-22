@@ -6,8 +6,9 @@ import { Auth,
   confirmPasswordReset,
   signOut } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import { from } from 'rxjs';
-import { Firestore, doc, setDoc, getDoc } from '@angular/fire/firestore';
+import { from, Observable } from 'rxjs';
+import { Firestore, doc, setDoc, getDoc, updateDoc } from '@angular/fire/firestore';
+import { User } from '../models/user.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -47,8 +48,13 @@ export class AuthService {
     return signOut(this.auth).then(() => this.router.navigate(['/login']));
   }
 
-  get user() {
+  getUserProfile() {
     return this.auth.currentUser;
+  }
+
+  updateUserProfile(uid: string, updatedUser: Partial<User>): Observable<any>{
+    const userRef = doc(this.firestore, `users/${uid}`);
+    return from(updateDoc(userRef, updatedUser));
   }
 
   isAuthenticated(): boolean {
