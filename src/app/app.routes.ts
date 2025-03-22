@@ -49,10 +49,6 @@ export const routes: Routes = [
         data: {
           title: 'Subscriptions'
         }
-      },
-      {
-        path: 'theme',
-        loadChildren: () => import('./views/theme/routes').then((m) => m.routes)
       }
     ]
   },
