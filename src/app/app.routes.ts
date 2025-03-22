@@ -92,6 +92,7 @@ export const routes: Routes = [
   },
   {
     path: 'checkout/:id',
+    canActivate: [authGuard],
     loadComponent: () => import('./views/front/checkout/checkout.component').then(m => m.CheckoutComponent),
   },
   { path: '**', redirectTo: '404' }
