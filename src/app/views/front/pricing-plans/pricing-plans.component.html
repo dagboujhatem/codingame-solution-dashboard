@@ -18,7 +18,7 @@
         <section id="pricing" class="pricing-content section-padding">
           <div class="container-fluid">
             <div class="row text-center">
-              <div *ngFor="let subscription of limitedSubscriptions()" class="col-lg-4 col-md-6 col-sm-6 col-xs-12 wow fadeInUp subcpription" data-wow-duration="1s" data-wow-delay="0.1s" data-wow-offset="0">
+              <div *ngFor="let subscription of limitedSubscriptions()" class="col-lg-4 col-md-6 col-sm-6 col-xs-12 wow fadeInUp subcpription d-flex flex-column" data-wow-duration="1s" data-wow-delay="0.1s" data-wow-offset="0">
                 <ng-container *ngTemplateOutlet="subscriptionTemplate; context: { $implicit: subscription }" class="h-100"></ng-container>
               </div>
             </div>
@@ -29,8 +29,8 @@
         <section id="pricing" class="pricing-content section-padding">
           <div class="container-fluid">
             <div class="row text-center">
-              <div *ngFor="let subscription of unlimitedSubscriptions()" class="col-lg-4 col-md-6 col-sm-6 col-xs-12 wow fadeInUp subcpription" data-wow-duration="1s" data-wow-delay="0.1s" data-wow-offset="0">
-                <ng-container *ngTemplateOutlet="subscriptionTemplate; context: { $implicit: subscription }"></ng-container>
+              <div *ngFor="let subscription of unlimitedSubscriptions()" class="col-lg-4 col-md-6 col-sm-6 col-xs-12 wow fadeInUp subcpription d-flex flex-column" data-wow-duration="1s" data-wow-delay="0.1s" data-wow-offset="0">
+                <ng-container *ngTemplateOutlet="subscriptionTemplate; context: { $implicit: subscription }" class="h-100"></ng-container>
               </div>
             </div>
           </div>
