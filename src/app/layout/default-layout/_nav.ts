@@ -29,31 +29,5 @@ export const navItems: INavData[] = [
     name: 'Subscriptions',
     url: '/subscriptions',
     iconComponent: { name: 'cil-applications-settings' }
-  },
-  {
-    name: 'Icons',
-    iconComponent: { name: 'cil-star' },
-    url: '/icons',
-    children: [
-      {
-        name: 'CoreUI Free',
-        url: '/icons/coreui-icons',
-        icon: 'nav-icon-bullet',
-        badge: {
-          color: 'success',
-          text: 'FREE'
-        }
-      },
-      {
-        name: 'CoreUI Flags',
-        url: '/icons/flags',
-        icon: 'nav-icon-bullet'
-      },
-      {
-        name: 'CoreUI Brands',
-        url: '/icons/brands',
-        icon: 'nav-icon-bullet'
-      }
-    ]
   }
 ];

@@ -53,10 +53,6 @@ export const routes: Routes = [
       {
         path: 'theme',
         loadChildren: () => import('./views/theme/routes').then((m) => m.routes)
-      },
-      {
-        path: 'icons',
-        loadChildren: () => import('./views/icons/routes').then((m) => m.routes)
       }
     ]
   },
