@@ -5,10 +5,11 @@ import { AuthService } from '../../../services/auth.service';
 import { Router, RouterModule } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { User } from '../../../models/user.interface';
+import { IconDirective } from '@coreui/icons-angular';
 
 @Component({
   selector: 'app-profile',
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, IconDirective],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
