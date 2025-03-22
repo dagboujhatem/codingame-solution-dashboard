@@ -6,13 +6,22 @@
     <h4>Setting Data</h4>
     <div class="row">
       <div class="col-md-5">
-        <input [(ngModel)]="newSetting.key" class="form-control" placeholder="Key" />
+        <input [(ngModel)]="newSetting.key" class="form-control" placeholder="Key" required
+        #keyInput="ngModel" [ngClass]="{'is-invalid': keyInput.invalid && keyInput.touched}"/>
+        <div *ngIf="keyInput.invalid && keyInput.touched" class="d-block invalid-feedback">
+          Key is required.
+        </div>
       </div>
       <div class="col-md-5">
-        <input [(ngModel)]="newSetting.value" class="form-control" placeholder="Value" />
+        <input [(ngModel)]="newSetting.value" class="form-control" placeholder="Value" required
+        #valueInput="ngModel" [ngClass]="{'is-invalid': valueInput.invalid && valueInput.touched}"/>
+        <div *ngIf="valueInput.invalid && valueInput.touched" class="d-block invalid-feedback">
+          Value is required.
+        </div>
       </div>
       <div class="col-md-2">
-        <button class="btn btn-success w-100 text-white" (click)="saveSetting()">
+        <button class="btn btn-success w-100 text-white" (click)="saveSetting()"
+        [disabled]="keyInput.invalid || valueInput.invalid">
           <svg [cIcon]="icons.cilSave"></svg>
           {{ settingUId  ? 'Update' : 'Add' }}
         </button>

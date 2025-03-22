@@ -25,6 +25,12 @@ p {
 .note-text{
   color: var(--primary-color);
 }
+.subcpription {
+  visibility: visible;
+  animation-duration: 1s;
+  animation-delay: 0.1s;
+  animation-name: fadeInUp;
+}
 .pricing-content{position:relative;}
 .pricing_design{
     position: relative;

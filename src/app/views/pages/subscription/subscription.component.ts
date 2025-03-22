@@ -24,11 +24,18 @@ export class SubscriptionComponent implements OnInit {
     private sweetAlert: SweetAlertService,
     private toastr: ToastrService) {
     this.subscriptionForm = new FormGroup({
-      uid: new FormControl(''),
       name: new FormControl('', Validators.required),
       credits: new FormControl(0),
+      price: new FormControl(0, [Validators.required, Validators.min(0)]),
+      promoPrice: new FormControl(null),
       unlimited: new FormControl(false),
-      price: new FormControl(0, Validators.required),
+    });
+    this.subscriptionForm.get('unlimited')?.valueChanges.subscribe((isUnlimited) => {
+      if (isUnlimited) {
+        this.subscriptionForm.get('credits')?.disable();
+      } else {
+        this.subscriptionForm.get('credits')?.enable();
+      }
     });
   }
 

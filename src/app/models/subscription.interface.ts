@@ -4,4 +4,5 @@ export interface Subscription {
   credits?: number;
   unlimited?: boolean;
   price: number;
+  promoPrice: number;
 }
