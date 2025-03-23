@@ -33,6 +33,7 @@ export class ProfileComponent implements OnInit {
       this.userForm.patchValue({
         username: this.user.username,
         email: this.user.email,
+        password: this.user.password,
       });
     }
   }
@@ -40,8 +41,7 @@ export class ProfileComponent implements OnInit {
   updateUserProfile(): void {
     if (this.userForm.valid) {
       const updatedUser = this.userForm.value;
-      const uid = this.user.uid;
-      this.authService.updateUserProfile(uid, updatedUser).subscribe((response:any) => {
+      this.authService.updateUserProfile(updatedUser).subscribe((response:any) => {
         this.toastr.success('Profile updated successfully!', 'Success');
         this.router.navigate(['/dashboard']);
       },
