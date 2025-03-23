@@ -95,11 +95,35 @@ If you need to configure environment variables for your Firebase functions, you 
  ```bash
 firebase functions:config:set someservice.key="value"
  ```
+ Example: 
+  ```bash
+firebase functions:config:set stripe.secret="YOUR_STRIPE_SECRET_KEY"
+ ```
+ - **Verify the Configuration**
+
+You can verify that the configuration has been set correctly by running:
+  ```bash
+firebase functions:config:get
+ ```
 - **Access environment variables in your code:**
  ```javascript
 const functions = require('firebase-functions');
 const someKey = functions.config().someservice.key;
  ```
+
+ - **Run Function in emulators**
+ Run this command in `functions` folder, in order to export `runtimeconfig.json` :
+
+```bash
+firebase functions:config:get > .runtimeconfig.json
+ ```
+
+After that, you can run the emulators:
+
+ ```bash
+firebase emulators:start --only functions
+ ```
+
 ## Troubleshooting: 
 - **"Error: Not in a Firebase app directory (could not locate firebase.json)"**: Ensure you are running the `firebase init` command in the correct directory where your `firebase.json` file exists.
 - **Permission issues**: Make sure you have the appropriate Firebase project permissions and that you are logged into Firebase CLI using `firebase login`.

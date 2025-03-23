@@ -3,7 +3,7 @@ import { Firestore, collection, addDoc, doc, updateDoc, deleteDoc, collectionDat
 import { Observable } from 'rxjs';
 import { User } from '../models/user.interface';
 import { Auth, createUserWithEmailAndPassword, updateEmail, updatePassword, deleteUser } from '@angular/fire/auth';
-import * as admin from 'firebase-admin';
+// import * as admin from 'firebase-admin';
 
 @Injectable({
   providedIn: 'root'

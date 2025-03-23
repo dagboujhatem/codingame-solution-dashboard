@@ -1,2 +1,4 @@
 node_modules/
 *.local
+*.log
+.runtimeconfig.json
