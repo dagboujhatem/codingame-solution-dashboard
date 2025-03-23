@@ -22,7 +22,7 @@ app.post('/create-checkout-session', async (req, res) => {
       mode: 'subscription',
       line_items: [
         {
-          price: priceId, // This must be a Stripe Price ID
+          price: priceId,
           quantity: 1,
         },
       ],
@@ -52,5 +52,4 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
   res.status(200).json({ received: true });
 });
 
-export const api = functions.https.onRequest(app);
-//exports.api = functions.https.onRequest(app);
+export const condingameSolutionsApi = functions.https.onRequest(app);

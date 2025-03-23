@@ -69,6 +69,8 @@ Once your functions are ready, you can deploy them to Firebase with the followin
 Run the following command to deploy your functions to Firebase:
  ```bash
 firebase deploy --only functions
+firebase deploy --only functions:addMessage,functions:makeUppercase
+firebase deploy --only functions:condingameSolutionsApi --dry-run
  ```
 This command will upload your functions to Firebase and deploy them to the cloud.
 
@@ -87,7 +89,44 @@ firebase deploy --only functions
  ```
  This will deploy the updated functions to Firebase.
 
-## 5. Additional Configuration
+## 5. Delete a Firebase function
+ ```bash
+firebase functions:delete <functionName>
+ ```
+ Example: 
+
+ ```bash
+firebase functions:delete condingameSolutionsApi
+ ```
+
+You can also, delete All Functions in a Region: 
+```bash
+firebase functions:delete condingameSolutionsApi --region <region>
+ ```
+
+If you want to deploy to a different region, just replace '`europe-west9`' with the desired. Some available regions include:
+- `us-central1` (default)
+- `europe-west1` (Belgium)
+- `europe-west9` (Paris)
+- `asia-northeast1` (Tokyo)
+## 6. Verify the Function Region
+
+To check where your functions are deployed, you can look in the Firebase Console (Functions > Your Function), or run the following command to list all your deployed functions:
+
+```bash
+firebase <command> --help
+firebase deploy --help
+firebase functions --help
+ ```
+
+## 7. Additional help with a specific Firebase command 
+
+```bash
+firebase functions:list
+firebase functions:list --region us-central1
+ ```
+
+## 8. Additional Configuration
 
 If you need to configure environment variables for your Firebase functions, you can do so with the Firebase CLI:
 
@@ -96,13 +135,15 @@ If you need to configure environment variables for your Firebase functions, you 
 firebase functions:config:set someservice.key="value"
  ```
  Example: 
-  ```bash
+
+```bash
 firebase functions:config:set stripe.secret="YOUR_STRIPE_SECRET_KEY"
  ```
  - **Verify the Configuration**
 
 You can verify that the configuration has been set correctly by running:
-  ```bash
+
+```bash
 firebase functions:config:get
  ```
 - **Access environment variables in your code:**
@@ -110,6 +151,16 @@ firebase functions:config:get
 const functions = require('firebase-functions');
 const someKey = functions.config().someservice.key;
  ```
+ - **Delete a Specific Config Value**
+
+If you want to **delete** a Firebase function config value that you previously set using `functions:config:set`, you can use the following command:
+
+ ```bash
+firebase functions:config:unset custom
+firebase functions:config:unset custom.region
+ ```
+- The first command can be used to remove all values inside custom
+- The second command removes only the `custom.region` key.
 
  - **Run Function in emulators**
  Run this command in `functions` folder, in order to export `runtimeconfig.json` :
