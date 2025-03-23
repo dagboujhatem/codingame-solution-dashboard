@@ -115,7 +115,6 @@ To check where your functions are deployed, you can look in the Firebase Console
 
 ```bash
 firebase <command> --help
-firebase deploy --help
 firebase functions --help
  ```
 
