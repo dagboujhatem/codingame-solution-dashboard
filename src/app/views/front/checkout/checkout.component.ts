@@ -3,6 +3,7 @@ import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CheckoutService } from '../../../services/checkout.service';
+import { AuthService } from '../../../services/auth.service';
 import { Subscription } from '../../../models/subscription.interface';
 import { loadStripe, Stripe } from '@stripe/stripe-js';
 import { environment } from '../../../../environments/environment';
@@ -26,6 +27,7 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
 
   constructor(private route: ActivatedRoute,
     private toastr: ToastrService,
+    private authService: AuthService,
     private router: Router,
     private checkoutService: CheckoutService) {
     this.stripePromise = loadStripe(environment.stripePublicKey);
@@ -64,12 +66,18 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
     this.checkoutService.checkout(this.subscriptionData.stripeProductId)
       .subscribe(async (response) => {
         try {
+          const profile = await this.authService.getUserProfile();
+          let username = '';
+          if(profile?.exists()){
+            const user = profile.data();
+            username = user['username'];
+          }
           const stripe = await this.stripePromise;
           const result = await stripe?.confirmCardPayment(response.clientSecret, {
             payment_method: {
               card: this.cardElement,
               billing_details: {
-                name: 'Cardholder Name',
+                name: username,
               },
             },
           });
