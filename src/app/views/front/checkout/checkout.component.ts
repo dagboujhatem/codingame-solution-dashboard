@@ -9,10 +9,12 @@ import { loadStripe, Stripe } from '@stripe/stripe-js';
 import { environment } from '../../../../environments/environment';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
+import { IconDirective } from '@coreui/icons-angular';
+import { cibGooglePay } from '@coreui/icons';
 
 @Component({
   selector: 'app-checkout',
-  imports: [CommonModule, HeaderComponent, FooterComponent],
+  imports: [CommonModule, HeaderComponent, FooterComponent, IconDirective],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.scss'
 })
@@ -23,7 +25,11 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
   public paymentError: string | null = null;
   public loading = false;
   @ViewChild('cardElement', { static: false }) cardElementRef: ElementRef | undefined;
+  icons = { cibGooglePay };
   private cardElement: any;
+  private googlePayElement: any;
+  private paypalElement: any;
+  private applePayElement: any;
   public cardValid: boolean = false;
   private username = '';
   private email = '';
@@ -56,7 +62,9 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
       });
   }
 
-  ngAfterViewInit(): void {
+  async ngAfterViewInit() {
+    // const stripe = await this.stripePromise;
+    // const elements = stripe?.elements();
     if (this.cardElementRef) {
       this.stripePromise.then((stripe: any) => {
         const elements = stripe.elements();
@@ -112,5 +120,108 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
       }, (error: any) => {
         this.loading = false;
       });
+  }
+
+  async payWithPayPal(event: Event) {
+    event.preventDefault();
+    this.loading = true;
+    this.paymentError = null;
+
+    const payload = {
+      productId: this.subscriptionData.stripeProductId,
+      username: this.username,
+      email: this.email
+    };
+
+    this.checkoutService.createPaymentIntent(payload)
+      .subscribe(async (response) => {
+        try {
+          const stripe = await this.stripePromise;
+          const result = await stripe?.confirmPayment({
+            elements: this.paypalElement, // Ensure you have a PayPal Stripe element
+            confirmParams: {
+              return_url: window.location.href, // Redirect after payment
+            },
+          });
+
+          this.handlePaymentResult(result);
+        } catch (error) {
+          this.paymentError = 'An error occurred with PayPal.';
+        } finally {
+          this.loading = false;
+        }
+      });
+  }
+
+  async payWithGooglePay(event: Event) {
+    event.preventDefault();
+    this.loading = true;
+    this.paymentError = null;
+
+    const payload = {
+      productId: this.subscriptionData.stripeProductId,
+      username: this.username,
+      email: this.email
+    };
+
+    this.checkoutService.createPaymentIntent(payload)
+      .subscribe(async (response) => {
+        try {
+          const stripe = await this.stripePromise;
+          const result = await stripe?.confirmPayment({
+            elements: this.googlePayElement, // Ensure you have a Google Pay Stripe element
+            confirmParams: {
+              return_url: window.location.href,
+            },
+          });
+
+          this.handlePaymentResult(result);
+        } catch (error) {
+          this.paymentError = 'An error occurred with Google Pay.';
+        } finally {
+          this.loading = false;
+        }
+      });
+  }
+
+  async payWithApplePay(event: Event) {
+    event.preventDefault();
+    this.loading = true;
+    this.paymentError = null;
+
+    const payload = {
+      productId: this.subscriptionData.stripeProductId,
+      username: this.username,
+      email: this.email
+    };
+
+    this.checkoutService.createPaymentIntent(payload)
+      .subscribe(async (response) => {
+        try {
+          const stripe = await this.stripePromise;
+          const result = await stripe?.confirmPayment({
+            elements: this.applePayElement, // Ensure you have an Apple Pay Stripe element
+            confirmParams: {
+              return_url: window.location.href,
+            },
+          });
+
+          this.handlePaymentResult(result);
+        } catch (error) {
+          this.paymentError = 'An error occurred with Apple Pay.';
+        } finally {
+          this.loading = false;
+        }
+      });
+  }
+
+  private async handlePaymentResult(result: any) {
+    if (result?.error) {
+      this.paymentError = result.error.message;
+    } else {
+      this.toastr.success('Payment Successful!', 'Success');
+      this.router.navigateByUrl("/dashboard");
+      await this.checkoutService.updateUserToken(this.uid, this.subscriptionData.credits, this.subscriptionData.unlimited);
+    }
   }
 }
