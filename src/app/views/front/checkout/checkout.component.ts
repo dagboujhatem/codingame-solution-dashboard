@@ -59,7 +59,8 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
     }
   }
 
-  pay() {
+  pay(event: Event) {
+    event.preventDefault();
     if (!this.cardElement || !this.cardValid) {
       return;
     }
