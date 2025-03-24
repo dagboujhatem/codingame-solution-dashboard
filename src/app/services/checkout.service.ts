@@ -1,31 +1,25 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { loadStripe, Stripe } from '@stripe/stripe-js';
 import { environment } from '../../environments/environment';
+import { Firestore, getDoc, doc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CheckoutService {
-  private stripePromise: Promise<Stripe | null>;
-  private apiUrl = 'https://us-central1-YOUR_PROJECT_ID.cloudfunctions.net/api';
+  private apiUrl = environment.codingameSolutionsFunctionUrl;
 
-  constructor(private http: HttpClient) {
-    this.stripePromise = loadStripe(environment.stripePublicKey);
+  constructor(private firestore: Firestore, private http: HttpClient) {
+
   }
 
-  async checkout(priceId: string): Promise<void> {
-    const stripe = await this.stripePromise;
-    if (!stripe) {
-      console.error('Stripe failed to load');
-      return;
-    }
+  getSubscription(uid: string) {
+    const docRef = doc(this.firestore, 'subscriptions', uid);
+    return getDoc(docRef)
+  }
 
-    this.http.post<{ sessionId: string }>(`${this.apiUrl}/create-checkout-session`, { priceId })
-      .subscribe(async (res) => {
-        const { sessionId } = res;
-        await stripe.redirectToCheckout({ sessionId });
-      });
+  checkout(productId: string): Observable<{ clientSecret: any }> {
+    return this.http.post<{ clientSecret: any }>(`${this.apiUrl}/create-payment-intent`, { productId });
   }
 }
