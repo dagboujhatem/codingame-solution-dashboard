@@ -24,6 +24,7 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
   public loading = false;
   @ViewChild('cardElement', { static: false }) cardElementRef: ElementRef | undefined;
   private cardElement: any;
+  public cardValid: boolean = false;
 
   constructor(private route: ActivatedRoute,
     private toastr: ToastrService,
@@ -51,12 +52,15 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
         const elements = stripe.elements();
         this.cardElement = elements.create('card');
         this.cardElement.mount(this.cardElementRef?.nativeElement);
+        this.cardElement.on('change', (event: any) => {
+          this.cardValid = event.complete;
+        });
       });
     }
   }
 
   pay() {
-    if (!this.cardElement) {
+    if (!this.cardElement || !this.cardValid) {
       return;
     }
 
