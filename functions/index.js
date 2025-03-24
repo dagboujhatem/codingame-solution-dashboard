@@ -93,8 +93,18 @@ app.delete("/delete-product/:productId", async (req, res) => {
 // Create a Payment Intent based on the price.
 app.post("/create-payment-intent", async (req, res) => {
   try {
-    const { productId } = req.body;
-
+    const { productId, username, email } = req.body;
+    // Step 0: Create a new customer if the customer does not exist
+    let customer;
+    const customers = await stripe.customers.list({ email: email, limit: 1 });
+    if (customers.data.length > 0) {
+      customer = customers.data[0];
+    } else {
+      customer = await stripe.customers.create({
+        email: email,
+        name: username,
+      });
+    }
     // Step 1: Retrieve the price associated with the product in Stripe
     const product = await stripe.products.retrieve(productId);
     let priceId = product.default_price;
@@ -114,6 +124,9 @@ app.post("/create-payment-intent", async (req, res) => {
     const paymentIntent = await stripe.paymentIntents.create({
       amount: priceAmount,
       currency: price.currency,
+      customer: customer.id,
+      receipt_email: email,
+      capture_method: 'automatic',
       description: `Payment for ${product.name}`,
       payment_method_types: ['card'],
       metadata: {
@@ -126,30 +139,6 @@ app.post("/create-payment-intent", async (req, res) => {
     res.json({
       clientSecret: paymentIntent.client_secret,
     });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// Endpoint to create a payment session
-app.post('/create-checkout-session', async (req, res) => {
-  try {
-    const { priceId } = req.body;
-
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      mode: 'subscription',
-      line_items: [
-        {
-          price: priceId,
-          quantity: 1,
-        },
-      ],
-      success_url: 'https://your-app.com/success',
-      cancel_url: 'https://your-app.com/cancel',
-    });
-
-    res.json({ sessionId: session.id });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

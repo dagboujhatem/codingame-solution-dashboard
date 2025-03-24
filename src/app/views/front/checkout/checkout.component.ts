@@ -25,6 +25,9 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
   @ViewChild('cardElement', { static: false }) cardElementRef: ElementRef | undefined;
   private cardElement: any;
   public cardValid: boolean = false;
+  private username = '';
+  private email = '';
+  private uid : any;
 
   constructor(private route: ActivatedRoute,
     private toastr: ToastrService,
@@ -34,8 +37,15 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
     this.stripePromise = loadStripe(environment.stripePublicKey);
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.subscriptionId = this.route.snapshot.paramMap.get('id')!;
+    const profile = await this.authService.getUserProfile();
+    if(profile?.exists()){
+      const user = profile.data();
+      this.username = user['username'];
+      this.email = user['email'];
+      this.uid = user['uid'];
+    }
     this.checkoutService.getSubscription(this.subscriptionId)
       .then((subscriptionDoc: any) => {
         if (!subscriptionDoc.exists()) {
@@ -59,7 +69,7 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
     }
   }
 
-  pay(event: Event) {
+  async pay(event: Event) {
     event.preventDefault();
     if (!this.cardElement || !this.cardValid) {
       return;
@@ -67,22 +77,20 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
 
     this.loading = true;
     this.paymentError = null;
-
-    this.checkoutService.checkout(this.subscriptionData.stripeProductId)
+    const payload = {
+      productId: this.subscriptionData.stripeProductId,
+      username: this.username,
+      email: this.email
+    }
+    this.checkoutService.createPaymentIntent(payload)
       .subscribe(async (response) => {
         try {
-          const profile = await this.authService.getUserProfile();
-          let username = '';
-          if(profile?.exists()){
-            const user = profile.data();
-            username = user['username'];
-          }
           const stripe = await this.stripePromise;
           const result = await stripe?.confirmCardPayment(response.clientSecret, {
             payment_method: {
               card: this.cardElement,
               billing_details: {
-                name: username,
+                name: this.username,
               },
             },
           });
@@ -93,6 +101,7 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
             // Payment was successful
             this.toastr.success('Payment Successful!', 'Success');
             this.router.navigateByUrl("/dashboard");
+            await this.checkoutService.updateUserToken(this.uid, this.subscriptionData.credits, this.subscriptionData.unlimited)
           }
         } catch (error) {
           // Handle errors
