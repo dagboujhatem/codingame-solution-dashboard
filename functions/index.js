@@ -1,4 +1,6 @@
 import * as functions from 'firebase-functions';
+import { setGlobalOptions } from 'firebase-functions/v2'
+
 import * as admin from 'firebase-admin';
 import express from 'express';
 import cors from 'cors';
@@ -7,6 +9,7 @@ import morgan from 'morgan';
 import compression from 'compression';
 
 //admin.initializeApp();
+setGlobalOptions({ region: 'europe-west9' })
 const stripe = new Stripe(functions.config().stripe?.secret, {
   apiVersion: '2023-10-16',
 });
