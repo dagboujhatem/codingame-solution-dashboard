@@ -59,6 +59,8 @@ You can use Firebase Emulator Suite to test your functions locally.
 To install the emulator suite, run the following command in your project:
  ```bash
 firebase emulators:start
+firebase emulators:start --only functions
+firebase emulators:start --only functions,firestore
  ```
 This will run your functions locally and you can access them at `http://localhost:5000`.
 ## 3. Deploying Firebase Functions
