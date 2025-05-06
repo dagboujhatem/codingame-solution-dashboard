@@ -2,6 +2,7 @@ import { Injectable, signal, computed } from '@angular/core';
 import { Firestore, collection, collectionData } from '@angular/fire/firestore';
 import { Setting } from '../models/setting.interface';
 import { Subscription } from '../models/subscription.interface';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,10 @@ export class StateService {
   private settings = signal<Setting[]>([]);
   private subscriptions = signal<Subscription[]>([]);
 
-  constructor(private firestore: Firestore) {
+  constructor(
+    private firestore: Firestore,
+    private sanitizer: DomSanitizer
+  ) {
     this.loadSettings();
     this.loadSubscriptions();
   }
@@ -37,6 +41,11 @@ export class StateService {
     return this.settings().find(setting => setting.key === 'app-name')?.value || 'Codingame Solutions';
   });
 
+  youtubeLink = computed(() => {
+    const url = this.settings().find(setting => setting.key === 'youtube-tuto')?.value || 'https://www.youtube.com/embed/dQw4w9WgXcQ';
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  });
+
   unlimitedSubscriptions = computed(() => {
     return this.subscriptions().filter(sub => sub.unlimited);
   });
@@ -44,5 +53,4 @@ export class StateService {
   limitedSubscriptions = computed(() => {
     return this.subscriptions().filter(sub => !sub.unlimited);
   });
-
 }

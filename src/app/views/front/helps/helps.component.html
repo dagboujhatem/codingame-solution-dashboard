@@ -1,0 +1,46 @@
+<front-header> - Help Center</front-header>
+<main>
+  <div class="container">
+    <h1 class="text-center mb-4">Welcome to {{ appName() }} Help Center</h1>
+    
+    <div class="row">
+      <div class="col-md-8 mx-auto">
+        <div class="card mb-4">
+          <div class="card-body">
+            <h2 class="card-title">Getting Started</h2>
+            <p class="card-text">
+              Welcome to {{ appName() }}! This guide will help you get started with our Chrome extension and make the most of its features.
+            </p>
+          </div>
+        </div>
+
+        <div class="card mb-4">
+          <div class="card-body">
+            <h2 class="card-title">Video Tutorial</h2>
+            <div class="ratio ratio-16x9 mb-3">
+              <iframe 
+                [src]="youtubeLink()" 
+                title="How to use {{ appName() }}" 
+                allowfullscreen>
+              </iframe>
+            </div>
+            <p class="card-text">
+              Watch our comprehensive video tutorial to learn how to use {{ appName() }} effectively.
+            </p>
+          </div>
+        </div>
+
+        <div class="card mb-4">
+          <div class="card-body">
+            <h2 class="card-title">Need More Help?</h2>
+            <p class="card-text">
+              If you have any questions or need assistance, please don't hesitate to contact our support team at 
+              <a [href]="'mailto:' + supportMail()">{{ supportMail() }}</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<front-footer></front-footer>

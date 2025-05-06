@@ -81,6 +81,10 @@ export const routes: Routes = [
     loadComponent: () => import('./views/front/privacy-policy/privacy-policy.component').then(m => m.PrivacyPolicyComponent),
   },
   {
+    path: 'helps',
+    loadComponent: () => import('./views/front/helps/helps.component').then(m => m.HelpsComponent),
+  },
+  {
     path: 'plans',
     loadComponent: () => import('./views/front/pricing-plans/pricing-plans.component').then(m => m.PricingPlansComponent),
   },
