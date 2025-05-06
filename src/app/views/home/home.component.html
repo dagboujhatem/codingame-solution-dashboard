@@ -1,0 +1,108 @@
+<app-home-header></app-home-header>
+<div class="home-container">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6">
+          <h1>Welcome to {{ appName() }}</h1>
+          <p class="lead">Your all-in-one solution for project success</p>
+          <div class="cta-buttons">
+            <a routerLink="/register" class="btn btn-light btn-lg me-3">Get Started</a>
+            <a routerLink="/plans" class="btn btn-outline-light btn-lg">View Plans</a>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <img src="assets/images/home/hero.svg" alt="Hero Illustration" class="hero-image">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section">
+    <div class="container">
+      <h2 class="text-center mb-5">Our Features</h2>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="feature-card">
+            <img src="assets/images/home/feature-1.svg" alt="Feature 1" class="feature-image">
+            <h3>AI Solution</h3>
+            <p>Harness the power of artificial intelligence to optimize your projects</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="feature-card">
+            <img src="assets/images/home/feature-2.svg" alt="Feature 2" class="feature-image">
+            <h3>Guaranteed Security</h3>
+            <p>Your data is protected with the latest security technologies</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="feature-card">
+            <img src="assets/images/home/feature-3.svg" alt="Feature 3" class="feature-image">
+            <h3>Guaranteed Success</h3>
+            <p>Concrete and measurable results for your business</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="how-it-works-section">
+    <div class="container">
+      <h2 class="text-center mb-5">How It Works</h2>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="step-card">
+            <div class="step-number">1</div>
+            <img src="assets/images/home/step-1.svg" alt="Step 1" class="step-image">
+            <h4>Sign Up</h4>
+            <p>Create your account in just a few clicks</p>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="step-card">
+            <div class="step-number">2</div>
+            <img src="assets/images/home/step-2.svg" alt="Step 2" class="step-image">
+            <h4>Choose Your Plan</h4>
+            <p>Select the offer that suits your needs</p>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="step-card">
+            <div class="step-number">3</div>
+            <img src="assets/images/home/step-3.svg" alt="Step 3" class="step-image">
+            <h4>Installation</h4>
+            <p>Configure your solution in minutes</p>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="step-card">
+            <div class="step-number">4</div>
+            <img src="assets/images/home/step-4.svg" alt="Step 4" class="step-image">
+            <h4>Success</h4>
+            <p>Enjoy results from day one</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="contact-section">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6">
+          <h2>Need Help?</h2>
+          <p class="lead">Our team is here to support you</p>
+          <a [href]="'mailto:' + supportMail()" class="btn btn-primary btn-lg">Contact Us</a>
+        </div>
+        <div class="col-lg-6">
+          <img src="assets/images/home/contact.svg" alt="Contact" class="contact-image">
+        </div>
+      </div>
+    </div>
+  </section>
+</div> 

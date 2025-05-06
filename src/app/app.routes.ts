@@ -6,8 +6,12 @@ import { authorizationGuard } from './guards/authorization.guard';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'dashboard',
+    redirectTo: 'home',
     pathMatch: 'full'
+  },
+  {
+    path: 'home',
+    loadComponent: () => import('./views/home/home.component').then(m => m.HomeComponent)
   },
   {
     path: '',
