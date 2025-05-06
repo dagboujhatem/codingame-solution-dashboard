@@ -5,7 +5,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CheckoutService } from '../../../services/checkout.service';
 import { AuthService } from '../../../services/auth.service';
 import { Subscription } from '../../../models/subscription.interface';
-import { loadStripe, Stripe } from '@stripe/stripe-js';
+import {
+  loadStripe, PaymentRequestOptions, Stripe, StripeElements, StripePaymentRequestButtonElement,
+  StripePaymentRequestButtonElementOptions,
+} from '@stripe/stripe-js';
 import { environment } from '../../../../environments/environment';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
@@ -22,9 +25,14 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
   private subscriptionId!: string;
   public subscriptionData!: Subscription;
   private stripePromise: Promise<Stripe | null>;
+  private stripe!: Stripe | null;
+  private elements!: StripeElements;
   public paymentError: string | null = null;
   public loading = false;
   @ViewChild('cardElement', { static: false }) cardElementRef: ElementRef | undefined;
+  @ViewChild('googlePayElementRef') googlePayElementRef!: ElementRef | undefined;
+  @ViewChild('applePayElementRef') applePayElementRef!: ElementRef | undefined;
+  @ViewChild('paypalElementRef') paypalElementRef!: ElementRef | undefined;
   icons = { cibGooglePay };
   private cardElement: any;
   private googlePayElement: any;
@@ -33,7 +41,7 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
   public cardValid: boolean = false;
   private username = '';
   private email = '';
-  private uid : any;
+  private uid: any;
 
   constructor(private route: ActivatedRoute,
     private toastr: ToastrService,
@@ -46,38 +54,104 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
   async ngOnInit() {
     this.subscriptionId = this.route.snapshot.paramMap.get('id')!;
     const profile = await this.authService.getUserProfile();
-    if(profile?.exists()){
+    if (profile?.exists()) {
       const user = profile.data();
       this.username = user['username'];
       this.email = user['email'];
       this.uid = user['uid'];
     }
-    this.checkoutService.getSubscription(this.subscriptionId)
-      .then((subscriptionDoc: any) => {
-        if (!subscriptionDoc.exists()) {
-          return;
-        }
-        const subData: Subscription = subscriptionDoc.data();
-        this.subscriptionData = subData;
-      });
   }
 
   async ngAfterViewInit() {
-    // const stripe = await this.stripePromise;
-    // const elements = stripe?.elements();
-    if (this.cardElementRef) {
-      this.stripePromise.then((stripe: any) => {
-        const elements = stripe.elements();
-        this.cardElement = elements.create('card');
-        this.cardElement.mount(this.cardElementRef?.nativeElement);
-        this.cardElement.on('change', (event: any) => {
-          this.cardValid = event.complete;
-        });
-      });
+    try {
+      this.stripe = await this.stripePromise!;
+      if (!this.stripe) {
+        console.error('Stripe failed to initialize');
+        return;
+      }
+      this.elements = this.stripe.elements();
+      await this.loadSubscriptionData()
+      if (this.cardElementRef) {
+        this.initializeCardPayment();
+      }
+      if (this.googlePayElementRef || this.applePayElementRef || this.paypalElementRef) {
+        await this.initializePaymentRequestButton();
+      }
+    } catch (error) {
+      console.error('Error initializing Stripe:', error);
     }
   }
 
-  async pay(event: Event) {
+  async initializePaymentRequestButton() {
+    const paymentRequest = this.createPaymentRequest();
+    const paymentRequestButton: StripePaymentRequestButtonElement = this.elements.create(
+      'paymentRequestButton',
+      { paymentRequest } as StripePaymentRequestButtonElementOptions
+    );
+    const canMakePayment = await paymentRequest?.canMakePayment()
+    if (canMakePayment) {
+      this.unmountExistingButtons();
+      if (this.googlePayElementRef) {
+        paymentRequestButton.mount(this.googlePayElementRef?.nativeElement);
+      }
+      // if (this.applePayElementRef) {
+      //   paymentRequestButton.mount(this.applePayElementRef?.nativeElement);
+      // }
+      // if (this.paypalElementRef) {
+      //   paymentRequestButton.mount(this.paypalElementRef?.nativeElement);
+      // }
+    } else {
+      console.warn('Payment request button is not available on this device.');
+    }
+  }
+
+  private unmountExistingButtons() {
+    if (this.googlePayElementRef?.nativeElement?.children.length) {
+      this.googlePayElementRef.nativeElement.innerHTML = '';
+    }
+    if (this.applePayElementRef?.nativeElement?.children.length) {
+      this.applePayElementRef.nativeElement.innerHTML = '';
+    }
+    if (this.paypalElementRef?.nativeElement?.children.length) {
+      this.paypalElementRef.nativeElement.innerHTML = '';
+    }
+  }
+
+  async loadSubscriptionData() {
+    const subscriptionDoc = await this.checkoutService.getSubscription(this.subscriptionId);
+    if (!subscriptionDoc.exists()) {
+      return;
+    }
+    const subData: any = subscriptionDoc.data();
+    this.subscriptionData = subData;
+  }
+
+  private initializeCardPayment() {
+    this.cardElement = this.elements.create('card');
+    this.cardElement.mount(this.cardElementRef?.nativeElement);
+    this.cardElement.on('change', (event: any) => {
+      this.cardValid = event.complete;
+    });
+  }
+
+  private createPaymentRequest() {
+    const productPrice = this.subscriptionData?.promoPrice ? this.subscriptionData?.promoPrice : this.subscriptionData?.price;
+    const priceInCents = Math.round(productPrice * 100);
+    return this.stripe?.paymentRequest({
+      country: 'FR',
+      currency: 'eur',
+      total: {
+        label: `Payment for ${this.subscriptionData?.name}`,
+        amount: priceInCents,
+      },
+      requestPayerName: true,
+      requestPayerEmail: true,
+      // paymentMethodTypes: ['card', 'paypal'],
+      // supportedPaymentMethods: ['googlePay', 'applePay', 'card'],
+    } as PaymentRequestOptions);
+  }
+
+  async payWithCard(event: Event) {
     event.preventDefault();
     if (!this.cardElement || !this.cardValid) {
       return;
@@ -136,11 +210,11 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
     this.checkoutService.createPaymentIntent(payload)
       .subscribe(async (response) => {
         try {
-          const stripe = await this.stripePromise;
-          const result = await stripe?.confirmPayment({
-            elements: this.paypalElement, // Ensure you have a PayPal Stripe element
+          // const stripe = await this.stripePromise;
+          const result = await this.stripe?.confirmPayment({
+            elements: this.paypalElement,
             confirmParams: {
-              return_url: window.location.href, // Redirect after payment
+              return_url: window.location.href,
             },
           });
 
@@ -169,7 +243,7 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
         try {
           const stripe = await this.stripePromise;
           const result = await stripe?.confirmPayment({
-            elements: this.googlePayElement, // Ensure you have a Google Pay Stripe element
+            elements: this.googlePayElement,
             confirmParams: {
               return_url: window.location.href,
             },
@@ -200,7 +274,7 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
         try {
           const stripe = await this.stripePromise;
           const result = await stripe?.confirmPayment({
-            elements: this.applePayElement, // Ensure you have an Apple Pay Stripe element
+            elements: this.applePayElement,
             confirmParams: {
               return_url: window.location.href,
             },
@@ -216,6 +290,7 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
   }
 
   private async handlePaymentResult(result: any) {
+    console.log(result)
     if (result?.error) {
       this.paymentError = result.error.message;
     } else {

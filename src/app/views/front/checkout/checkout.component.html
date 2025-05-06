@@ -36,7 +36,7 @@
         <h2>Choose a payment method</h2>
         <hr>
         <div class="d-flex justify-content-center gap-3">
-          <button (click)="payWithPayPal($event)" class="btn btn-primary d-flex align-items-center" id="paypal-button">
+          <!-- <button (click)="payWithPayPal($event)" class="btn btn-primary d-flex align-items-center" id="paypal-button">
             <svg cIcon class="me-2" name="cibCcPaypal"></svg> PayPal
           </button>
           <button (click)="payWithGooglePay($event)" class="btn btn-dark d-flex align-items-center" id="google-pay-button">
@@ -44,7 +44,10 @@
           </button>
           <button (click)="payWithApplePay($event)" class="btn btn-secondary d-flex align-items-center" id="apple-pay-button">
             <svg cIcon class="me-2" name="cibCcApplePay"></svg> Apple Pay
-          </button>
+          </button> -->
+          <div #googlePayElementRef style="width: 300px;"></div>
+          <div #applePayElementRef style="width: 300px;"></div>
+          <div #paypalElementRef style="width: 300px;"></div>
         </div>
         <div class="d-flex align-items-center my-3">
           <hr class="flex-grow-1">
@@ -61,7 +64,7 @@
           <div *ngIf="paymentError" class="alert alert-danger mt-3">
             {{ paymentError }}
           </div>
-          <button type="button" (click)="pay($event)" class="btn btn-primary w-100 mt-3" [disabled]="loading || !cardValid">
+          <button type="button" (click)="payWithCard($event)" class="btn btn-primary w-100 mt-3" [disabled]="loading || !cardValid">
             <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
             <svg cIcon class="me-2" name="cibCcStripe"></svg> Pay Now
           </button>
