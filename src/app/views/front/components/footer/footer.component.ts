@@ -1,5 +1,5 @@
 import { Component, Signal } from '@angular/core';
-import { StateService } from '../../../services/state.service';
+import { StateService } from '../../../../services/state.service';
 
 @Component({
   selector: 'front-footer',

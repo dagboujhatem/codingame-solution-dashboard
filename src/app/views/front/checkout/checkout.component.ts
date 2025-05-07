@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { HeaderComponent } from '../header/header.component';
-import { FooterComponent } from '../footer/footer.component';
+import { HeaderComponent } from '../components/header/header.component';
+import { FooterComponent } from '../components/footer/footer.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CheckoutService } from '../../../services/checkout.service';
 import { AuthService } from '../../../services/auth.service';
@@ -14,7 +14,7 @@ import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { IconDirective } from '@coreui/icons-angular';
 import { cibGooglePay } from '@coreui/icons';
-import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
+import { BreadcrumbComponent } from '../components/breadcrumb/breadcrumb.component';
 
 @Component({
   selector: 'app-checkout',

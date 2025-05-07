@@ -1,8 +1,8 @@
 import { Component, Signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { StateService } from '../../../services/state.service';
-import { AuthService } from '../../../services/auth.service';
+import { StateService } from '../../../../services/state.service';
+import { AuthService } from '../../../../services/auth.service';
 
 @Component({
   selector: 'front-header',

@@ -2,9 +2,9 @@ import { Component, signal, Signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { StateService } from '../../../services/state.service';
-import { HeaderComponent } from '../header/header.component';
-import { FooterComponent } from '../footer/footer.component';
-import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
+import { HeaderComponent } from '../components/header/header.component';
+import { FooterComponent } from '../components/footer/footer.component';
+import { BreadcrumbComponent } from '../components/breadcrumb/breadcrumb.component';
 import { 
   TabsModule,    
   TabDirective,
