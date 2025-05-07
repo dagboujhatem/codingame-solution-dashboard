@@ -1,11 +1,7 @@
 import { Component, signal, Signal } from '@angular/core';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
-import {  TabDirective,
-  TabPanelComponent,
-  TabsComponent,
-  TabsContentComponent,
-  TabsListComponent } from '@coreui/angular';
+import { TabDirective, TabPanelComponent, TabsComponent, TabsContentComponent, TabsListComponent } from '@coreui/angular';
 import { StateService } from '../../../services/state.service';
 import { Subscription } from '../../../models/subscription.interface';
 import { CommonModule } from '@angular/common';
@@ -15,11 +11,18 @@ import { AuthService } from "../../../services/auth.service";
 
 @Component({
   selector: 'app-pricing-plans',
-  imports: [CommonModule, RouterModule, HeaderComponent, FooterComponent, TabDirective,
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    HeaderComponent,
+    FooterComponent,
+    TabDirective,
     TabPanelComponent,
     TabsComponent,
     TabsContentComponent,
-    TabsListComponent],
+    TabsListComponent
+  ],
   templateUrl: './pricing-plans.component.html',
   styleUrl: './pricing-plans.component.scss'
 })
@@ -30,7 +33,8 @@ export class PricingPlansComponent {
   limitedSubscriptions: Signal<Subscription[]>;
   readonly activeItem = signal(0);
 
-  constructor(private stateService: StateService,
+  constructor(
+    private stateService: StateService,
     private toastr: ToastrService,
     private router: Router,
     private authService: AuthService,
@@ -54,5 +58,4 @@ export class PricingPlansComponent {
       this.router.navigate(['/login']);
     }
   }
-
 }

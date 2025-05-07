@@ -49,12 +49,14 @@ import { AuthService } from '../../../services/auth.service';
       font-size: 1.5rem;
       font-weight: 600;
       text-decoration: none;
+      cursor: pointer;
     }
     .btn {
       padding: 0.5rem 1.5rem;
       font-weight: 500;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      cursor: pointer;
     }
     .btn-outline-light {
       border-width: 2px;

@@ -12,15 +12,36 @@ import { SideBarService } from '../../../services/side-bar.service';
 
 @Component({
     selector: 'app-login',
+    standalone: true,
+    imports: [
+        NgIf,
+        RouterLink,
+        ReactiveFormsModule,
+        CommonComponent,
+        ContainerComponent,
+        RowComponent,
+        ColComponent,
+        CardGroupComponent,
+        TextColorDirective,
+        CardComponent,
+        CardBodyComponent,
+        FormDirective,
+        InputGroupComponent,
+        InputGroupTextDirective,
+        IconDirective,
+        FormControlDirective,
+        ButtonDirective,
+        NgStyle
+    ],
     templateUrl: './login.component.html',
-    styleUrls: ['./login.component.scss'],
-    imports: [NgIf, RouterLink, ReactiveFormsModule, CommonComponent, ContainerComponent, RowComponent, ColComponent, CardGroupComponent, TextColorDirective, CardComponent, CardBodyComponent, FormDirective, InputGroupComponent, InputGroupTextDirective, IconDirective, FormControlDirective, ButtonDirective, NgStyle]
+    styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
   signInForm!: FormGroup;
   appName: Signal<string>;
 
-  constructor(private authService: AuthService,
+  constructor(
+    private authService: AuthService,
     private toastr: ToastrService,
     private stateService: StateService,
     private router: Router,
