@@ -37,15 +37,18 @@ export class AppComponent implements OnInit {
     });
     // iconSet singleton
     this.#iconSetService.icons = { ...iconSubset };
-    this.#colorModeService.localStorageItemName.set('coreui-free-angular-admin-template-theme-default');
+    this.#colorModeService.localStorageItemName.set('theme-default');
     this.#colorModeService.eventName.set('ColorSchemeChange');
   }
 
   ngOnInit(): void {
     // Vérifier si les cookies sont déjà acceptés
-    if (!this.ccService.hasConsented()) {
+    const cookiesConsent = localStorage.getItem('cookies-consent');
+    if (!this.ccService.hasConsented() && cookiesConsent !== 'allow') {
       // Si les cookies ne sont pas acceptés, le popup s'affichera automatiquement
       //console.log('Cookies not accepted, showing consent popup');
+    }else{
+      this.ccService.destroy();
     }
 
     // S'abonner aux changements de statut du consentement aux cookies
@@ -55,6 +58,7 @@ export class AppComponent implements OnInit {
       if (event.status === 'allow' || event.status === 'deny') {
         // Cacher le popup après que l'utilisateur ait fait son choix
         this.ccService.destroy();
+        localStorage.setItem('cookies-consent', event.status);
       }
     });
 
