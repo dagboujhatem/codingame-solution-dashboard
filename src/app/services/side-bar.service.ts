@@ -8,7 +8,7 @@ import { navItems } from '../layout/default-layout/_nav';
 })
 export class SideBarService {
   private navItems = signal<INavData[]>([... navItems]);
-  private userRoleSignal = signal<string>('User');
+  private userRoleSignal = signal<string>('');
 
   constructor(private authService: AuthService) {}
 
@@ -30,7 +30,7 @@ export class SideBarService {
       }else if( role === 'User'){
         return navItems.filter(item => item.title || item.url === '/profile' || item.url === '/home' || item.url === '/helps' || item.url === '/plans');
       }else{
-        return navItems
+        return []
       }
     });
   }

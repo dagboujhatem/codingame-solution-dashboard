@@ -7,8 +7,8 @@ export const authorizationGuard: CanActivateFn = async (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
   const toastr =  inject(ToastrService);
-  const userRole = await authService.getAuthUserRole();
-  if(userRole === 'Admin'){
+  const isAdmin = await authService.authUserhasRole('Admin');
+  if(isAdmin){
     return true;
   }else {
     const routeUrl = state.url;
