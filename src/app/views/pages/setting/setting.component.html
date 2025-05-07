@@ -32,28 +32,34 @@
   <!-- Settings List -->
   <div class="card p-3">
     <h4>Existing Settings</h4>
-    <table class="table table-bordered table-striped table-responsive">
-      <thead class="thead-dark">
-        <tr>
-          <th>Key</th>
-          <th>Value</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let setting of settings">
-          <td>{{ setting.key }}</td>
-          <td>{{ setting.value }}</td>
-          <td>
-            <button class="btn btn-primary btn-sm me-2 text-white" (click)="showUpdateForm(setting)">
-              <svg [cIcon]="icons.cilPen"></svg> Update
-            </button>
-            <button class="btn btn-danger btn-sm text-white" (click)="deleteSetting(setting.uid)">
-              <svg [cIcon]="icons.cilTrash"></svg> Delete
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+          <tr>
+            <th>Key</th>
+            <th>Value</th>
+            <th class="text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let setting of settings">
+            <td data-label="Key">{{ setting.key }}</td>
+            <td data-label="Value">{{ setting.value }}</td>
+            <td data-label="Actions" class="text-center">
+              <div class="d-flex justify-content-center gap-2">
+                <button class="btn btn-primary btn-sm text-white d-inline-flex" (click)="showUpdateForm(setting)">
+                  <svg [cIcon]="icons.cilPen"></svg> 
+                  <span class="ms-2">Update</span>
+                </button>
+                <button class="btn btn-danger btn-sm text-white d-inline-flex" (click)="deleteSetting(setting.uid)">
+                  <svg [cIcon]="icons.cilTrash"></svg> 
+                  <span class="ms-2">Delete</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
