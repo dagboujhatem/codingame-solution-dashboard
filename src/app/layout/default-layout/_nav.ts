@@ -11,6 +11,11 @@ export const navItems: INavData[] = [
     name: 'Menu'
   },
   {
+    name: 'Home',
+    url: '/home',
+    iconComponent: { name: 'cil-home' }
+  },
+  {
     name: 'My Profile',
     url: '/profile',
     iconComponent: { name: 'cil-user' }
@@ -29,5 +34,15 @@ export const navItems: INavData[] = [
     name: 'Subscriptions',
     url: '/subscriptions',
     iconComponent: { name: 'cil-applications-settings' }
+  },
+  {
+    name: 'Plans',
+    url: '/plans',
+    iconComponent: { name: 'cil-basket' }
+  },
+  {
+    name: 'Helps',
+    url: '/helps',
+    iconComponent: { name: 'cil-speech' }
   }
 ];

@@ -28,7 +28,7 @@ export class SideBarService {
       if(role === 'Admin'){
         return navItems
       }else if( role === 'User'){
-        return navItems.filter(item => item.title || item.url === '/profile');
+        return navItems.filter(item => item.title || item.url === '/profile' || item.url === '/home' || item.url === '/helps' || item.url === '/plans');
       }else{
         return navItems
       }
