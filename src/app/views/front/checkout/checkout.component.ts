@@ -14,10 +14,11 @@ import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { IconDirective } from '@coreui/icons-angular';
 import { cibGooglePay } from '@coreui/icons';
+import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 
 @Component({
   selector: 'app-checkout',
-  imports: [CommonModule, HeaderComponent, FooterComponent, IconDirective],
+  imports: [CommonModule, HeaderComponent, FooterComponent, IconDirective, BreadcrumbComponent],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.scss'
 })
