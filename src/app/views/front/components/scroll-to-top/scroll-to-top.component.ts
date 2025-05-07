@@ -1,14 +1,15 @@
 import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IconModule } from '@coreui/icons-angular';
+import { IconDirective, IconModule } from '@coreui/icons-angular';
+import { cilArrowTop } from '@coreui/icons';
 
 @Component({
   selector: 'app-scroll-to-top',
   standalone: true,
-  imports: [CommonModule, IconModule],
+  imports: [CommonModule, IconModule, IconDirective],
   template: `
     <button class="scroll-to-top" (click)="scrollToTop()" [class.show]="showScrollButton">
-      <i class="cil-arrow-top"></i>
+      <svg [cIcon]="icons.cilArrowTop"></svg> 
     </button>
   `,
   styles: [`
@@ -45,6 +46,7 @@ import { IconModule } from '@coreui/icons-angular';
 
       i {
         font-size: 1.2rem;
+        color: white !important;
       }
     }
 
@@ -57,12 +59,17 @@ import { IconModule } from '@coreui/icons-angular';
         &:hover {
           background: var(--cui-primary);
         }
+
+        i {
+          color: white !important;
+        }
       }
     }
   `]
 })
 export class ScrollToTopComponent {
   showScrollButton = false;
+  icons = { cilArrowTop };
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
