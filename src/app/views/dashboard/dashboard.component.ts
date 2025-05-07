@@ -21,7 +21,6 @@ export class DashboardComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    const userRole = await this.authService.getAuthUserRole();
-    this.isAdmin = userRole === 'Admin';
+    this.isAdmin = await this.authService.authUserhasRole('Admin');
   }
 }

@@ -123,7 +123,7 @@ export class AuthService {
     });
   }
 
-  async hasRole(role: string): Promise<boolean> {
+  async authUserhasRole(role: string): Promise<boolean> {
     const authUserRole = await this.getAuthUserRole();
     return authUserRole === role;
   }
