@@ -1,4 +1,3 @@
-
 main {
   padding: 20px;
   background:#DCDCDC;
@@ -130,4 +129,10 @@ text-decoration:none;
     margin-top: 0;
     position: relative;
     text-transform: capitalize;
+}
+
+.pricing-background {
+  background:#f3f4f6;
+  min-height: 100vh;
+  padding-bottom: 2rem;
 }
