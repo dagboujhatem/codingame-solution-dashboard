@@ -8,11 +8,15 @@ import { ColorModeService } from '@coreui/angular';
 import { IconSetService } from '@coreui/icons-angular';
 import { iconSubset } from './icons/icon-subset';
 import { StateService } from './services/state.service';
+import { NgcCookieConsentService } from 'ngx-cookieconsent';
 
 @Component({
     selector: 'app-root',
-    template: '<router-outlet />',
-    imports: [RouterOutlet]
+    standalone: true,
+    imports: [RouterOutlet],
+    template: `
+      <router-outlet></router-outlet>
+    `
 })
 export class AppComponent implements OnInit {
   readonly #destroyRef: DestroyRef = inject(DestroyRef);
@@ -23,7 +27,10 @@ export class AppComponent implements OnInit {
   readonly #colorModeService = inject(ColorModeService);
   readonly #iconSetService = inject(IconSetService);
 
-  constructor(private stateService: StateService) {
+  constructor(
+    private stateService: StateService, 
+    private ccService: NgcCookieConsentService
+  ) {
     effect(() => {
       const appName = this.stateService?.appName();
       this.#titleService.setTitle(appName);
@@ -35,6 +42,21 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Vérifier si les cookies sont déjà acceptés
+    if (!this.ccService.hasConsented()) {
+      // Si les cookies ne sont pas acceptés, le popup s'affichera automatiquement
+      //console.log('Cookies not accepted, showing consent popup');
+    }
+
+    // S'abonner aux changements de statut du consentement aux cookies
+    this.ccService.statusChange$.pipe(
+      takeUntilDestroyed(this.#destroyRef)
+    ).subscribe(event => {
+      if (event.status === 'allow' || event.status === 'deny') {
+        // Cacher le popup après que l'utilisateur ait fait son choix
+        this.ccService.destroy();
+      }
+    });
 
     this.#router.events.pipe(
         takeUntilDestroyed(this.#destroyRef)

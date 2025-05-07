@@ -19,6 +19,9 @@ import { environment } from '../environments/environment';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { bearerTokenInterceptor } from './interceptors/bearer-token.interceptor';
 import { provideAuth, getAuth } from '@angular/fire/auth';
+import { provideClientHydration } from '@angular/platform-browser';
+import { provideNgcCookieConsent } from 'ngx-cookieconsent';
+import { cookieConfig } from './cookieConfig';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -43,5 +46,7 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideAnimations(),
     provideToastr(),
+    provideClientHydration(),
+    provideNgcCookieConsent(cookieConfig),
   ]
 };

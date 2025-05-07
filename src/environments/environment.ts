@@ -1,5 +1,6 @@
 export const environment = {
   production: false,
+  domain: 'https://localhost:4200/#/',
   codingameSolutionsFunctionUrl : 'http://127.0.0.1:5001/codingame-solution/us-central1/condingameSolutionsApi',
   stripePublicKey: 'pk_test_51K5w4MKTwukrcrQl3W00ediUfsydZ56eH4ksxIx9v5ChfWzqGEFSfh8tMn8ZyrJIlCuqqMfl1vuOlQnrZy1la7WL005Jh7zGtm',
   firebaseConfig: {

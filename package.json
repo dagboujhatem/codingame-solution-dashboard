@@ -42,6 +42,7 @@
     "firebase": "^11.4.0",
     "jwt-decode": "^4.0.0",
     "lodash-es": "^4.17.21",
+    "ngx-cookieconsent": "^8.0.0",
     "ngx-scrollbar": "^13.0.3",
     "ngx-toastr": "^19.0.0",
     "rxjs": "~7.8.2",
