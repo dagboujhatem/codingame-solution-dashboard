@@ -25,6 +25,7 @@ section {
     bottom: 0;
     background: url('https://storyset.com/illustration/pattern/amico') center/cover;
     opacity: 0.1;
+    pointer-events: none;
   }
 
   .hero-image {
@@ -36,19 +37,56 @@ section {
   h1 {
     font-weight: 700;
     margin-bottom: 1.5rem;
+    position: relative;
+    z-index: 1;
   }
 
   .lead {
     font-size: 1.25rem;
     margin-bottom: 2rem;
+    position: relative;
+    z-index: 1;
   }
 
   .cta-buttons {
+    position: relative;
+    z-index: 2;
+
     .btn {
       padding: 0.75rem 2rem;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      cursor: pointer;
+      position: relative;
+      display: inline-block;
+      text-decoration: none;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      &.btn-light {
+        background-color: white;
+        color: var(--primary-color);
+        border: none;
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.9);
+        }
+      }
+
+      &.btn-outline-light {
+        border: 2px solid white;
+        color: white;
+
+        &:hover {
+          background-color: white;
+          color: var(--primary-color);
+        }
+      }
     }
   }
 }
