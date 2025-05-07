@@ -17,6 +17,7 @@ import {
 import { INavData } from '@coreui/angular';
 import { DefaultFooterComponent, DefaultHeaderComponent } from './';
 import { SideBarService } from '../../services/side-bar.service';
+import { StateService } from '../../services/state.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -33,7 +34,7 @@ import { SideBarService } from '../../services/side-bar.service';
     ContainerComponent,
     DefaultFooterComponent,
     DefaultHeaderComponent,
-    IconDirective,
+    // IconDirective,
     NgScrollbar,
     RouterOutlet,
     RouterLink,
@@ -43,9 +44,14 @@ import { SideBarService } from '../../services/side-bar.service';
 export class DefaultLayoutComponent {
   public navItems : INavData [] = [];
   navItemsSignal: Signal<INavData[]>;
+  appName: Signal<string>;
 
-  constructor(private sideBarService: SideBarService){
+  constructor(
+    private sideBarService: SideBarService,
+    private stateService: StateService
+  ){
     this.navItemsSignal = this.sideBarService.getNavItemsSignal();
+    this.appName = this.stateService.appName;
     effect(() => {
       this.navItems = this.navItemsSignal();
     });
