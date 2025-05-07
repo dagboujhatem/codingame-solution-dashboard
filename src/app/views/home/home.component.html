@@ -55,7 +55,7 @@
       <h2 class="text-center mb-5">How It Works</h2>
       <div class="row">
         <div class="col-md-3">
-          <div class="step-card">
+          <div class="step-card" routerLink="/register" style="cursor: pointer;">
             <div class="step-number">1</div>
             <img src="assets/images/home/step-1.svg" alt="Step 1" class="step-image">
             <h4>Sign Up</h4>
@@ -63,7 +63,7 @@
           </div>
         </div>
         <div class="col-md-3">
-          <div class="step-card">
+          <div class="step-card" routerLink="/plans" style="cursor: pointer;">
             <div class="step-number">2</div>
             <img src="assets/images/home/step-2.svg" alt="Step 2" class="step-image">
             <h4>Choose Your Plan</h4>
@@ -71,15 +71,17 @@
           </div>
         </div>
         <div class="col-md-3">
-          <div class="step-card">
-            <div class="step-number">3</div>
-            <img src="assets/images/home/step-3.svg" alt="Step 3" class="step-image">
-            <h4>Installation</h4>
-            <p>Configure your solution in minutes</p>
+          <div class="step-card" style="cursor: pointer;">
+            <a href="https://chromewebstore.google.com/detail/codingame-solution/jpchdfcdnpnicbdipfdmgiaekkmbidbl" target="_blank" style="text-decoration: none; color: inherit;">
+              <div class="step-number">3</div>
+              <img src="assets/images/home/step-3.svg" alt="Step 3" class="step-image">
+              <h4>Installation</h4>
+              <p>Configure your solution in minutes</p>
+            </a>
           </div>
         </div>
         <div class="col-md-3">
-          <div class="step-card">
+          <div class="step-card" [routerLink]="['/helps']" style="cursor: pointer;">
             <div class="step-number">4</div>
             <img src="assets/images/home/step-4.svg" alt="Step 4" class="step-image">
             <h4>Success</h4>
@@ -97,6 +99,7 @@
         <div class="col-lg-6">
           <h2>Need Help?</h2>
           <p class="lead">Our team is here to support you</p>
+          <p class="email-support">Contact us at: <a [href]="'mailto:' + supportMail()" class="text-primary">{{ supportMail() }}</a></p>
           <a [href]="'mailto:' + supportMail()" class="btn btn-primary btn-lg">Contact Us</a>
         </div>
         <div class="col-lg-6">
