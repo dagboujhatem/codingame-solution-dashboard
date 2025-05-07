@@ -32,7 +32,8 @@ import { AuthService } from '../../../services/auth.service';
   imports: [ContainerComponent, HeaderTogglerDirective, SidebarToggleDirective, IconDirective, HeaderNavComponent, RouterLink, NgTemplateOutlet, BreadcrumbRouterComponent, DropdownComponent, DropdownToggleDirective, AvatarComponent, DropdownMenuDirective, DropdownHeaderDirective, DropdownItemDirective]
 })
 export class DefaultHeaderComponent extends HeaderComponent {
-
+  username: string = '';
+  avatar: string = '';
   readonly #colorModeService = inject(ColorModeService);
   readonly #authService= inject(AuthService);
   readonly colorMode = this.#colorModeService.colorMode;
@@ -48,8 +49,15 @@ export class DefaultHeaderComponent extends HeaderComponent {
     return this.colorModes.find(mode => mode.name === currentMode)?.icon ?? 'cilSun';
   });
 
-  constructor() {
+ constructor(private authService: AuthService) {
     super();
+    this.authService.getUserProfile()?.then((profile)=>{
+      if (profile?.exists()) {
+        const user = profile.data();
+        this.username = user['username'] || 'User';
+        this.avatar = `https://ui-avatars.com/api/?name=${this.username}&background=random`
+      }
+    });
   }
 
   sidebarId = input('sidebar1');
