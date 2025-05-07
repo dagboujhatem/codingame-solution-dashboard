@@ -14,6 +14,7 @@ import { AuthService } from '../../../../services/auth.service';
 export class HomeHeaderComponent {
   appName: Signal<string>;
   scrolled = false;
+  isNavbarCollapsed = true;
 
   constructor(
     private stateService: StateService,
@@ -29,5 +30,9 @@ export class HomeHeaderComponent {
   @HostListener('window:scroll', [])
   onWindowScroll() {
     this.scrolled = window.scrollY > 10;
+  }
+
+  toggleNavbar() {
+    this.isNavbarCollapsed = !this.isNavbarCollapsed;
   }
 } 

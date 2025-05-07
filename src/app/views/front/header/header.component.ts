@@ -13,12 +13,17 @@ import { AuthService } from '../../../services/auth.service';
 })
 export class HeaderComponent {
   appName: Signal<string>;
+  isNavbarCollapsed = true;
 
   constructor(
     private stateService: StateService,
     private authService: AuthService
   ) {
     this.appName = this.stateService?.appName;
+  }
+
+  toggleNavbar() {
+    this.isNavbarCollapsed = !this.isNavbarCollapsed;
   }
 
   isAuthenticated(): boolean {
