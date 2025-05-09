@@ -2,3 +2,7 @@ node_modules/
 *.local
 *.log
 .runtimeconfig.json
+saved_data/
+.env
+screenshot
+

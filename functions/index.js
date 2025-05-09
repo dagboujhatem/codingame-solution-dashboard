@@ -1,16 +1,21 @@
 import * as functions from 'firebase-functions';
 import { setGlobalOptions } from 'firebase-functions/v2'
-
+import { defineSecret } from 'firebase-functions/params';
 import * as admin from 'firebase-admin';
+import { initializeApp } from "firebase-admin/app";
 import express from 'express';
 import cors from 'cors';
 import Stripe from 'stripe';
 import morgan from 'morgan';
 import compression from 'compression';
+import dotenv from 'dotenv';
+dotenv.config();
+const stripeSecret = process.env.STRIPE_SECRET || defineSecret('STRIPE_SECRET');
+const REGION = process.env.REGION || defineSecret('REGION') || 'us-central1'; // Default region
+initializeApp();
+setGlobalOptions({ region: REGION })
 
-//admin.initializeApp();
-setGlobalOptions({ region: 'europe-west9' })
-const stripe = new Stripe(functions.config().stripe?.secret, {
+const stripe = new Stripe(stripeSecret, {
   apiVersion: '2023-10-16',
 });
 

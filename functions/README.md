@@ -88,6 +88,8 @@ When you make changes to your functions, follow these steps to redeploy them:
 2. **Redeploy your functions:**
  ```bash
 firebase deploy --only functions
+# To see logs
+firebase functions:log
  ```
  This will deploy the updated functions to Firebase.
 
@@ -127,7 +129,7 @@ firebase functions:list
 firebase functions:list --region us-central1
  ```
 
-## 8. Additional Configuration
+## 8. Additional Configuration (Firebase Functions v2 → functions.config() is deprecated)
 
 If you need to configure environment variables for your Firebase functions, you can do so with the Firebase CLI:
 
@@ -174,6 +176,40 @@ After that, you can run the emulators:
 
  ```bash
 firebase emulators:start --only functions
+# OR
+firebase emulators:start --only functions,firestore,auth
+# OR 
+# You can export emulator data
+firebase emulators:export ./functions/saved_data
+# After that, run the emulator with importing data
+firebase emulators:start --import=./functions/saved_data --only functions,firestore,auth
+ ```
+
+## 9. Additional Configuration (Recommended for setting the env. variables)
+
+If you use `functions:config`, this way is deprecated in V2 of Firebase Functions. Look that: 
+
+![Firebase Function Error](./screenshots/firebase-function-error.png)
+
+So you can use the **Firebase Secrets Manager**, in this case you can use this command to define secret variable: 
+
+ ```bash
+ firebase functions:secrets:set STRIPE_SECRET
+ ```
+
+After that, you can use this code to access to the secret:
+
+ ```javascript
+ import { defineSecret } from 'firebase-functions/params';
+const stripeSecret = process.env.STRIPE_SECRET || defineSecret('STRIPE_SECRET');
+ ```
+ - View an Existing Secret: 
+ ```bash
+firebase functions:secrets:get STRIPE_SECRET
+ ```
+ - Delete a Secret: 
+ ```bash
+firebase functions:secrets:destroy STRIPE_SECRET
  ```
 
 ## Troubleshooting: 
