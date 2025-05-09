@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { StateService } from '../../../../services/state.service';
 import { AuthService } from '../../../../services/auth.service';
+import { ThemeSwitchComponent } from '../theme-switch/theme-switch.component';
 
 @Component({
   selector: 'front-header',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, ThemeSwitchComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })

@@ -1,0 +1,18 @@
+<c-dropdown alignment="end" variant="nav-item">
+  <button [caret]="false" cDropdownToggle aria-label="Open theme picker">
+    <svg cIcon [name]="icons()" size="lg" class="icon-white"></svg>
+  </button>
+  <div cDropdownMenu>
+    @for (mode of colorModes; track mode.name) {
+      <button
+        (click)="changeTheme(mode.name)"
+        [active]="currentTheme() === mode.name"
+        cDropdownItem
+        class="d-flex align-items-center"
+      >
+        <svg cIcon class="me-2" [name]="mode.icon" size="lg"></svg>
+        {{ mode.text }}
+      </button>
+    }
+  </div>
+</c-dropdown> 

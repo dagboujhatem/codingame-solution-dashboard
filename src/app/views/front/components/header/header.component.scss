@@ -49,6 +49,10 @@ header h1 {
       }
     }
 
+    .nav-item {
+      text-align: left;
+    }
+
     .nav-link {
       color: white;
       font-weight: 500;
@@ -94,6 +98,11 @@ main {
         .nav-link {
           color: #333;
 
+          &.btn-primary {
+            padding: 0.5rem 1rem !important;
+            margin-left: 0 !important;
+          }
+
           &:hover {
             color: var(--primary-color);
           }
@@ -101,8 +110,7 @@ main {
       }
 
       .nav-link.btn-primary {
-        margin: 0.5rem 0;
-        text-align: center;
+        text-align: left;
       }
     }
   }

@@ -69,6 +69,11 @@
         .nav-link {
           color: #333;
 
+          &.btn-primary {
+            padding: 0.5rem 1rem !important;
+            margin-left: 0 !important;
+          }
+
           &:hover {
             color: var(--primary-color);
           }
@@ -76,8 +81,8 @@
       }
 
       .nav-link.btn-primary {
-        margin: 0.5rem 0;
-        text-align: center;
+        //margin: 0 0 !important;
+        text-align: left;
       }
     }
   }

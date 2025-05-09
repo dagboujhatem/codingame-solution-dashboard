@@ -37,7 +37,7 @@ export class AppComponent implements OnInit {
     });
     // iconSet singleton
     this.#iconSetService.icons = { ...iconSubset };
-    this.#colorModeService.localStorageItemName.set('theme-default');
+    this.#colorModeService.localStorageItemName.set('theme');
     this.#colorModeService.eventName.set('ColorSchemeChange');
   }
 
