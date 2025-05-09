@@ -25,7 +25,7 @@ const addBearerToken = async (
 };
 
 export const bearerTokenInterceptor: HttpInterceptorFn = (req, next) => {
-  if (req.url.includes('firebase')) {
+  if (true) { //req.url.includes('firebase')
     return from(addBearerToken(req, next));
   } else {
     return next(req);

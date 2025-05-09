@@ -3,17 +3,32 @@ import { setGlobalOptions } from 'firebase-functions/v2'
 import { defineSecret } from 'firebase-functions/params';
 import * as admin from 'firebase-admin';
 import { initializeApp } from "firebase-admin/app";
+import { getAuth } from 'firebase-admin/auth';
 import express from 'express';
 import cors from 'cors';
 import Stripe from 'stripe';
 import morgan from 'morgan';
 import compression from 'compression';
 import dotenv from 'dotenv';
+import passport from "passport";
+import { Strategy as BearerStrategy } from "passport-http-bearer";
 dotenv.config();
 const stripeSecret = process.env.STRIPE_SECRET || defineSecret('STRIPE_SECRET');
 const REGION = process.env.REGION || defineSecret('REGION') || 'us-central1'; // Default region
 initializeApp();
+const auth = getAuth();
 setGlobalOptions({ region: REGION })
+passport.use(
+  new BearerStrategy(async (token, done) => {
+    try {
+      const decodedToken = await auth.verifyIdToken(token); 
+      return done(null, decodedToken);
+    } catch (error) {
+      console.log('error', error);
+      return done(null, false);
+    }
+  })
+);
 
 const stripe = new Stripe(stripeSecret, {
   apiVersion: '2023-10-16',
@@ -22,13 +37,16 @@ const stripe = new Stripe(stripeSecret, {
 const app = express();
 app.use(cors());
 app.use(morgan('dev'));
-app.use(compression())
+app.use(compression());
+app.use(passport.initialize());
 
-app.post("/create-product", async (req, res) => {
-  try {
-    // Step 1: Create the product in Stripe
-    const { name, description, price, interval } = req.body;
-    const product = await stripe.products.create({
+app.post("/create-product",
+  passport.authenticate("bearer", { session: false }),
+  async (req, res) => {
+    try {
+      // Step 1: Create the product in Stripe
+      const { name, description, price, interval } = req.body;
+      const product = await stripe.products.create({
       name,
       description,
     });
@@ -50,7 +68,9 @@ app.post("/create-product", async (req, res) => {
   }
 });
 
-app.put("/update-product/:productId", async (req, res) => {
+app.put("/update-product/:productId",
+  passport.authenticate("bearer", { session: false }),
+  async (req, res) => {
   try {
     const { productId } = req.params;
     const { name, description, price, interval } = req.body;
@@ -82,7 +102,9 @@ app.put("/update-product/:productId", async (req, res) => {
   }
 });
 
-app.delete("/delete-product/:productId", async (req, res) => {
+app.delete("/delete-product/:productId",
+  passport.authenticate("bearer", { session: false }),
+  async (req, res) => {
   try {
     const { productId } = req.params;
     const prices = await stripe.prices.list({ product: productId });
@@ -99,7 +121,9 @@ app.delete("/delete-product/:productId", async (req, res) => {
 });
 
 // Create a Payment Intent based on the price.
-app.post("/create-payment-intent", async (req, res) => {
+app.post("/create-payment-intent",
+  passport.authenticate("bearer", { session: false }),
+  async (req, res) => {
   try {
     const { productId, username, email } = req.body;
     // Step 0: Create a new customer if the customer does not exist
