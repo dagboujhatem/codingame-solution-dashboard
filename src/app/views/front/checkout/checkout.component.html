@@ -1,43 +1,44 @@
-<front-header></front-header>
-<front-breadcrumb>Checkout</front-breadcrumb>
-<main>
-  <section class="container my-5">
-    <div class="row">
-      <div class="col-md-12">
-        <h1 class="text-center mb-4">Review Your Order & Complete Checkout</h1>
-      </div>
-      <div *ngIf="subscriptionData" class="col-md-6">
-        <h2>Order Summary</h2>
-        <hr>
-        <div class="d-flex justify-content-between">
-          <strong class="p-2">{{ subscriptionData.name }} offer:</strong>
-          <span *ngIf="subscriptionData.promoPrice; else normalPrice" class="p-2">
-            {{ subscriptionData.promoPrice | currency:'EUR':'symbol':'1.2' }}
-          </span>
+<div class="page-wrapper">
+  <front-header></front-header>
+  <front-breadcrumb>Checkout</front-breadcrumb>
+  <main>
+    <section class="container my-5">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 class="text-center mb-4">Review Your Order & Complete Checkout</h1>
         </div>
-        <hr>
-        <div class="d-flex justify-content-between">
-          <strong class="p-2">Subtotal:</strong>
-          <span *ngIf="subscriptionData.promoPrice; else normalPrice" class="p-2">
-            {{ subscriptionData.promoPrice | currency:'EUR':'symbol':'1.2' }}
-          </span>
+        <div *ngIf="subscriptionData" class="col-md-6">
+          <h2>Order Summary</h2>
+          <hr>
+          <div class="d-flex justify-content-between">
+            <strong class="p-2">{{ subscriptionData.name }} offer:</strong>
+            <span *ngIf="subscriptionData.promoPrice; else normalPrice" class="p-2">
+              {{ subscriptionData.promoPrice | currency:'EUR':'symbol':'1.2' }}
+            </span>
+          </div>
+          <hr>
+          <div class="d-flex justify-content-between">
+            <strong class="p-2">Subtotal:</strong>
+            <span *ngIf="subscriptionData.promoPrice; else normalPrice" class="p-2">
+              {{ subscriptionData.promoPrice | currency:'EUR':'symbol':'1.2' }}
+            </span>
+          </div>
+          <hr>
+          <div class="d-flex justify-content-between">
+            <strong class="p-2">Total due:</strong>
+            <span *ngIf="subscriptionData.promoPrice; else normalPrice" class="p-2">
+              {{ subscriptionData.promoPrice | currency:'EUR':'symbol':'1.2' }}
+            </span>
+          </div>
+          <ng-template #normalPrice>
+            <span class="p-2">{{ subscriptionData.price | currency:'EUR':'symbol':'1.2' }}</span>
+          </ng-template>
         </div>
-        <hr>
-        <div class="d-flex justify-content-between">
-          <strong class="p-2">Total due:</strong>
-          <span *ngIf="subscriptionData.promoPrice; else normalPrice" class="p-2">
-            {{ subscriptionData.promoPrice | currency:'EUR':'symbol':'1.2' }}
-          </span>
-        </div>
-        <ng-template #normalPrice>
-          <span class="p-2">{{ subscriptionData.price | currency:'EUR':'symbol':'1.2' }}</span>
-        </ng-template>
-      </div>
-      <div class="col-md-6">
-        <h2>Choose a payment method</h2>
-        <hr>
-        <div class="d-flex justify-content-center gap-3">
-          <!-- <button (click)="payWithPayPal($event)" class="btn btn-primary d-flex align-items-center" id="paypal-button">
+        <div class="col-md-6">
+          <h2>Choose a payment method</h2>
+          <hr>
+          <div class="d-flex justify-content-center gap-3">
+            <!-- <button (click)="payWithPayPal($event)" class="btn btn-primary d-flex align-items-center" id="paypal-button">
             <svg cIcon class="me-2" name="cibCcPaypal"></svg> PayPal
           </button>
           <button (click)="payWithGooglePay($event)" class="btn btn-dark d-flex align-items-center" id="google-pay-button">
@@ -46,32 +47,34 @@
           <button (click)="payWithApplePay($event)" class="btn btn-secondary d-flex align-items-center" id="apple-pay-button">
             <svg cIcon class="me-2" name="cibCcApplePay"></svg> Apple Pay
           </button> -->
-          <div #googlePayElementRef style="width: 300px;"></div>
-          <div #applePayElementRef style="width: 300px;"></div>
-          <div #paypalElementRef style="width: 300px;"></div>
-        </div>
-        <div class="d-flex align-items-center my-3">
-          <hr class="flex-grow-1">
-          <span class="mx-2 text-muted">Or pay with card</span>
-          <hr class="flex-grow-1">
-        </div>
-        <form>
-          <div class="form-group">
-            <label for="cardElement" class="form-label">
-              <strong>Card information</strong>
-            </label>
-            <div #cardElement class="form-control"></div>
+            <div #googlePayElementRef style="width: 300px;"></div>
+            <div #applePayElementRef style="width: 300px;"></div>
+            <div #paypalElementRef style="width: 300px;"></div>
           </div>
-          <div *ngIf="paymentError" class="alert alert-danger mt-3">
-            {{ paymentError }}
+          <div class="d-flex align-items-center my-3">
+            <hr class="flex-grow-1">
+            <span class="mx-2 text-muted">Or pay with card</span>
+            <hr class="flex-grow-1">
           </div>
-          <button type="button" (click)="payWithCard($event)" class="btn btn-primary w-100 mt-3" [disabled]="loading || !cardValid">
-            <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-            <svg cIcon class="me-2" name="cibCcStripe"></svg> Pay Now
-          </button>
-        </form>
+          <form>
+            <div class="form-group">
+              <label for="cardElement" class="form-label">
+                <strong>Card information</strong>
+              </label>
+              <div #cardElement class="form-control"></div>
+            </div>
+            <div *ngIf="paymentError" class="alert alert-danger mt-3">
+              {{ paymentError }}
+            </div>
+            <button type="button" (click)="payWithCard($event)" class="btn btn-primary w-100 mt-3"
+              [disabled]="loading || !cardValid">
+              <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              <svg cIcon class="me-2" name="cibCcStripe"></svg> Pay Now
+            </button>
+          </form>
+        </div>
       </div>
-    </div>
-  </section>
-</main>
-<front-footer></front-footer>
+    </section>
+  </main>
+  <front-footer></front-footer>
+</div>

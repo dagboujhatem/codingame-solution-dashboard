@@ -57,14 +57,6 @@ export const routes: Routes = [
     ]
   },
   {
-    path: '404',
-    loadComponent: () => import('./views/pages/page404/page404.component').then(m => m.Page404Component),
-  },
-  {
-    path: '500',
-    loadComponent: () => import('./views/pages/page500/page500.component').then(m => m.Page500Component),
-  },
-  {
     path: 'login',
     loadComponent: () => import('./views/pages/login/login.component').then(m => m.LoginComponent),
   },
@@ -79,6 +71,10 @@ export const routes: Routes = [
   {
     path: 'reset-password',
     loadComponent: () => import('./views/pages/reset-password/reset-password.component').then(m => m.ResetPasswordComponent),
+  },
+  {
+    path: 'terms-of-use',
+    loadComponent: () => import('./views/front/terms-of-use/terms-of-use.component').then(m => m.TermsOfUseComponent)
   },
   {
     path: 'privacy-policy',
@@ -96,6 +92,14 @@ export const routes: Routes = [
     path: 'checkout/:id',
     canActivate: [authenticationGuard],
     loadComponent: () => import('./views/front/checkout/checkout.component').then(m => m.CheckoutComponent),
+  },
+  {
+    path: '404',
+    loadComponent: () => import('./views/pages/page404/page404.component').then(m => m.Page404Component),
+  },
+  {
+    path: '500',
+    loadComponent: () => import('./views/pages/page500/page500.component').then(m => m.Page500Component),
   },
   { path: '**', redirectTo: '404' }
 ];

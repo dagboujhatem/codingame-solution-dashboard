@@ -1,12 +1,25 @@
-
 main {
   padding: 20px;
+  background-color: var(--surface-color);
+  color: var(--text-color);
 }
 h1, h2 {
   color: var(--primary-color);
 }
 p {
   margin-bottom: 1rem;
+  color: var(--text-color);
+}
+
+// Variables CSS pour les thèmes
+:root {
+  --surface-color: #ffffff;
+  --text-color: #333;
+}
+
+[data-theme="dark"] {
+  --surface-color: #1a1a1a;
+  --text-color: #ffffff;
 }
 
 

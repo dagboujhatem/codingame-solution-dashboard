@@ -1,7 +1,27 @@
 @use "sass:color";
 
+:root {
+  --bg-color: #ffffff;
+  --text-color: #333333;
+  --card-bg: #ffffff;
+  --section-bg: #f8f9fa;
+  --feature-text: #666666;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-bs-theme="dark"] {
+  --bg-color: #1a1a1a;
+  --text-color: #ffffff;
+  --card-bg: #2d2d2d;
+  --section-bg: #2d2d2d;
+  --feature-text: #cccccc;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+}
+
 .home-container {
   overflow-x: hidden;
+  background-color: var(--bg-color);
+  color: var(--text-color);
 }
 
 section {
@@ -95,19 +115,20 @@ section {
 
 // Features Section
 .features-section {
-  background-color: #f8f9fa;
+  background-color: var(--section-bg);
 
   .feature-card {
-    background: white;
+    background: var(--card-bg);
     border-radius: 15px;
     padding: 2rem;
     text-align: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     height: 100%;
+    color: var(--text-color);
 
     &:hover {
       transform: translateY(-10px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 10px 30px var(--shadow-color);
     }
 
     .feature-image {
@@ -123,7 +144,7 @@ section {
     }
 
     p {
-      color: #666;
+      color: var(--feature-text);
       margin-bottom: 0;
     }
   }
@@ -136,6 +157,7 @@ section {
     padding: 2rem;
     position: relative;
     transition: transform 0.3s ease;
+    color: var(--text-color);
 
     &:hover {
       transform: translateY(-5px);
@@ -167,7 +189,7 @@ section {
     }
 
     p {
-      color: #666;
+      color: var(--feature-text);
       margin-bottom: 0;
     }
   }
@@ -175,7 +197,7 @@ section {
 
 // Contact Section
 .contact-section {
-  background-color: #f8f9fa;
+  background-color: var(--section-bg);
 
   .contact-image {
     max-width: 100%;
@@ -189,7 +211,7 @@ section {
   }
 
   .lead {
-    color: #666;
+    color: var(--feature-text);
     margin-bottom: 2rem;
   }
 
@@ -209,23 +231,23 @@ section {
 // Discord Section
 .discord-section {
   padding: 80px 0;
-  background-color: var(--cui-body-bg);
-  color: var(--cui-body-color);
+  background-color: var(--bg-color);
+  color: var(--text-color);
 
   h2 {
     margin-bottom: 1.5rem;
-    color: var(--cui-body-color);
+    color: var(--text-color);
   }
 
   .lead {
     font-size: 1.25rem;
     margin-bottom: 1rem;
-    color: var(--cui-body-color);
+    color: var(--text-color);
   }
 
   p {
     margin-bottom: 2rem;
-    color: var(--cui-body-color);
+    color: var(--text-color);
   }
 
   .btn-primary {
