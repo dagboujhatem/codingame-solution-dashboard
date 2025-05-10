@@ -10,7 +10,12 @@ export class SideBarService {
   private navItems = signal<INavData[]>([... navItems]);
   private userRoleSignal = signal<string>('');
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) {
+     // S'abonner aux changements d'état d'authentification
+     this.authService.authState$.subscribe(state => {
+      this.updateUserRole();
+    });
+  }
 
   async updateUserRole(): Promise<void> {
     const role = await this.authService.getAuthUserRole();

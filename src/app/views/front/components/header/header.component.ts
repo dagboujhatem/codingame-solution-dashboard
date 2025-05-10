@@ -1,33 +1,33 @@
-import { Component, Signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { StateService } from '../../../../services/state.service';
+import { Component, OnInit, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../../services/auth.service';
 import { ThemeSwitchComponent } from '../theme-switch/theme-switch.component';
+import { CommonModule } from '@angular/common';
+import { StateService } from '../../../../services/state.service';
 
 @Component({
   selector: 'front-header',
   standalone: true,
-  imports: [CommonModule, RouterModule, ThemeSwitchComponent],
+  imports: [RouterLink, CommonModule, ThemeSwitchComponent],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss'
+  styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent {
-  appName: Signal<string>;
+export class HeaderComponent implements OnInit {
+  private authService = inject(AuthService);
+  private stateService = inject(StateService);
+  
+  isAuthenticated = false;
+  appName = this.stateService.appName;
   isNavbarCollapsed = true;
 
-  constructor(
-    private stateService: StateService,
-    private authService: AuthService
-  ) {
-    this.appName = this.stateService?.appName;
+  ngOnInit() {
+    // S'abonner aux changements d'état d'authentification
+    this.authService.authState$.subscribe(state => {
+      this.isAuthenticated = state;
+    });
   }
 
   toggleNavbar() {
     this.isNavbarCollapsed = !this.isNavbarCollapsed;
-  }
-
-  isAuthenticated(): boolean {
-    return this.authService.isAuthenticated();
   }
 }

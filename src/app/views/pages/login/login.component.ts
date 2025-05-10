@@ -71,7 +71,6 @@ export class LoginComponent implements OnInit {
           }else{
             this.router.navigate(['/dashboard']);
           }
-          this.sideBarService.updateUserRole();
         },
         (error:any) => {
           if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {

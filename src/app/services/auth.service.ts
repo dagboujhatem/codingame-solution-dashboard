@@ -7,10 +7,11 @@ import {
   confirmPasswordReset,
   signOut,
   updateEmail,
-  updatePassword
+  updatePassword,
+  onAuthStateChanged
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import { from, Observable } from 'rxjs';
+import { from, Observable, BehaviorSubject } from 'rxjs';
 import { Firestore, doc, setDoc, getDoc, updateDoc } from '@angular/fire/firestore';
 import { User } from '../models/user.interface';
 
@@ -18,10 +19,17 @@ import { User } from '../models/user.interface';
   providedIn: 'root'
 })
 export class AuthService {
+  private authStateSubject = new BehaviorSubject<boolean>(false);
+  authState$ = this.authStateSubject.asObservable();
 
   constructor(private auth: Auth,
     private router: Router,
-    private firestore: Firestore) { }
+    private firestore: Firestore) {
+    // Écouter les changements d'état d'authentification Firebase
+    onAuthStateChanged(this.auth, (user) => {
+      this.authStateSubject.next(!!user);
+    });
+  }
 
   login(email: string, password: string) {
     return from(signInWithEmailAndPassword(this.auth, email, password));
@@ -49,7 +57,9 @@ export class AuthService {
   }
 
   logout() {
-    return signOut(this.auth).then(() => this.router.navigate(['/home']));
+    return signOut(this.auth).then(() => {
+      this.router.navigate(['/home']);
+    });
   }
 
   getUserProfile() {
@@ -89,8 +99,7 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    const currentUser = this.auth.currentUser;
-    return !!currentUser;
+    return this.authStateSubject.value;
   }
 
   async getJWT() {
@@ -126,5 +135,21 @@ export class AuthService {
   async authUserhasRole(role: string): Promise<boolean> {
     const authUserRole = await this.getAuthUserRole();
     return authUserRole === role;
+  }
+
+  async createUser(userData: User) {
+    const userRef = doc(this.firestore, 'users', userData.uid);
+    await setDoc(userRef, userData);
+  }
+
+  async getUser(uid: string): Promise<User | null> {
+    const userRef = doc(this.firestore, 'users', uid);
+    const userSnap = await getDoc(userRef);
+    return userSnap.exists() ? userSnap.data() as User : null;
+  }
+
+  async updateUser(uid: string, data: Partial<User>) {
+    const userRef = doc(this.firestore, 'users', uid);
+    await updateDoc(userRef, data);
   }
 }
