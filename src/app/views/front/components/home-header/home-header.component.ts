@@ -16,16 +16,17 @@ export class HomeHeaderComponent {
   appName: Signal<string>;
   scrolled = false;
   isNavbarCollapsed = true;
+  isAuthenticated = false;
 
   constructor(
     private stateService: StateService,
     private authService: AuthService
   ) {
-    this.appName = this.stateService?.appName;
-  }
-
-  isAuthenticated(): boolean {
-    return this.authService.isAuthenticated();
+      this.appName = this.stateService?.appName;
+      // S'abonner aux changements d'état d'authentification
+      this.authService.authState$.subscribe(state => {
+        this.isAuthenticated = state;
+      });
   }
 
   @HostListener('window:scroll', [])

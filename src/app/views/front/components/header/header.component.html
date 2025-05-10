@@ -16,7 +16,7 @@
           <li class="nav-item">
             <a class="nav-link" routerLink="/helps">Helps</a>
           </li>
-          <ng-container *ngIf="!isAuthenticated(); else authenticatedLinks">
+          <ng-container *ngIf="!isAuthenticated; else authenticatedLinks">
             <li class="nav-item">
               <a class="nav-link" routerLink="/login">Login</a>
             </li>
