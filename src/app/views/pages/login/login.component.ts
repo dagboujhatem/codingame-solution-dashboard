@@ -9,6 +9,8 @@ import { Router, RouterLink } from '@angular/router';
 import { CommonComponent } from '../common/common.component';
 import { StateService } from '../../../services/state.service';
 import { SideBarService } from '../../../services/side-bar.service';
+import { HeaderComponent } from '../../front/components/header/header.component';
+import { FooterComponent } from '../../front/components/footer/footer.component';
 
 @Component({
     selector: 'app-login',
@@ -31,7 +33,9 @@ import { SideBarService } from '../../../services/side-bar.service';
         IconDirective,
         FormControlDirective,
         ButtonDirective,
-        NgStyle
+        NgStyle,
+        HeaderComponent,
+        FooterComponent
     ],
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss']

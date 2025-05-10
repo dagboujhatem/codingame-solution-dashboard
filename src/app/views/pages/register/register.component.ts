@@ -7,12 +7,14 @@ import { NgIf } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { Router, RouterLink } from '@angular/router';
 import { StateService } from '../../../services/state.service';
+import { HeaderComponent } from '../../front/components/header/header.component';
+import { FooterComponent } from '../../front/components/footer/footer.component';
 
 @Component({
     selector: 'app-register',
     templateUrl: './register.component.html',
     styleUrls: ['./register.component.scss'],
-    imports: [NgIf, RouterLink, ReactiveFormsModule, ContainerComponent, RowComponent, ColComponent, TextColorDirective, CardComponent, CardBodyComponent, FormDirective, InputGroupComponent, InputGroupTextDirective, IconDirective, FormControlDirective, ButtonDirective]
+    imports: [NgIf, RouterLink, ReactiveFormsModule, ContainerComponent, RowComponent, ColComponent, TextColorDirective, CardComponent, CardBodyComponent, FormDirective, InputGroupComponent, InputGroupTextDirective, IconDirective, FormControlDirective, ButtonDirective, HeaderComponent, FooterComponent]
 })
 export class RegisterComponent implements OnInit {
   signupForm!: FormGroup;
