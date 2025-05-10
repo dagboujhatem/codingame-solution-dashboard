@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { WidgetsDropdownComponent } from '../widgets/widgets-dropdown/widgets-dropdown.component';
+import { WidgetsDropdownComponent } from './widgets-dropdown/widgets-dropdown.component';
 import { CardComponent, CardBodyComponent } from '@coreui/angular';
 import { NgIf } from '@angular/common';
 import { AuthService } from '../../services/auth.service';

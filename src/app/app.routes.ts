@@ -58,19 +58,19 @@ export const routes: Routes = [
   },
   {
     path: 'login',
-    loadComponent: () => import('./views/pages/login/login.component').then(m => m.LoginComponent),
+    loadComponent: () => import('./views/auth/login/login.component').then(m => m.LoginComponent),
   },
   {
     path: 'register',
-    loadComponent: () => import('./views/pages/register/register.component').then(m => m.RegisterComponent),
+    loadComponent: () => import('./views/auth/register/register.component').then(m => m.RegisterComponent),
   },
   {
     path: 'forgot-password',
-    loadComponent: () => import('./views/pages/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent),
+    loadComponent: () => import('./views/auth/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent),
   },
   {
     path: 'reset-password',
-    loadComponent: () => import('./views/pages/reset-password/reset-password.component').then(m => m.ResetPasswordComponent),
+    loadComponent: () => import('./views/auth/reset-password/reset-password.component').then(m => m.ResetPasswordComponent),
   },
   {
     path: 'terms-of-use',
@@ -95,11 +95,11 @@ export const routes: Routes = [
   },
   {
     path: '404',
-    loadComponent: () => import('./views/pages/page404/page404.component').then(m => m.Page404Component),
+    loadComponent: () => import('./views/error/page404/page404.component').then(m => m.Page404Component),
   },
   {
     path: '500',
-    loadComponent: () => import('./views/pages/page500/page500.component').then(m => m.Page500Component),
+    loadComponent: () => import('./views/error/page500/page500.component').then(m => m.Page500Component),
   },
   { path: '**', redirectTo: '404' }
 ];
