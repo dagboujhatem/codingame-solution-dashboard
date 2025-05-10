@@ -14,11 +14,11 @@
                     <svg cIcon name="cilUser"></svg>
                   </span>
                   <input autoComplete="email" cFormControl placeholder="E-mail" formControlName="email"/>
+                  <div class="invalid-feedback d-block" *ngIf="signInForm.get('email')?.invalid && signInForm.get('email')?.touched">
+                    <small *ngIf="signInForm.get('email')?.hasError('required')">E-mail is required.</small>
+                    <small *ngIf="signInForm.get('email')?.hasError('email')">Please enter a valid email.</small>
+                  </div>
                 </c-input-group>
-                <div *ngIf="signInForm.get('email')?.invalid && signInForm.get('email')?.touched">
-                  <small *ngIf="signInForm.get('email')?.hasError('required')">E-mail is required.</small>
-                  <small *ngIf="signInForm.get('email')?.hasError('email')">Please enter a valid email.</small>
-                </div>
                 <c-input-group class="mb-4">
                   <span cInputGroupText>
                     <svg cIcon name="cilLockLocked"></svg>
@@ -30,11 +30,11 @@
                     type="password"
                     formControlName="password"
                   />
+                  <div class="invalid-feedback d-block" *ngIf="signInForm.get('password')?.invalid && signInForm.get('password')?.touched">
+                    <small *ngIf="signInForm.get('password')?.hasError('required')">Password is required.</small>
+                    <small *ngIf="signInForm.get('password')?.hasError('minlength')">Password must be at least 6 characters.</small>
+                  </div>
                 </c-input-group>
-                <div *ngIf="signInForm.get('password')?.invalid && signInForm.get('password')?.touched">
-                  <small *ngIf="signInForm.get('password')?.hasError('required')">Password is required.</small>
-                  <small *ngIf="signInForm.get('password')?.hasError('minlength')">Password must be at least 6 characters.</small>
-                </div>
                 <c-row>
                   <c-col xs="6">
                     <button cButton class="px-4" color="primary" type="submit" [disabled]="signInForm.invalid">
