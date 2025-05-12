@@ -1,7 +1,7 @@
 <div class="switch-toggle">
-    <label *ngIf="label" [for]="controlName" class="form-check-label me-2">{{ label }}</label>
+    <label *ngIf="switchLabel" [for]="switchControlName" class="form-check-label me-2">{{ switchLabel }}</label>
     <label class="switch">
-        <input type="checkbox" [formControl]="control" [id]="controlName" />
+        <input type="checkbox" [formControl]="switchControl" [id]="switchControlName" />
         <span class="slider">
             <svg class="slider-icon" viewBox="0 0 20 20" fill="none">
                 <polyline points="4 11 8 15 16 6" stroke="currentColor" fill="none" />

@@ -1,11 +1,12 @@
 import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { NgxDatatableModule, SortType } from '@swimlane/ngx-datatable';
+import { ColumnMode, NgxDatatableModule, SortType } from '@swimlane/ngx-datatable';
 import { SearchPipe } from '../../pipes/search.pipe';
 import { FormsModule } from '@angular/forms';
 import { IconDirective } from '@coreui/icons-angular';
 import { cilPen, cilTrash, cilYen } from '@coreui/icons';
+import { datatableMessages } from './messages';
 
 export interface Column {
   name: string;
@@ -24,13 +25,13 @@ export interface Column {
 export class DatatableComponent implements OnChanges {
   @Input() data: any[] = [];
   @Input() columns: Column[] = [];
-  @Input() columnMode: 'standard' | 'force' | 'flex' = 'force';
+  @Input() columnMode: ColumnMode = ColumnMode.force;
   @Input() headerHeight: number = 50;
   @Input() footerHeight: number = 50;
   @Input() rowHeight: number = 50 ;
   @Input() sortType: SortType = SortType.multi;
-  @Input() limit: number = 10;
-  @Input() messages: any = {};
+  @Input() limit: number = 5;
+  @Input() messages: any = datatableMessages;
   @Input() sorts: any[] = [];
 
   // Action buttons configuration

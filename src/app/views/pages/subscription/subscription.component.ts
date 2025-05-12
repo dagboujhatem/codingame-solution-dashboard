@@ -114,4 +114,8 @@ export class SubscriptionComponent implements OnInit {
     this.subscriptionForm.reset();
     this.currentSubscriptionUId = null;
   }
+
+  getSwitchControl(): FormControl {
+    return this.subscriptionForm.get('unlimited') as FormControl;
+  }
 }

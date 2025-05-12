@@ -122,4 +122,8 @@ export class UsersComponent {
     this.userForm.reset();
     this.currentUserUId = null;
   }
+  
+  getSwitchControl(): FormControl {
+    return this.userForm.get('unlimited') as FormControl;
+  }
 }

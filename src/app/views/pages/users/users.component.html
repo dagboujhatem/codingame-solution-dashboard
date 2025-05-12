@@ -81,9 +81,9 @@
             </ng-container>
           </div>
         </div>
-        <div class="col-md-6 mt-2">
-          <switch-toggle [control]="userForm.get('unlimited')!" controlName="unlimited"
-          label="Unlimited Tokens"></switch-toggle>
+        <div class="col-md-6 mt-2" *ngIf="userForm.get('unlimited')!">
+          <switch-toggle [switchControl]="getSwitchControl()" [switchControlName]="'unlimited'"
+          [switchLabel]="'Unlimited Tokens'"></switch-toggle>
         </div>
         <div class="col-md-12 mt-2 d-flex justify-content-end">
           <button type="button" class="btn btn-secondary me-2 text-white" (click)="clearForm()">

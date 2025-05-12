@@ -10,7 +10,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
     styleUrls: ['./switch-toggle.component.scss']
 })
 export class SwitchToggleComponent {
-    @Input() control!: FormControl;
-    @Input() controlName!: string;
-    @Input() label?: string;
+    @Input() switchControl!: FormControl;
+    @Input() switchControlName!: string;
+    @Input() switchLabel?: string;
 }

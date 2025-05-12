@@ -43,8 +43,8 @@
             [ngClass]="{'is-invalid': subscriptionForm.get('promoPrice')?.invalid && subscriptionForm.get('promoPrice')?.touched, 'is-valid': subscriptionForm.get('promoPrice')?.valid && subscriptionForm.get('promoPrice')?.touched}" />
         </div>
         <div class="col-md-6 mt-2">
-          <switch-toggle [control]="subscriptionForm.get('unlimited')!" controlName="unlimited"
-            label="Unlimited Tokens"></switch-toggle>
+          <switch-toggle [switchControl]="getSwitchControl()" [switchControlName]="'unlimited'"
+            [switchLabel]="'Unlimited Tokens'"></switch-toggle>
         </div>
           
         <div class="col-md-12 mt-2 d-flex justify-content-end">

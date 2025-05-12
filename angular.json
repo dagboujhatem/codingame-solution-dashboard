@@ -40,7 +40,9 @@
             ],
             "styles": [
               "src/scss/styles.scss",
-              "node_modules/cookieconsent/build/cookieconsent.min.css"
+              "node_modules/cookieconsent/build/cookieconsent.min.css",
+              "node_modules/@swimlane/ngx-datatable/themes/bootstrap.css",
+              "node_modules/@swimlane/ngx-datatable/assets/icons.css"
             ],
             "scripts": [
               "node_modules/cookieconsent/build/cookieconsent.min.js"
