@@ -6,24 +6,24 @@
     <h4>Setting Data</h4>
     <div class="row">
       <div class="col-md-5">
-        <input [(ngModel)]="newSetting.key" class="form-control" placeholder="Key" required
-        #keyInput="ngModel" [ngClass]="{'is-invalid': keyInput.invalid && keyInput.touched}"/>
+        <input [(ngModel)]="newSetting.key" class="form-control" placeholder="Key" required #keyInput="ngModel"
+          [ngClass]="{'is-invalid': keyInput.invalid && keyInput.touched}" />
         <div *ngIf="keyInput.invalid && keyInput.touched" class="d-block invalid-feedback">
           Key is required.
         </div>
       </div>
       <div class="col-md-5">
-        <input [(ngModel)]="newSetting.value" class="form-control" placeholder="Value" required
-        #valueInput="ngModel" [ngClass]="{'is-invalid': valueInput.invalid && valueInput.touched}"/>
+        <input [(ngModel)]="newSetting.value" class="form-control" placeholder="Value" required #valueInput="ngModel"
+          [ngClass]="{'is-invalid': valueInput.invalid && valueInput.touched}" />
         <div *ngIf="valueInput.invalid && valueInput.touched" class="d-block invalid-feedback">
           Value is required.
         </div>
       </div>
       <div class="col-md-2">
         <button class="btn btn-success w-100 text-white" (click)="saveSetting()"
-        [disabled]="keyInput.invalid || valueInput.invalid">
+          [disabled]="keyInput.invalid || valueInput.invalid">
           <svg [cIcon]="icons.cilSave"></svg>
-          {{ settingUId  ? 'Update' : 'Add' }}
+          {{ settingUId ? 'Update' : 'Add' }}
         </button>
       </div>
     </div>
@@ -31,35 +31,18 @@
 
   <!-- Settings List -->
   <div class="card p-3">
-    <h4>Existing Settings</h4>
-    <div class="table-responsive">
-      <table class="table table-bordered table-striped">
-        <thead class="thead-dark">
-          <tr>
-            <th>Key</th>
-            <th>Value</th>
-            <th class="text-center">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let setting of settings">
-            <td data-label="Key">{{ setting.key }}</td>
-            <td data-label="Value">{{ setting.value }}</td>
-            <td data-label="Actions" class="text-center">
-              <div class="d-flex justify-content-center gap-2">
-                <button class="btn btn-primary btn-sm text-white d-inline-flex" (click)="showUpdateForm(setting)">
-                  <svg [cIcon]="icons.cilPen"></svg> 
-                  <span class="ms-2">Update</span>
-                </button>
-                <button class="btn btn-danger btn-sm text-white d-inline-flex" (click)="deleteSetting(setting.uid)">
-                  <svg [cIcon]="icons.cilTrash"></svg> 
-                  <span class="ms-2">Delete</span>
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="card-header">
+      <h4>Existing Settings</h4>
     </div>
+   <div class="card-body">
+    <datatable
+      [data]="settings"
+      [columns]="columns"
+      [sorts]="[{ prop: 'key', dir: 'asc' }]"
+      [showViewButton]="false"
+      (onEdit)="showUpdateForm($event)"
+      (onDelete)="deleteSetting($event)">
+    </datatable>
+   </div>
   </div>
 </div>

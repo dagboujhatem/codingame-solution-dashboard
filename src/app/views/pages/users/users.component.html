@@ -89,8 +89,11 @@
   </div>
   <!-- Users List -->
   <div class="card p-3">
-    <h2>Existing Users</h2>
-    <table class="table table-bordered">
+    <div class="card-header">
+      <h2>Existing Users</h2>
+    </div>
+    <div class="card-body">
+      <!-- <table class="table table-bordered">
       <thead class="thead-dark">
         <tr>
           <th>Name</th>
@@ -127,7 +130,15 @@
           </td>
         </tr>
       </tbody>
-    </table>
+    </table> -->
+    <datatable
+      [data]="users$ | async"
+      [columns]="columns"
+      [sorts]="[{ prop: 'username', dir: 'asc' }]"
+      [showViewButton]="false"
+      (onEdit)="onEdit($event)"
+      (onDelete)="onDelete($event)"
+    ></datatable>
   </div>
 </div>
 

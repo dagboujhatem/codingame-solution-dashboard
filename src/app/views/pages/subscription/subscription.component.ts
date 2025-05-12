@@ -7,10 +7,10 @@ import { Subscription } from '../../../models/subscription.interface';
 import { ToastrService } from 'ngx-toastr';
 import { IconDirective } from '@coreui/icons-angular';
 import { cilSave, cilActionUndo, cilTrash, cilPen } from '@coreui/icons';
-
+import { DatatableComponent } from '../common/components/datatable.component';
 @Component({
   selector: 'app-subscription',
-  imports: [CommonModule, ReactiveFormsModule, IconDirective],
+  imports: [CommonModule, ReactiveFormsModule, IconDirective, DatatableComponent],
   templateUrl: './subscription.component.html',
   styleUrl: './subscription.component.scss'
 })
@@ -19,6 +19,29 @@ export class SubscriptionComponent implements OnInit {
   subscriptionForm: FormGroup;
   subscriptions: Subscription[] = [];
   currentSubscriptionUId: string | null = null;
+  columns: any[] = [
+    {
+      name: 'Name',
+      prop: 'name',
+      sortable: true
+    },
+    {
+      name: 'Credits/Tokens',    
+      prop: 'credits',
+      sortable: true
+    },
+    {
+      name: 'Price',    
+      prop: 'price',
+      sortable: true
+    },
+    {
+      name: 'Promo Price',    
+      prop: 'promoPrice',
+      sortable: true
+    },
+
+  ];
 
   constructor(private subscriptionService: SubscriptionService,
     private sweetAlert: SweetAlertService,
@@ -73,10 +96,10 @@ export class SubscriptionComponent implements OnInit {
     this.subscriptionForm.patchValue(subscription);
   }
 
-  onDelete(uid: string): void {
+  onDeleted(subscription: Subscription): void {
     this.sweetAlert.deleteConfirmation().then((result:any) => {
       if (result.isConfirmed) {
-        this.subscriptionService.delete(uid).then(() => {
+        this.subscriptionService.delete(subscription.uid!).then(() => {
           this.fetchSubscriptions();
         });
       }else{

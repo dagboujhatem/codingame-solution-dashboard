@@ -52,34 +52,19 @@
     </form>
   </div>
     <!-- Subscriptions List -->
-    <div class="card p-3">
+   <div class="card">
+    <div class="card-header">
       <h2>Existing Subscriptions</h2>
-      <table class="table table-bordered">
-        <thead class="thead-dark">
-          <tr>
-            <th>Name</th>
-            <th>Credits</th>
-            <th>Price</th>
-            <th>Promo Price</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let subscription of subscriptions">
-            <td>{{ subscription.name }}</td>
-            <td>{{ subscription.credits || 'Unlimited' }}</td>
-            <td>{{ subscription.price | currency:'EUR':'symbol':'1.2' }}</td>
-            <td>{{ subscription.promoPrice | currency:'EUR':'symbol':'1.2' }}</td>
-            <td>
-              <button class="btn btn-primary btn-sm me-2 text-white" (click)="onEdit(subscription)">
-                <svg [cIcon]="icons.cilPen"></svg> Edit
-              </button>
-              <button class="btn btn-danger btn-sm text-white" (click)="onDelete(subscription.uid)">
-                <svg [cIcon]="icons.cilTrash"></svg> Delete
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
     </div>
+    <div class="card-body">
+      <datatable
+      [data]="subscriptions"
+      [columns]="columns"
+      [sorts]="[{ prop: 'name', dir: 'asc' }]"
+      [showViewButton]="false"
+      (onEdit)="onEdit($event)"
+      (onDelete)="onDeleted($event)"
+      ></datatable>
+    </div>
+   </div>
 </div>

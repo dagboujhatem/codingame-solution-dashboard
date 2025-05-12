@@ -7,10 +7,12 @@ import { CommonModule } from '@angular/common';
 import { IconDirective } from '@coreui/icons-angular';
 import { cilSave, cilActionUndo, cilTrash, cilPen } from '@coreui/icons';
 import { Setting } from '../../../models/setting.interface';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { DatatableComponent } from '../common/components/datatable.component';
 
 @Component({
   selector: 'app-setting',
-  imports: [CommonModule, FormsModule, IconDirective],
+  imports: [CommonModule, FormsModule, IconDirective, NgxDatatableModule, DatatableComponent],
   templateUrl: './setting.component.html',
   styleUrl: './setting.component.scss'
 })
@@ -19,6 +21,18 @@ export class SettingComponent implements OnInit {
   settings: any[] = [];
   newSetting: Setting = { key: '', value: '' };
   settingUId: any;
+  columns: any[] = [
+    {
+      name: 'Key',
+      prop: 'key',
+      sortable: true
+    },
+    {
+      name: 'Value',    
+      prop: 'value',
+      sortable: true
+    }
+  ];
 
   constructor(private settingsService: SettingsService,
     private sweetAlert: SweetAlertService,
@@ -57,10 +71,10 @@ export class SettingComponent implements OnInit {
     this.newSetting = { key: setting['key'], value: setting['value']};
   }
 
-  deleteSetting(uid: string) {
+  deleteSetting(setting: Setting) {
     this.sweetAlert.deleteConfirmation().then((result:any) => {
       if (result.isConfirmed) {
-        this.settingsService.deleteSetting(uid).then(() => {
+        this.settingsService.deleteSetting(setting.uid!).then(() => {
           this.toastr.success('Setting deleted successfully!');
         });
       }else{

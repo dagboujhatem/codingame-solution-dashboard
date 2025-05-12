@@ -8,10 +8,11 @@ import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { IconDirective } from '@coreui/icons-angular';
 import { cilSave, cilActionUndo, cilTrash, cilPen } from '@coreui/icons';
+import { DatatableComponent } from '../common/components/datatable.component';
 
 @Component({
   selector: 'app-users',
-  imports: [CommonModule, ReactiveFormsModule, IconDirective],
+  imports: [CommonModule, ReactiveFormsModule, IconDirective, DatatableComponent],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss'
 })
@@ -20,6 +21,33 @@ export class UsersComponent {
   userForm: FormGroup;
   users$!: Observable<User[]>;
   currentUserUId: string | null = null;
+  columns: any[] = [
+    {
+      name: 'Name',
+      prop: 'username',
+      sortable: true
+    },
+    {
+      name: 'Email',
+      prop: 'email',
+      sortable: true
+    },
+    {
+      name: 'Role',
+      prop: 'role',
+      sortable: true
+    },
+    {
+      name: 'Tokens',
+      prop: 'tokens',
+      sortable: true
+    },
+    {
+      name: 'Unlimited',
+      prop: 'unlimited',
+      sortable: true
+    } 
+  ];
 
   constructor(private userService: UserService,
     private sweetAlert: SweetAlertService,
