@@ -19,8 +19,12 @@ export interface Column {
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule, NgxDatatableModule, SearchPipe, IconDirective,],
   template: `
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <input type="text" class="form-control" placeholder="Search..." [(ngModel)]="filterQuery" />  
+    <div class="row">
+      <div class="col-lg-4 col-md-6 col-sm-12">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <input type="text" class="form-control" placeholder="Search..." [(ngModel)]="filterQuery" />  
+        </div>
+      </div>
     </div>
     <div class="row">
       <ngx-datatable 
