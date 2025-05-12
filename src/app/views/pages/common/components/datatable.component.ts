@@ -140,8 +140,7 @@ export class DatatableComponent {
 
   icons = { cilPen, cilTrash, cilYen };
 
-  constructor(public iconSetService: IconSetService) {
-    iconSetService.icons = { cilPen, cilTrash, cilYen };
+  constructor() {
   }
 
   ngOnChanges(changes: SimpleChanges) {
