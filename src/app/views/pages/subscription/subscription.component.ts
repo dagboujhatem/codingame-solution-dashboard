@@ -57,8 +57,10 @@ export class SubscriptionComponent implements OnInit {
     });
     this.subscriptionForm.get('unlimited')?.valueChanges.subscribe((isUnlimited) => {
       if (isUnlimited) {
+        this.subscriptionForm.get('credits')?.setValue(0);
         this.subscriptionForm.get('credits')?.disable();
       } else {
+        this.subscriptionForm.get('credits')?.setValue(0);
         this.subscriptionForm.get('credits')?.enable();
       }
     });
