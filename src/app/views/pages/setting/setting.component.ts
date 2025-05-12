@@ -7,12 +7,11 @@ import { CommonModule } from '@angular/common';
 import { IconDirective } from '@coreui/icons-angular';
 import { cilSave, cilActionUndo, cilTrash, cilPen } from '@coreui/icons';
 import { Setting } from '../../../models/setting.interface';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { DatatableComponent } from '../common/components/datatable.component';
 
 @Component({
   selector: 'app-setting',
-  imports: [CommonModule, FormsModule, IconDirective, NgxDatatableModule, DatatableComponent],
+  imports: [CommonModule, FormsModule, IconDirective, DatatableComponent],
   templateUrl: './setting.component.html',
   styleUrl: './setting.component.scss'
 })
