@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import { IconDirective } from '@coreui/icons-angular';
 import { cilSave, cilActionUndo, cilTrash, cilPen } from '@coreui/icons';
 import { Setting } from '../../../models/setting.interface';
-import { DatatableComponent } from '../common/components/datatable.component';
+import { DatatableComponent } from '../common/components/datatable/datatable.component';
 
 @Component({
   selector: 'app-setting',

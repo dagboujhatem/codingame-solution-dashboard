@@ -8,7 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { IconDirective } from '@coreui/icons-angular';
 import { cilSave, cilActionUndo, cilTrash, cilPen } from '@coreui/icons';
-import { DatatableComponent } from '../common/components/datatable.component';
+import { DatatableComponent } from '../common/components/datatable/datatable.component';
 
 @Component({
   selector: 'app-users',
