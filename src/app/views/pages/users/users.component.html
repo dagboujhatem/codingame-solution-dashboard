@@ -6,7 +6,8 @@
     <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="row">
       <div class="col-md-6">
         <label for="username">Username:</label>
-        <input id="username" class="form-control" formControlName="username" type="text" autocomplete="username"
+        <input id="username" class="form-control" formControlName="username"
+         type="text" autocomplete="username" placeholder="Enter username"
         [ngClass]="{'is-invalid': userForm.get('username')?.invalid && userForm.get('username')?.touched, 'is-valid': userForm.get('username')?.valid && userForm.get('username')?.touched}">
         <div *ngIf="userForm.get('username')?.invalid && userForm.get('username')?.touched" class="d-block invalid-feedback">
           <ng-container *ngIf="userForm.get('username')?.errors?.['required']">
@@ -19,7 +20,8 @@
       </div>
       <div class="col-md-6">
         <label for="email">E-mail:</label>
-        <input id="email" class="form-control" formControlName="email" type="email" autocomplete="email"
+        <input id="email" class="form-control" formControlName="email"
+         type="email" autocomplete="email" placeholder="Enter e-mail"
         [ngClass]="{'is-invalid': userForm.get('email')?.invalid && userForm.get('email')?.touched, 'is-valid': userForm.get('email')?.valid && userForm.get('email')?.touched}">
         <div *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched" class="d-block invalid-feedback">
           <ng-container *ngIf="userForm.get('email')?.errors?.['required']">
@@ -32,7 +34,8 @@
       </div>
       <div class="col-md-6">
         <label for="password">Password:</label>
-        <input id="password" class="form-control" formControlName="password" type="password" autocomplete="new-password"
+        <input id="password" class="form-control" formControlName="password"
+         type="password" autocomplete="new-password" placeholder="Enter password"
           [ngClass]="{'is-invalid': userForm.get('password')?.invalid && userForm.get('password')?.touched,
                       'is-valid': userForm.get('password')?.valid && userForm.get('password')?.touched}">
 
@@ -132,7 +135,7 @@
       </tbody>
     </table> -->
     <datatable
-      [data]="users$ | async"
+      [data]="(users$ | async) || []"
       [columns]="columns"
       [sorts]="[{ prop: 'username', dir: 'asc' }]"
       [showViewButton]="false"

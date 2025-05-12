@@ -6,7 +6,7 @@
     <form [formGroup]="subscriptionForm" (ngSubmit)="onSubmit()" class="row">
       <div class="col-md-6">
         <label for="name">Name</label>
-        <input id="name" class="form-control" formControlName="name"
+        <input id="name" class="form-control" formControlName="name" placeholder="Enter subscription name"
         [ngClass]="{'is-invalid': subscriptionForm.get('name')?.invalid && subscriptionForm.get('name')?.touched, 'is-valid': subscriptionForm.get('name')?.valid && subscriptionForm.get('name')?.touched}"/>
         <div *ngIf="subscriptionForm.get('name')?.invalid && subscriptionForm.get('name')?.touched" class="d-block invalid-feedback">
           Name is required.
@@ -14,12 +14,12 @@
       </div>
       <div class="col-md-6">
         <label for="credits">Credits/Tokens</label>
-        <input id="credits" class="form-control" type="number" formControlName="credits"
+        <input id="credits" class="form-control" type="number" formControlName="credits" placeholder="Enter credits/tokens"
         [ngClass]="{'is-invalid': subscriptionForm.get('credits')?.invalid && subscriptionForm.get('credits')?.touched, 'is-valid': subscriptionForm.get('credits')?.valid && subscriptionForm.get('credits')?.touched}" />
       </div>
       <div class="col-md-6">
         <label for="price">Price</label>
-        <input id="price" class="form-control" type="number" formControlName="price"
+        <input id="price" class="form-control" type="number" formControlName="price" placeholder="Enter price"
          [ngClass]="{'is-invalid': subscriptionForm.get('price')?.invalid && subscriptionForm.get('price')?.touched, 'is-valid': subscriptionForm.get('price')?.valid && subscriptionForm.get('price')?.touched}"/>
         <div *ngIf="subscriptionForm.get('price')?.invalid && subscriptionForm.get('price')?.touched" class="d-block invalid-feedback">
           <ng-container *ngIf="subscriptionForm.get('price')?.errors?.['required']">
@@ -32,7 +32,7 @@
       </div>
       <div class="col-md-6">
         <label for="promoPrice">Promo Price</label>
-        <input id="promoPrice" class="form-control" type="number" formControlName="promoPrice"
+        <input id="promoPrice" class="form-control" type="number" formControlName="promoPrice" placeholder="Enter promo price"
         [ngClass]="{'is-invalid': subscriptionForm.get('promoPrice')?.invalid && subscriptionForm.get('promoPrice')?.touched, 'is-valid': subscriptionForm.get('promoPrice')?.valid && subscriptionForm.get('promoPrice')?.touched}" />
       </div>
       <div class="col-md-6 form-check ps-5">
