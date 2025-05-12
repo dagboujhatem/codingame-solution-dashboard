@@ -1,0 +1,16 @@
+import { NgIf } from '@angular/common';
+import { Component, Input } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+
+@Component({
+    selector: 'switch-toggle',
+    standalone: true,
+    imports: [NgIf, ReactiveFormsModule],
+    templateUrl: './switch-toggle.component.html',
+    styleUrls: ['./switch-toggle.component.scss']
+})
+export class SwitchToggleComponent {
+    @Input() control!: FormControl;
+    @Input() controlName!: string;
+    @Input() label?: string;
+}

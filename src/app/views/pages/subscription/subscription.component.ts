@@ -8,9 +8,11 @@ import { ToastrService } from 'ngx-toastr';
 import { IconDirective } from '@coreui/icons-angular';
 import { cilSave, cilActionUndo, cilTrash, cilPen } from '@coreui/icons';
 import { DatatableComponent } from '../common/components/datatable/datatable.component';
+import { SwitchToggleComponent } from '../common/components/switch-toggle/switch-toggle.component';
+
 @Component({
   selector: 'app-subscription',
-  imports: [CommonModule, ReactiveFormsModule, IconDirective, DatatableComponent],
+  imports: [CommonModule, ReactiveFormsModule, IconDirective, DatatableComponent, SwitchToggleComponent],
   templateUrl: './subscription.component.html',
   styleUrl: './subscription.component.scss'
 })

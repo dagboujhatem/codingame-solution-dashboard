@@ -7,7 +7,7 @@
     </div>
     <div class="card-body">
       <form [formGroup]="subscriptionForm" (ngSubmit)="onSubmit()" class="row">
-        <div class="col-md-6">
+        <div class="col-md-6 mt-2">
           <label for="name">Name</label>
           <input id="name" class="form-control" formControlName="name" placeholder="Enter subscription name"
             [ngClass]="{'is-invalid': subscriptionForm.get('name')?.invalid && subscriptionForm.get('name')?.touched, 'is-valid': subscriptionForm.get('name')?.valid && subscriptionForm.get('name')?.touched}" />
@@ -16,13 +16,13 @@
             Name is required.
           </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 mt-2">
           <label for="credits">Credits/Tokens</label>
           <input id="credits" class="form-control" type="number" formControlName="credits"
             placeholder="Enter credits/tokens"
             [ngClass]="{'is-invalid': subscriptionForm.get('credits')?.invalid && subscriptionForm.get('credits')?.touched, 'is-valid': subscriptionForm.get('credits')?.valid && subscriptionForm.get('credits')?.touched}" />
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 mt-2">
           <label for="price">Price</label>
           <input id="price" class="form-control" type="number" formControlName="price" placeholder="Enter price"
             [ngClass]="{'is-invalid': subscriptionForm.get('price')?.invalid && subscriptionForm.get('price')?.touched, 'is-valid': subscriptionForm.get('price')?.valid && subscriptionForm.get('price')?.touched}" />
@@ -36,16 +36,17 @@
             </ng-container>
           </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 mt-2">
           <label for="promoPrice">Promo Price</label>
           <input id="promoPrice" class="form-control" type="number" formControlName="promoPrice"
             placeholder="Enter promo price"
             [ngClass]="{'is-invalid': subscriptionForm.get('promoPrice')?.invalid && subscriptionForm.get('promoPrice')?.touched, 'is-valid': subscriptionForm.get('promoPrice')?.valid && subscriptionForm.get('promoPrice')?.touched}" />
         </div>
-        <div class="col-md-6 form-check ps-5">
-          <label for="unlimited" class="form-check-label">Unlimited Tokens</label>
-          <input id="unlimited" class="form-check-input" type="checkbox" formControlName="unlimited" />
+        <div class="col-md-6 mt-2">
+          <switch-toggle [control]="subscriptionForm.get('unlimited')!" controlName="unlimited"
+            label="Unlimited Tokens"></switch-toggle>
         </div>
+          
         <div class="col-md-12 mt-2 d-flex justify-content-end">
           <button type="button" class="btn btn-secondary me-2 text-white" (click)="clearForm()">
             <svg [cIcon]="icons.cilActionUndo"></svg>
