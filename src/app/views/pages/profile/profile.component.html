@@ -44,6 +44,16 @@
                 </a>
               </div>
             </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="avatarInput" class="form-label">Choisir un avatar</label>
+                <input type="file" class="form-control" id="avatarInput" (change)="onFileSelected($event)" accept="image/*" />
+              </div>
+              <div class="mb-3" *ngIf="previewUrl">
+                <label class="form-label">Aperçu :</label>
+                <img [src]="previewUrl" alt="Avatar preview" class="img-thumbnail" style="max-width: 200px;" />
+              </div>
+            </div>
           </div>
         </div>
         <div class="col-md-6 mt-2">

@@ -6,7 +6,7 @@ import { Router, RouterModule } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { IconDirective } from '@coreui/icons-angular';
 import { passwordMatchValidator } from '../common/validations/password-match.validator';
-
+import { UploadAvatarService } from '../../../services/upload-avatar.service';
 @Component({
   selector: 'app-profile',
   imports: [CommonModule, ReactiveFormsModule, RouterModule, IconDirective],
@@ -14,13 +14,16 @@ import { passwordMatchValidator } from '../common/validations/password-match.val
   styleUrl: './profile.component.scss'
 })
 export class ProfileComponent implements OnInit {
+  selectedFile: File | null = null;
+  previewUrl: string | ArrayBuffer | null = null;
   profileForm!: FormGroup;
   passwordForm!: FormGroup;
   user: any;
 
   constructor(private authService: AuthService,
     private toastr: ToastrService,
-    private router: Router) { }
+    private router: Router,
+    private uploadService: UploadAvatarService) { }
 
   async ngOnInit() {
     this.passwordForm = new FormGroup({
@@ -44,6 +47,9 @@ export class ProfileComponent implements OnInit {
 
   updateUserProfile(): void {
     if (this.profileForm.valid) {
+      if(this.selectedFile){
+        this.saveAvatar();
+      }
       const updatedUser = this.profileForm.value;
       this.authService.updateUserProfile(updatedUser).subscribe((response:any) => {
         this.toastr.success('Profile updated successfully!', 'Success');
@@ -56,6 +62,30 @@ export class ProfileComponent implements OnInit {
           this.toastr.error('There was an error updating your profile.', 'Error');
         }
       });
+    }
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    if (input.files && input.files[0]) {
+      this.selectedFile = input.files[0];
+
+      // Aperçu de l'image
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.previewUrl = e.target?.result as string | ArrayBuffer | null;
+      };
+      reader.readAsDataURL(this.selectedFile);
+    }
+  }
+
+  async saveAvatar() {  
+    if (!this.selectedFile) return;
+    try {
+      await this.uploadService.uploadAvatar(this.selectedFile);
+    } catch (error) {
+      console.error('Upload error:', error);
     }
   }
 

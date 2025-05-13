@@ -110,11 +110,25 @@ export class AuthService {
     this.getUserProfile()?.then((profile)=>{
       if (profile?.exists()) {
         const user = profile.data();
-        const username = user['username'] || 'Anonymous User';
-        const avatar = user['avatar'] || `https://ui-avatars.com/api/?name=${username}&background=random`;
-        this.avatar$.next(avatar); 
+        const currentUserAvatar = this.getCurrentUserAvatar();
+        if (currentUserAvatar) {    
+          this.avatar$.next(currentUserAvatar);
+        }else {
+          const username = user['username'] || 'Anonymous User';
+          const avatar = user['avatar'] || `https://ui-avatars.com/api/?name=${username}&background=random`;
+          this.avatar$.next(avatar); 
+        }
       }
     });
+  }
+
+  
+  getCurrentUserAvatar() {
+    const user = this.auth.currentUser;
+    if (!user) {
+      return;
+    }
+    return user.photoURL;
   }
 
   getAvatar$(): Observable<string> {

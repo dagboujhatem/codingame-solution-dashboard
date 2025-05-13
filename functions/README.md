@@ -177,12 +177,12 @@ After that, you can run the emulators:
  ```bash
 firebase emulators:start --only functions
 # OR
-firebase emulators:start --only functions,firestore,auth
+firebase emulators:start --only functions,firestore,storage,auth
 # OR 
 # You can export emulator data
 firebase emulators:export ./functions/saved_data
 # After that, run the emulator with importing data
-firebase emulators:start --import=./functions/saved_data --only functions,firestore,auth
+firebase emulators:start --import=./functions/saved_data --only functions,firestore,storage,auth
  ```
 
 ## 9. Additional Configuration (Recommended for setting the env. variables)
