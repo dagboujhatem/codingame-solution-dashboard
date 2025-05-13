@@ -75,8 +75,8 @@
         <li *ngIf="subscription.unlimited">
           An <b>Unlimited</b> number of tokens with no commitment!
         </li>
-        <li>
-          <b>Unlimited </b> Support
+        <li *ngFor="let feature of subscription.features">
+          <b>{{ feature.key }}:</b> {{ feature.value }}
         </li>
       </ul>
       <div class="pricing-price">

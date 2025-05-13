@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators, FormArray, FormBuilder } from '@angular/forms';
 import { SubscriptionService } from '../../../services/subscription.service';
 import { SweetAlertService } from '../../../services/sweet-alert.service';
 import { Subscription } from '../../../models/subscription.interface';
@@ -47,13 +47,15 @@ export class SubscriptionComponent implements OnInit {
 
   constructor(private subscriptionService: SubscriptionService,
     private sweetAlert: SweetAlertService,
-    private toastr: ToastrService) {
+    private toastr: ToastrService,
+    private fb: FormBuilder) {
     this.subscriptionForm = new FormGroup({
       name: new FormControl('', Validators.required),
       credits: new FormControl(0),
       price: new FormControl(0, [Validators.required, Validators.min(0)]),
       promoPrice: new FormControl(null),
       unlimited: new FormControl(false),
+      features: this.fb.array([])
     });
     this.subscriptionForm.get('unlimited')?.valueChanges.subscribe((isUnlimited) => {
       if (isUnlimited) {
@@ -78,7 +80,11 @@ export class SubscriptionComponent implements OnInit {
 
   onSubmit(): void {
     if (this.subscriptionForm.valid) {
-      const subscriptionData: Subscription = this.subscriptionForm.value;
+      const subscriptionData: Subscription = {
+        ...this.subscriptionForm.value,
+        features: this.features.value
+      };
+      
       if (this.currentSubscriptionUId) {
         this.subscriptionService
           .update(this.currentSubscriptionUId, subscriptionData)
@@ -97,7 +103,26 @@ export class SubscriptionComponent implements OnInit {
 
   onEdit(subscription: Subscription): void {
     this.currentSubscriptionUId = subscription.uid;
-    this.subscriptionForm.patchValue(subscription);
+    this.subscriptionForm.patchValue({
+      name: subscription.name,
+      credits: subscription.credits,
+      price: subscription.price,
+      promoPrice: subscription.promoPrice,
+      unlimited: subscription.unlimited
+    });
+
+    while (this.features.length) {
+      this.features.removeAt(0);
+    }
+
+    if (subscription.features) {
+      subscription.features.forEach(feature => {
+        this.features.push(this.fb.group({
+          key: [feature.key, Validators.required],
+          value: [feature.value, Validators.required]
+        }));
+      });
+    }
   }
 
   onDeleted(subscription: Subscription): void {
@@ -115,9 +140,31 @@ export class SubscriptionComponent implements OnInit {
   clearForm(): void {
     this.subscriptionForm.reset();
     this.currentSubscriptionUId = null;
+    while (this.features.length) {
+      this.features.removeAt(0);
+    }
   }
 
   getSwitchControl(): FormControl {
     return this.subscriptionForm.get('unlimited') as FormControl;
+  }
+
+  get features() {
+    return this.subscriptionForm.get('features') as FormArray;
+  }
+
+  createFeatureFormGroup() {
+    return this.fb.group({
+      key: ['', Validators.required],
+      value: ['', Validators.required]
+    });
+  }
+
+  addFeature() {
+    this.features.push(this.createFeatureFormGroup());
+  }
+
+  removeFeature(index: number) {
+    this.features.removeAt(index);
   }
 }

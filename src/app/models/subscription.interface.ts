@@ -9,4 +9,8 @@ export interface Subscription {
   stripeProductId: any;
   stripePriceId: any;
   interval: any;
+  features?: Array<{
+    key: string;
+    value: string;
+  }>;
 }
