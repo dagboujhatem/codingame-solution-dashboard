@@ -41,11 +41,11 @@
                 <span cInputGroupText>
                   <svg cIcon name="cilLockLocked"></svg>
                 </span>
-                <input autoComplete="new-password" cFormControl placeholder="Repeat password" type="password" formControlName="passwordConfirmation"  />
-                <div class="invalid-feedback d-block" *ngIf="signupForm.get('passwordConfirmation')?.invalid && signupForm.get('passwordConfirmation')?.touched">
-                  <small *ngIf="signupForm.get('passwordConfirmation')?.hasError('required')">Password confirmation is required</small>
-                  <small *ngIf="signupForm.get('passwordConfirmation')?.hasError('minlength')">Password confirmation must be at least 6 characters</small>
-                  <small *ngIf="signupForm.get('passwordConfirmation')?.hasError('passwordMismatch')">Passwords must match</small>
+                <input autoComplete="new-password" cFormControl placeholder="Repeat password" type="password" formControlName="confirmPassword"  />
+                <div class="invalid-feedback d-block" *ngIf="signupForm.get('confirmPassword')?.invalid && signupForm.get('confirmPassword')?.touched">
+                  <small *ngIf="signupForm.get('confirmPassword')?.hasError('required')">Password confirmation is required</small>
+                  <small *ngIf="signupForm.get('confirmPassword')?.hasError('minlength')">Password confirmation must be at least 6 characters</small>
+                  <small *ngIf="signupForm.get('confirmPassword')?.hasError('passwordMismatch')">Passwords must match</small>
                 </div>
               </c-input-group>
               <div class="form-check">

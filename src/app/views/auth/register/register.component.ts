@@ -9,6 +9,7 @@ import { Router, RouterLink } from '@angular/router';
 import { StateService } from '../../../services/state.service';
 import { HeaderComponent } from '../../front/components/header/header.component';
 import { FooterComponent } from '../../front/components/footer/footer.component';
+import { passwordMatchValidator } from '../../pages/common/validations/password-match.validator';
 
 @Component({
     selector: 'app-register',
@@ -42,19 +43,12 @@ export class RegisterComponent implements OnInit {
         Validators.required,
         Validators.minLength(6),
       ]),
-      passwordConfirmation: new FormControl('', [
+      confirmPassword: new FormControl('', [
         Validators.required,
         Validators.minLength(6),
       ]),
       acceptTerms: new FormControl(false, [Validators.requiredTrue])
-    },); // Add custom validator for password confirmation // this.passwordMatchValidator
-  }
-
-  // Custom validator to check if password and passwordConfirmation match
-  passwordMatchValidator(group: FormGroup): { [key: string]: boolean } | null {
-    const password = group.get('password')?.value;
-    const confirmPassword = group.get('passwordConfirmation')?.value;
-    return password === confirmPassword ? null : { passwordMismatch: true };
+    }, { validators: passwordMatchValidator.bind(this) });
   }
 
   onSignup(): void {

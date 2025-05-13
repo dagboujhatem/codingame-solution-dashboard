@@ -10,6 +10,7 @@ import { ToastrService } from 'ngx-toastr';
 import { StateService } from '../../../services/state.service';
 import { HeaderComponent } from '../../front/components/header/header.component';
 import { FooterComponent } from '../../front/components/footer/footer.component';
+import { passwordMatchValidator } from '../../pages/common/validations/password-match.validator';
 
 @Component({
   selector: 'app-reset-password',
@@ -34,16 +35,9 @@ export class ResetPasswordComponent implements OnInit {
  ngOnInit(): void {
     this.resetPasswordForm = new FormGroup({
       newPassword: new FormControl('', [Validators.required, Validators.minLength(6)]),
-      confirmPassword: new FormControl('', [Validators.required, /*this.passwordMatchValidator.bind(this)*/]),
-    });
+      confirmPassword: new FormControl('', [Validators.required]),
+    }, { validators: passwordMatchValidator.bind(this) });
     this.oobCode = this.route.snapshot.queryParams['oobCode'];
-  }
-
-  passwordMatchValidator(control: FormControl): { [key: string]: boolean } | null {
-    if (this.resetPasswordForm && this.resetPasswordForm.get('newPassword')?.value !== control.value) {
-      return { 'passwordMismatch': true };
-    }
-    return null;
   }
 
   onResetPassword() {
