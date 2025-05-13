@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserService } from '../../../services/user.service';
 import { User } from '../../../models/user.interface';
@@ -22,6 +22,7 @@ export class UsersComponent {
   userForm: FormGroup;
   users$!: Observable<User[]>;
   currentUserUId: string | null = null;
+  @ViewChild('roleTemplate', { static: true }) roleTemplate!: TemplateRef<any>;
   columns: any[] = [
     {
       name: 'Name',
@@ -85,17 +86,24 @@ export class UsersComponent {
       if (this.currentUserUId) {
         this.userService
           .updateUser(this.currentUserUId, userData)
-          .then(() => {
+          .subscribe((response: any) => {
             this.toastr.success('User updated successfully!');
             this.fetchUsers();
             this.clearForm();
+          }, (error: any) => {
+            const message = error.error.error || '';
+            this.toastr.error(message, 'Error updating user!');
           });
       } else {
-        this.userService.addUser(userData).then(() => {
-          this.toastr.success('User added successfully!');
-          this.fetchUsers();
-          this.clearForm();
-        });
+        this.userService.addUser(userData)
+          .subscribe((response: any) => {
+            this.toastr.success('User added successfully!');
+            this.fetchUsers();
+            this.clearForm();
+          }, (error: any) => {
+            const message = error.error.error || '';
+            this.toastr.error(message, 'Error adding user!');
+          });
       }
     }
   }
@@ -105,13 +113,16 @@ export class UsersComponent {
     this.userForm.patchValue(user);
   }
 
-  onDelete(uid: string): void {
+  onDelete(user: User): void {
     this.sweetAlert.deleteConfirmation().then((result: any) => {
       if (result.isConfirmed) {
-        this.userService.deleteUser(uid).then(() => {
-          this.toastr.success('User deleted successfully!');
-          this.fetchUsers();
-        });
+        this.userService.deleteUser(user.uid)
+          .subscribe(() => {  
+            this.toastr.success('User deleted successfully!');
+            this.fetchUsers();
+          }, (error: any) => {
+            this.toastr.error('Error deleting user!');
+          });
       } else {
         this.toastr.warning('Deletion cancelled!');
       }

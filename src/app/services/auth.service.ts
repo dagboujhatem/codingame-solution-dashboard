@@ -6,27 +6,29 @@ import {
   sendPasswordResetEmail,
   confirmPasswordReset,
   signOut,
-  updateEmail,
-  updatePassword,
   onAuthStateChanged
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import { from, Observable, BehaviorSubject } from 'rxjs';
+import { from, Observable, BehaviorSubject, tap } from 'rxjs';
 import { Firestore, doc, setDoc, getDoc, updateDoc } from '@angular/fire/firestore';
 import { User } from '../models/user.interface';
 import { updateProfile } from 'firebase/auth';
+import { environment } from 'src/environments/environment'; 
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private apiUrl = environment.codingameSolutionsFunctionUrl;
   private authStateSubject = new BehaviorSubject<boolean>(false);
   private avatar$ = new BehaviorSubject<string>('');
   public authState$ = this.authStateSubject.asObservable();
 
   constructor(private auth: Auth,
     private router: Router,
-    private firestore: Firestore) {
+    private firestore: Firestore, 
+    private http: HttpClient) {
     // Écouter les changements d'état d'authentification Firebase
     onAuthStateChanged(this.auth, (user) => {
       this.authStateSubject.next(!!user);
@@ -77,33 +79,47 @@ export class AuthService {
   }
 
   updateUserProfile(updatedUser: Partial<User>): Observable<any> {
-    return new Observable<any>((observer) => {
-        // Step 1: Update user from Firebase Authentication
-        const user = this.auth.currentUser;
-        if (user) {
-          const emailUpdate = updatedUser.email ? updateEmail(user, updatedUser.email) : Promise.resolve();
-          const usernameUpdate = updatedUser.username ? updateProfile(user, { displayName: updatedUser.username } ) : Promise.resolve();
-          Promise.all([emailUpdate, usernameUpdate])
-          .then(async() => {
-            // Step 2: Update user in Firestore
-            const userRef = doc(this.firestore, `users/${user.uid}`);
-            await updateDoc(userRef, updatedUser);
-
-            // Step 3: Notify avatar reload
+    // add pipe to reload user
+    return this.http.put(`${this.apiUrl}/update-auth-user`, updatedUser).pipe(
+      tap(async() => {
+          // Step 3: Notify avatar reload
+          const user = this.auth.currentUser;
+          if (user) {
             await user.reload();
             this.loadUserAvatar();
-          })
-          .then(() => {
-            observer.next('User profile updated successfully');
-            observer.complete();
-          })
-          .catch((error) => {
-            observer.error(error);
-          });
-        }else {
-          observer.error('No authenticated user');
-        }
-    });
+          }else {
+            console.error('No authenticated user');
+          }
+      })  
+    );
+  
+    // return new Observable<any>((observer) => {
+    //     // Step 1: Update user from Firebase Authentication
+    //     const user = this.auth.currentUser;
+    //     if (user) {
+    //       const emailUpdate = updatedUser.email ? updateEmail(user, updatedUser.email) : Promise.resolve();
+    //       const usernameUpdate = updatedUser.username ? updateProfile(user, { displayName: updatedUser.username } ) : Promise.resolve();
+    //       Promise.all([emailUpdate, usernameUpdate])
+    //       .then(async() => {
+    //         // Step 2: Update user in Firestore
+    //         const userRef = doc(this.firestore, `users/${user.uid}`);
+    //         await updateDoc(userRef, updatedUser);
+
+    //         // Step 3: Notify avatar reload
+    //         await user.reload();
+    //         this.loadUserAvatar();
+    //       })
+    //       .then(() => {
+    //         observer.next('User profile updated successfully');
+    //         observer.complete();
+    //       })
+    //       .catch((error) => {
+    //         observer.error(error);
+    //       });
+    //     }else {
+    //       observer.error('No authenticated user');
+    //     }
+    // });
   }
 
   loadUserAvatar(){
@@ -135,22 +151,8 @@ export class AuthService {
     return this.avatar$.asObservable();
   }
 
-  updateUserPassword(updatedUser: Partial<User>): Observable<any> {
-    return new Observable<any>((observer) => {
-      const user = this.auth.currentUser;
-      if (user) {
-        updatePassword(user, updatedUser?.password || '')
-        .then(() => {
-          observer.next('Password updated successfully');
-          observer.complete();
-        })
-        .catch((error) => {
-          observer.error(error);
-        });
-      }else {
-        observer.error('No authenticated user');
-      }
-    });
+  updateUserPassword(payload: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/update-auth-user-password`, payload);
   }
 
   isAuthenticated(): boolean {

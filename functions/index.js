@@ -1,9 +1,9 @@
 import * as functions from 'firebase-functions';
 import { setGlobalOptions } from 'firebase-functions/v2'
 import { defineSecret } from 'firebase-functions/params';
-import * as admin from 'firebase-admin';
 import { initializeApp } from "firebase-admin/app";
 import { getAuth } from 'firebase-admin/auth';
+import { getFirestore } from 'firebase-admin/firestore';
 import express from 'express';
 import cors from 'cors';
 import Stripe from 'stripe';
@@ -13,10 +13,15 @@ import dotenv from 'dotenv';
 import passport from "passport";
 import { Strategy as BearerStrategy } from "passport-http-bearer";
 dotenv.config();
+
 const stripeSecret = process.env.STRIPE_SECRET || defineSecret('STRIPE_SECRET');
 const REGION = process.env.REGION || defineSecret('REGION') || 'us-central1'; // Default region
-initializeApp();
-const auth = getAuth();
+
+// Initialize Firebase Admin
+const firebaseApp = initializeApp();
+const auth = getAuth(firebaseApp);
+const db = getFirestore(firebaseApp);
+
 setGlobalOptions({ region: REGION })
 passport.use(
   new BearerStrategy(async (token, done) => {
@@ -34,11 +39,136 @@ const stripe = new Stripe(stripeSecret, {
   apiVersion: '2023-10-16',
 });
 
+// Initialize Express app
 const app = express();
 app.use(cors());
 app.use(morgan('dev'));
 app.use(compression());
 app.use(passport.initialize());
+
+// update auth user info
+app.put("/update-auth-user",
+  passport.authenticate("bearer", { session: false }),
+  async (req, res) => {
+    try{
+      const { uid } = req.user;
+      const { email, username } = req.body;
+      const isEmailChanged = email !== req.user.email;
+      await auth.updateUser(uid, { email: email, displayName: username });
+      // save user to firestore
+      await db.collection('users').doc(uid).update({ email: email, username: username });
+      res.json({ message: "User info updated successfully", isEmailChanged: isEmailChanged });
+    }catch(error){
+      res.status(500).json({ error: error.message });
+    }
+  }
+);  
+
+// update auth user password
+app.put("/update-auth-user-password",
+  passport.authenticate("bearer", { session: false }),
+  async (req, res) => {
+    const { uid } = req.user;
+    const { oldPassword, password, confirmPassword } = req.body;
+    if (password !== confirmPassword) {
+      return res.status(400).json({ message: "Passwords do not match" });
+    } 
+    const user = await auth.getUser(uid);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    // console.log('user', user);
+    // if (user.password !== oldPassword) {
+    //   return res.status(400).json({ message: "Old password is incorrect" });
+    // }
+    await auth.updateUser(uid, { password: password });
+    res.json({ message: "Password updated successfully" });
+  });      
+// get all users
+app.get("/get-users",  
+  passport.authenticate("bearer", { session: false }),
+  async (req, res) => {
+    const users = await db.collection('users').get();
+    res.json(users.docs.map(doc => doc.data()));
+  }
+);
+
+// add user
+app.post("/add-user",  
+  passport.authenticate("bearer", { session: false }),
+  async (req, res) => {
+    try {
+      const { username, email, password, role, tokens, unlimited } = req.body;
+      const user = await auth.createUser({
+        email: email,
+        password: password,
+        displayName: username,
+      });
+      // add user to firestore
+      await db.collection('users').doc(user.uid).set({
+        uid: user.uid,
+        username: username,
+        email: email,
+        role: role,
+        tokens: unlimited ? 0 : tokens,
+        unlimited: unlimited,
+      });
+      res.json({ message: "User added successfully", user: user });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    } 
+  }
+);  
+
+app.put("/update-user/:uid",  
+  passport.authenticate("bearer", { session: false }),
+  async (req, res) => {
+    try {   
+      const { username, email, password, role, tokens, unlimited } = req.body;
+      const user = await auth.getUser(req.params.uid);
+      
+      // Prepare update data
+      const updateData = {
+        displayName: username,
+        email: email,
+      };
+
+      // Only update password if it's provided
+      if (password) {
+        updateData.password = password;
+      }
+
+      await auth.updateUser(user.uid, updateData);
+
+      // Update user in firestore
+      await db.collection('users').doc(user.uid).update({
+        username: username,
+        email: email,
+        role: role,
+        tokens: unlimited ? 0 : tokens,
+        unlimited: unlimited,
+      });
+
+      res.json({ message: "User infos updated successfully" });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+);
+
+app.delete("/delete-user/:uid",  
+  passport.authenticate("bearer", { session: false }),
+  async (req, res) => {
+    try {
+      const user = await auth.getUser(req.params.uid);    
+      await auth.deleteUser(user.uid);
+      await db.collection('users').doc(user.uid).delete();
+      res.json({ message: "User deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+);  
 
 app.post("/create-product",
   passport.authenticate("bearer", { session: false }),
@@ -181,7 +311,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
-    await admin.firestore().collection('payments').doc(session.id).set({
+    await db.collection('payments').doc(session.id).set({
       userId: session.metadata.userId,
       amount: session.amount_total,
       status: 'paid',

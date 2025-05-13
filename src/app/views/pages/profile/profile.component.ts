@@ -53,14 +53,17 @@ export class ProfileComponent implements OnInit {
       const updatedUser = this.profileForm.value;
       this.authService.updateUserProfile(updatedUser).subscribe((response:any) => {
         this.toastr.success('Profile updated successfully!', 'Success');
-        this.router.navigate(['/dashboard']);
+        if(response.isEmailChanged){
+          this.toastr.success('You need to login again to use the new email.', 'Success');
+          this.authService.logout();
+          this.router.navigate(['/login']);
+        }else{  
+          this.router.navigate(['/dashboard']);
+        }
       },
       (error:any) => {
-        if(error.code === 'auth/email-already-in-use'){
-          this.toastr.error('The email is already in use.', 'Error');
-        }else{
-          this.toastr.error('There was an error updating your profile.', 'Error');
-        }
+        const message = error.error.error || '';
+        this.toastr.error(message, 'Error updating infos!');
       });
     }
   }
@@ -93,7 +96,15 @@ export class ProfileComponent implements OnInit {
     if (this.passwordForm.valid) {
       const updatedUser = this.passwordForm.value;
       this.authService.updateUserPassword(updatedUser).subscribe((response:any) => {
+        this.passwordForm.reset();
         this.toastr.success('Password updated successfully!', 'Success');
+        this.toastr.success('You need to login again to use the new password.', 'Success');
+        this.authService.logout();
+        this.router.navigate(['/login']);
+      }, (error:any) => {
+        console.error('Error updating password:', error);
+        const message = error.error.message || '';
+        this.toastr.error(message, 'Error');
       }); 
     }
   }
