@@ -50,7 +50,11 @@ export class ProfileComponent implements OnInit {
         this.router.navigate(['/dashboard']);
       },
       (error:any) => {
-        this.toastr.error('There was an error updating your profile.', 'Error');
+        if(error.code === 'auth/email-already-in-use'){
+          this.toastr.error('The email is already in use.', 'Error');
+        }else{
+          this.toastr.error('There was an error updating your profile.', 'Error');
+        }
       });
     }
   }

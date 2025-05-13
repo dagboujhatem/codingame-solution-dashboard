@@ -14,13 +14,15 @@ import { Router } from '@angular/router';
 import { from, Observable, BehaviorSubject } from 'rxjs';
 import { Firestore, doc, setDoc, getDoc, updateDoc } from '@angular/fire/firestore';
 import { User } from '../models/user.interface';
+import { updateProfile } from 'firebase/auth';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private authStateSubject = new BehaviorSubject<boolean>(false);
-  authState$ = this.authStateSubject.asObservable();
+  private avatar$ = new BehaviorSubject<string>('');
+  public authState$ = this.authStateSubject.asObservable();
 
   constructor(private auth: Auth,
     private router: Router,
@@ -28,6 +30,7 @@ export class AuthService {
     // Écouter les changements d'état d'authentification Firebase
     onAuthStateChanged(this.auth, (user) => {
       this.authStateSubject.next(!!user);
+      this.loadUserAvatar();
     });
   }
 
@@ -39,6 +42,7 @@ export class AuthService {
     return from(createUserWithEmailAndPassword(this.auth, email, password)
       .then(async (userCredential) => {
         const user = userCredential.user;
+        await updateProfile(user, { displayName: username });
         await setDoc(doc(this.firestore, 'users', user.uid), { uid: user.uid, email, username, role: 'User', tokens: 2 });
         return user;
       }));
@@ -78,12 +82,16 @@ export class AuthService {
         const user = this.auth.currentUser;
         if (user) {
           const emailUpdate = updatedUser.email ? updateEmail(user, updatedUser.email) : Promise.resolve();
-          const passwordUpdate = updatedUser.password ? updatePassword(user, updatedUser.password) : Promise.resolve();
-          Promise.all([emailUpdate, passwordUpdate])
-          .then(() => {
+          const usernameUpdate = updatedUser.username ? updateProfile(user, { displayName: updatedUser.username } ) : Promise.resolve();
+          Promise.all([emailUpdate, usernameUpdate])
+          .then(async() => {
             // Step 2: Update user in Firestore
             const userRef = doc(this.firestore, `users/${user.uid}`);
-            return updateDoc(userRef, updatedUser);
+            await updateDoc(userRef, updatedUser);
+
+            // Step 3: Notify avatar reload
+            await user.reload();
+            this.loadUserAvatar();
           })
           .then(() => {
             observer.next('User profile updated successfully');
@@ -96,6 +104,21 @@ export class AuthService {
           observer.error('No authenticated user');
         }
     });
+  }
+
+  loadUserAvatar(){
+    this.getUserProfile()?.then((profile)=>{
+      if (profile?.exists()) {
+        const user = profile.data();
+        const username = user['username'] || 'Anonymous User';
+        const avatar = user['avatar'] || `https://ui-avatars.com/api/?name=${username}&background=random`;
+        this.avatar$.next(avatar); 
+      }
+    });
+  }
+
+  getAvatar$(): Observable<string> {
+    return this.avatar$.asObservable();
   }
 
   updateUserPassword(updatedUser: Partial<User>): Observable<any> {
