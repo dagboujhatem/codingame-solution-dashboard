@@ -98,6 +98,24 @@ export class AuthService {
     });
   }
 
+  updateUserPassword(updatedUser: Partial<User>): Observable<any> {
+    return new Observable<any>((observer) => {
+      const user = this.auth.currentUser;
+      if (user) {
+        updatePassword(user, updatedUser?.password || '')
+        .then(() => {
+          observer.next('Password updated successfully');
+          observer.complete();
+        })
+        .catch((error) => {
+          observer.error(error);
+        });
+      }else {
+        observer.error('No authenticated user');
+      }
+    });
+  }
+
   isAuthenticated(): boolean {
     return this.authStateSubject.value;
   }
