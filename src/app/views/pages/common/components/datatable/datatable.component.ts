@@ -29,7 +29,7 @@ export class DatatableComponent implements OnChanges {
   @Input() headerHeight: number = 50;
   @Input() footerHeight: number = 50;
   @Input() rowHeight: number = 50 ;
-  @Input() sortType: SortType = SortType.multi;
+  @Input() sortType: SortType = SortType.single;
   @Input() limit: number = 5;
   @Input() messages: any = datatableMessages;
   @Input() sorts: any[] = [];
@@ -61,5 +61,11 @@ export class DatatableComponent implements OnChanges {
     if (changes['data']) {
       this.searchFields = this.columns.map(col => col.prop);
     }
+  }
+
+  updateMessages() {
+    this.messages.emptyMessage = this.filterQuery?.trim()
+    ? this.messages.emptyMessageSearch
+    : this.messages.emptyMessage;
   }
 }
