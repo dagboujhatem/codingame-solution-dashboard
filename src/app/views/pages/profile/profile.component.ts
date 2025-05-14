@@ -35,14 +35,13 @@ export class ProfileComponent implements OnInit {
       username: new FormControl('', [Validators.required, Validators.minLength(3)]),
       email: new FormControl('', [Validators.required, Validators.email]),
     });
-    const profile = await this.authService.getUserProfile()
-    if(profile?.exists()){
-      this.user = profile.data();;
+    this.authService.getUserProfile().subscribe((profile: any) => {
+      this.user = profile;
       this.profileForm.patchValue({
         username: this.user.username,
         email: this.user.email,
       });
-    }
+    });
   }
 
   updateUserProfile(): void {
@@ -53,7 +52,7 @@ export class ProfileComponent implements OnInit {
       const updatedUser = this.profileForm.value;
       this.authService.updateUserProfile(updatedUser).subscribe((response:any) => {
         this.toastr.success('Profile updated successfully!', 'Success');
-        if(response.isEmailChanged){
+        if(response.mustLoginAgain){
           this.toastr.success('You need to login again to use the new email.', 'Success');
           this.authService.logout();
           this.router.navigate(['/login']);

@@ -10,6 +10,8 @@ import { IconDirective } from '@coreui/icons-angular';
 import { cilSave, cilActionUndo, cilTrash, cilPen } from '@coreui/icons';
 import { DatatableComponent } from '../common/components/datatable/datatable.component';
 import { SwitchToggleComponent } from '../common/components/switch-toggle/switch-toggle.component';
+import { AuthService } from '../../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-users',
@@ -53,21 +55,40 @@ export class UsersComponent {
 
   constructor(private userService: UserService,
     private sweetAlert: SweetAlertService,
-    private toastr: ToastrService) {
+    private toastr: ToastrService,
+    private authService: AuthService,
+    private router: Router) {
     this.userForm = new FormGroup({
       username: new FormControl('', [Validators.required, Validators.minLength(3)]),
       email: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('', [Validators.required, Validators.minLength(6)]),
+      password: new FormControl('', []),
       role: new FormControl('User', Validators.required),
       tokens: new FormControl(1, [Validators.required, Validators.min(0)]),
       unlimited: new FormControl(false)
     });
-    this.userForm.get('unlimited')?.valueChanges.subscribe(value => {
+    this.userForm.get('unlimited')?.valueChanges.subscribe(isUnlimited => {
       const tokensControl = this.userForm.get('tokens');
-      if (value) {
+      if (isUnlimited) {
         tokensControl?.disable();
+        this.userForm.get('tokens')?.setValue(0);
       } else {
         tokensControl?.enable();
+        this.userForm.get('tokens')?.setValue(0);
+      }
+    });
+    this.userForm.get('password')?.valueChanges.subscribe(value => {
+      const passwordControl = this.userForm.get('password');
+      if (!passwordControl) return;
+
+      // Check current validators to avoid reapplying unnecessarily
+      const currentValidators = passwordControl.validator ? [passwordControl.validator] : [];
+
+      if (value && currentValidators.length === 0) {
+        passwordControl.setValidators([Validators.required, Validators.minLength(6)]);
+        passwordControl.updateValueAndValidity({ emitEvent: false }); // avoid triggering again
+      } else if (!value && currentValidators.length > 0) {
+        passwordControl.clearValidators();
+        passwordControl.updateValueAndValidity({ emitEvent: false }); // avoid triggering again
       }
     });
   }
@@ -90,6 +111,11 @@ export class UsersComponent {
             this.toastr.success('User updated successfully!');
             this.fetchUsers();
             this.clearForm();
+            if(response.mustLoginAgain){
+              this.toastr.success('You need to login again to use the new email.', 'Success');
+              this.authService.logout();
+              this.router.navigate(['/login']);
+            }
           }, (error: any) => {
             const message = error.error.error || '';
             this.toastr.error(message, 'Error updating user!');
@@ -110,7 +136,9 @@ export class UsersComponent {
 
   onEdit(user: User): void {
     this.currentUserUId = user.uid;
-    this.userForm.patchValue(user);
+    this.userService.getUser(user.uid).subscribe((user: any) => {
+      this.userForm.patchValue(user);
+    });
   }
 
   onDelete(user: User): void {
@@ -121,7 +149,8 @@ export class UsersComponent {
             this.toastr.success('User deleted successfully!');
             this.fetchUsers();
           }, (error: any) => {
-            this.toastr.error('Error deleting user!');
+            const message = error.error.message || '';
+            this.toastr.error(message, 'Error deleting user!');
           });
       } else {
         this.toastr.warning('Deletion cancelled!');

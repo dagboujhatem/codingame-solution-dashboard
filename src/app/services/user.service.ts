@@ -19,6 +19,10 @@ export class UserService {
     return this.http.get<User[]>(`${this.apiUrl}/get-users`);
   }
 
+  getUser(uid: string) {
+    return this.http.get(`${this.apiUrl}/get-user/${uid}`);
+  }
+
   updateUser(uid: string, user: Partial<User>) {
     return this.http.put(`${this.apiUrl}/update-user/${uid}`, user);
   }

@@ -23,14 +23,14 @@ import { provideAuth, getAuth } from '@angular/fire/auth';
 import { provideClientHydration } from '@angular/platform-browser';
 import { provideNgcCookieConsent } from 'ngx-cookieconsent';
 import { cookieConfig } from './cookieConfig';
-
+import { responseInterceptor } from './interceptors/response-interceptor';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
     provideStorage(() => getStorage()), 
-    provideHttpClient(withInterceptors([bearerTokenInterceptor])),
+    provideHttpClient(withInterceptors([bearerTokenInterceptor, responseInterceptor])),
     provideRouter(routes,
       withRouterConfig({
         onSameUrlNavigation: 'reload'

@@ -144,6 +144,18 @@
     </table> -->
       <datatable [data]="(users$ | async) || []" [columns]="columns" [sorts]="[{ prop: 'username', dir: 'asc' }]"
         [showViewButton]="false" (onEdit)="onEdit($event)" (onDelete)="onDelete($event)"></datatable>
+
+        <!-- Template -->
+        <ng-template #roleTemplate let-row>
+          <span class="badge"
+            [ngClass]="{
+              'text-bg-primary': row.role === 'User',
+              'text-bg-success text-white': row.role === 'Admin'
+            }">
+            {{ row.role }}
+          </span>
+        </ng-template>
+        
     </div>
   </div>
 </div>

@@ -62,12 +62,12 @@ export class RegisterComponent implements OnInit {
         },
         (error:any) => {
           // Handle error
-          if (error.code === 'auth/email-already-in-use') {
-            this.toastr.error('This email is already registered.', 'Registration Failed');
+          const message = error.error.error || '';
+          if (message) {
+            this.toastr.error(message, 'Registration Failed');
           } else {
             this.toastr.error('An error occurred. Please try again later.', 'Error');
           }
-          console.error('Error signing in: ', error.message);
         }
       );
     }

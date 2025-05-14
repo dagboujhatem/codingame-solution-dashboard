@@ -54,13 +54,11 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
 
   async ngOnInit() {
     this.subscriptionId = this.route.snapshot.paramMap.get('id')!;
-    const profile = await this.authService.getUserProfile();
-    if (profile?.exists()) {
-      const user = profile.data();
-      this.username = user['username'];
-      this.email = user['email'];
-      this.uid = user['uid'];
-    }
+    this.authService.getUserProfile().subscribe((profile: any) => {
+        this.username = profile['username'];
+        this.email = profile['email'];
+        this.uid = profile['uid'];
+    });
   }
 
   async ngAfterViewInit() {

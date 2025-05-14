@@ -2,18 +2,19 @@ import { Injectable } from '@angular/core';
 import {
   Auth,
   signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
   sendPasswordResetEmail,
   confirmPasswordReset,
   signOut,
   onAuthStateChanged
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import { from, Observable, BehaviorSubject, tap } from 'rxjs';
-import { Firestore, doc, setDoc, getDoc, updateDoc } from '@angular/fire/firestore';
+import {
+  from, BehaviorSubject, tap,
+  Observable
+} from 'rxjs';
 import { User } from '../models/user.interface';
-import { updateProfile } from 'firebase/auth';
-import { environment } from 'src/environments/environment'; 
+import { getIdTokenResult } from 'firebase/auth';
+import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -27,7 +28,6 @@ export class AuthService {
 
   constructor(private auth: Auth,
     private router: Router,
-    private firestore: Firestore, 
     private http: HttpClient) {
     // Écouter les changements d'état d'authentification Firebase
     onAuthStateChanged(this.auth, (user) => {
@@ -41,13 +41,7 @@ export class AuthService {
   }
 
   register(username: string, email: string, password: string) {
-    return from(createUserWithEmailAndPassword(this.auth, email, password)
-      .then(async (userCredential) => {
-        const user = userCredential.user;
-        await updateProfile(user, { displayName: username });
-        await setDoc(doc(this.firestore, 'users', user.uid), { uid: user.uid, email, username, role: 'User', tokens: 2 });
-        return user;
-      }));
+    return this.http.post(`${this.apiUrl}/register`, { username, email, password });
   }
 
   forgotPassword(email: string) {
@@ -69,76 +63,38 @@ export class AuthService {
   }
 
   getUserProfile() {
-    const user = this.auth.currentUser;
-    if (!user) {
-      return;
-    }
-    const uid = user.uid;
-    const userRef = doc(this.firestore, `users/${uid}`);
-    return getDoc(userRef);
+    return this.http.get<User>(`${this.apiUrl}/get-auth-user`);
   }
 
   updateUserProfile(updatedUser: Partial<User>): Observable<any> {
     // add pipe to reload user
     return this.http.put(`${this.apiUrl}/update-auth-user`, updatedUser).pipe(
-      tap(async() => {
-          // Step 3: Notify avatar reload
-          const user = this.auth.currentUser;
-          if (user) {
-            await user.reload();
-            this.loadUserAvatar();
-          }else {
-            console.error('No authenticated user');
-          }
-      })  
+      tap(async () => {
+        // Step 3: Notify avatar reload
+        const user = this.auth.currentUser;
+        if (user) {
+          await user.reload();
+          this.loadUserAvatar();
+        } else {
+          console.error('No authenticated user');
+        }
+      })
     );
-  
-    // return new Observable<any>((observer) => {
-    //     // Step 1: Update user from Firebase Authentication
-    //     const user = this.auth.currentUser;
-    //     if (user) {
-    //       const emailUpdate = updatedUser.email ? updateEmail(user, updatedUser.email) : Promise.resolve();
-    //       const usernameUpdate = updatedUser.username ? updateProfile(user, { displayName: updatedUser.username } ) : Promise.resolve();
-    //       Promise.all([emailUpdate, usernameUpdate])
-    //       .then(async() => {
-    //         // Step 2: Update user in Firestore
-    //         const userRef = doc(this.firestore, `users/${user.uid}`);
-    //         await updateDoc(userRef, updatedUser);
-
-    //         // Step 3: Notify avatar reload
-    //         await user.reload();
-    //         this.loadUserAvatar();
-    //       })
-    //       .then(() => {
-    //         observer.next('User profile updated successfully');
-    //         observer.complete();
-    //       })
-    //       .catch((error) => {
-    //         observer.error(error);
-    //       });
-    //     }else {
-    //       observer.error('No authenticated user');
-    //     }
-    // });
   }
 
-  loadUserAvatar(){
-    this.getUserProfile()?.then((profile)=>{
-      if (profile?.exists()) {
-        const user = profile.data();
-        const currentUserAvatar = this.getCurrentUserAvatar();
-        if (currentUserAvatar) {    
-          this.avatar$.next(currentUserAvatar);
-        }else {
-          const username = user['username'] || 'Anonymous User';
-          const avatar = user['avatar'] || `https://ui-avatars.com/api/?name=${username}&background=random`;
-          this.avatar$.next(avatar); 
-        }
+  loadUserAvatar() {
+    this.getUserProfile().subscribe((profile: any) => {
+      const currentUserAvatar = this.getCurrentUserAvatar();
+      if (currentUserAvatar) {
+        this.avatar$.next(currentUserAvatar);
+      } else {
+        const username = profile['username'] || 'Anonymous User';
+        const avatar = profile['avatar'] || `https://ui-avatars.com/api/?name=${username}&background=random`;
+        this.avatar$.next(avatar);
       }
     });
   }
 
-  
   getCurrentUserAvatar() {
     const user = this.auth.currentUser;
     if (!user) {
@@ -159,9 +115,9 @@ export class AuthService {
     return this.authStateSubject.value;
   }
 
-  async getJWT() {
+  async getJWT(forceRefresh = true) {
     const currentUser = this.auth.currentUser;
-    const token = await currentUser?.getIdToken();
+    const token = await currentUser?.getIdToken(forceRefresh);
     return token;
   }
 
@@ -179,12 +135,17 @@ export class AuthService {
 
   getAuthUserRole(): Promise<string> {
     return new Promise(async (resolve, reject) => {
-      const profile = await this.getUserProfile();
-      if (profile?.exists()) {
-        const user: any = profile.data();;
-        resolve(user.role)
+      const user = this.auth.currentUser;
+      if (user) {
+        const token = await getIdTokenResult(user);
+        const role = token.claims['role'] as string;
+        if (role) {
+          resolve(role);
+        } else {
+          resolve('');
+        }
       } else {
-        resolve('User')
+        resolve('');
       }
     });
   }
@@ -194,19 +155,4 @@ export class AuthService {
     return authUserRole === role;
   }
 
-  async createUser(userData: User) {
-    const userRef = doc(this.firestore, 'users', userData.uid);
-    await setDoc(userRef, userData);
-  }
-
-  async getUser(uid: string): Promise<User | null> {
-    const userRef = doc(this.firestore, 'users', uid);
-    const userSnap = await getDoc(userRef);
-    return userSnap.exists() ? userSnap.data() as User : null;
-  }
-
-  async updateUser(uid: string, data: Partial<User>) {
-    const userRef = doc(this.firestore, 'users', uid);
-    await updateDoc(userRef, data);
-  }
 }

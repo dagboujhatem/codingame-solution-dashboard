@@ -25,7 +25,7 @@
             </div>
           </div>
           <div class="col-md-6">
-            <div class="col-md-6" *ngIf="user?.role === 'Admin'">
+            <div class="col-md-6 mt-2" *ngIf="user?.role === 'Admin'">
               <label for="role">
                 <strong>Role: </strong>
                 <span *ngIf="user?.role" class="badge" [ngClass]="{'text-bg-primary': user?.role === 'User', 'text-bg-success text-white': user?.role === 'Admin'}">
@@ -34,9 +34,16 @@
               </label>
             </div>
 
-            <div class="col-md-6">
-              <label for="tokens" *ngIf="user?.tokens">
-                <strong>Tokens:</strong> {{ user.tokens }} tokens
+            <div class="col-md-6 mt-2">
+              <label for="tokens">
+                <strong>Tokens:
+                  <ng-container *ngIf="user?.unlimited">
+                    Unlimited tokens
+                  </ng-container>
+                  <ng-container *ngIf="!user?.unlimited">
+                    {{ user?.tokens || '0' }} tokens
+                  </ng-container>
+                </strong>
               </label>
               <div class="mt-2">
                 <a routerLink="/plans" class="btn btn-info text-white">
@@ -44,7 +51,7 @@
                 </a>
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 mt-2">
               <div class="mb-3">
                 <label for="avatarInput" class="form-label">Choisir un avatar</label>
                 <input type="file" class="form-control" id="avatarInput" (change)="onFileSelected($event)" accept="image/*" />
