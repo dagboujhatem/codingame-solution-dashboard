@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, TemplateRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, TemplateRef, PipeTransform } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ColumnMode, NgxDatatableModule, SortType } from '@swimlane/ngx-datatable';
@@ -13,6 +13,7 @@ export interface Column {
   prop: string;
   sortable?: boolean;
   template?: any;
+  pipe?: PipeTransform;
 }
 
 @Component({

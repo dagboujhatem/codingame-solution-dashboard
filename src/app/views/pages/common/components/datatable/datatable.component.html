@@ -28,7 +28,10 @@
       [prop]="column.prop" 
       [sortable]="column.sortable"
       [cellTemplate]="column.template"
-      [resizeable]="false">
+      [pipe]="column?.pipe!"
+      [resizeable]="false"
+      [canAutoResize]="true"
+      [frozenLeft]="true">
       <ng-template *ngIf="column.template" let-row="row" ngx-datatable-cell-template>
         <ng-container *ngTemplateOutlet="column.template; context: { $implicit: row }">
         </ng-container>
