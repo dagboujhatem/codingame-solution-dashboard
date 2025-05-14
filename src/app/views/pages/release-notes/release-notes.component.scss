@@ -1,0 +1,25 @@
+/* Styles for ReleaseNotesComponent */
+.input-group {
+  margin-bottom: 0.5rem; // Add some space between FormArray items
+}
+
+.form-label {
+  font-weight: 500;
+}
+
+.card-header h4 {
+  margin-bottom: 0;
+}
+
+/* Ensure buttons in datatable actions column are spaced if you add more */
+/* You might need to adjust datatable component for action column styling */
+
+.badge.bg-success-gradient {
+    background: linear-gradient(to right, #28a745, #218838) !important;
+    color: white;
+}
+
+.badge.bg-danger-gradient {
+    background: linear-gradient(to right, #dc3545, #c82333) !important;
+    color: white;
+} 

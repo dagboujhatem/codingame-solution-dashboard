@@ -19,6 +19,7 @@
     "express": "^4.21.2",
     "firebase-admin": "^12.7.0",
     "firebase-functions": "^6.3.2",
+    "luxon": "^3.6.1",
     "morgan": "^1.10.0",
     "passport": "^0.7.0",
     "passport-http-bearer": "^1.0.1",

@@ -1,0 +1,132 @@
+<div class="container mt-4">
+  <h2 class="mb-3">Release Notes Management</h2>
+
+  <!-- Release Notes Form -->
+  <div class="card mb-4">
+    <div class="card-header">
+      <h4>{{ isEditMode ? 'Edit' : 'Add' }} Release Note</h4>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="releaseForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <!-- Version -->
+          <div class="col-md-4 mb-3">
+            <label for="version" class="form-label">Version (e.g., 1.0.0)</label>
+            <input type="text" id="version" class="form-control" formControlName="version"
+                   [ngClass]="{ 'is-invalid': releaseForm.get('version')?.invalid && releaseForm.get('version')?.touched }">
+            <div *ngIf="releaseForm.get('version')?.invalid && releaseForm.get('version')?.touched" class="invalid-feedback">
+              <div *ngIf="releaseForm.get('version')?.errors?.['required']">Version is required.</div>
+              <div *ngIf="releaseForm.get('version')?.errors?.['pattern']">Version must be in format X.Y.Z (e.g., 1.0.0).</div>
+            </div>
+          </div>
+
+          <!-- Release Date -->
+          <div class="col-md-4 mb-3">
+            <label for="release_date" class="form-label">Release Date</label>
+            <input type="date" id="release_date" class="form-control" formControlName="release_date"
+                   [ngClass]="{ 'is-invalid': releaseForm.get('release_date')?.invalid && releaseForm.get('release_date')?.touched }">
+            <div *ngIf="releaseForm.get('release_date')?.invalid && releaseForm.get('release_date')?.touched" class="invalid-feedback">
+              <div>Release Date is required.</div>
+            </div>
+          </div>
+
+          <!-- Force Update -->
+          <div class="col-md-4 mb-3 d-flex align-items-center mt-4">
+            <switch-toggle [switchControl]="getSwitchControl('force_update')" [switchControlName]="'force_update'"
+                           [switchLabel]="'Force Update'"></switch-toggle>
+          </div>
+        </div>
+
+        <!-- Features -->
+        <div class="mb-3">
+          <h5>
+            Features
+            <button type="button" class="btn btn-sm btn-outline-primary ms-2" (click)="addItem('features')">
+              <svg [cIcon]="icons.cilPlus" class="me-1"></svg> Add Feature
+            </button>
+          </h5>
+          <div formArrayName="features">
+            <div *ngFor="let feature of features.controls; let i = index" class="input-group mb-2">
+              <input type="text" [formControlName]="i" class="form-control"
+                     [ngClass]="{ 'is-invalid': feature.invalid && feature.touched }"
+                     placeholder="Enter feature description">
+              <button type="button" class="btn btn-outline-danger" (click)="removeItem('features', i)">
+                <svg [cIcon]="icons.cilTrash"></svg>
+              </button>
+              <div *ngIf="feature.invalid && feature.touched" class="invalid-feedback d-block">
+                Feature description is required.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bug Fixes -->
+        <div class="mb-3">
+          <h5>
+            Bug Fixes
+            <button type="button" class="btn btn-sm btn-outline-primary ms-2" (click)="addItem('bug_fixes')">
+              <svg [cIcon]="icons.cilPlus" class="me-1"></svg> Add Bug Fix
+            </button>
+          </h5>
+          <div formArrayName="bug_fixes">
+            <div *ngFor="let fix of bug_fixes.controls; let i = index" class="input-group mb-2">
+              <input type="text" [formControlName]="i" class="form-control"
+                     [ngClass]="{ 'is-invalid': fix.invalid && fix.touched }"
+                     placeholder="Enter bug fix description">
+              <button type="button" class="btn btn-outline-danger" (click)="removeItem('bug_fixes', i)">
+                <svg [cIcon]="icons.cilTrash"></svg>
+              </button>
+              <div *ngIf="fix.invalid && fix.touched" class="invalid-feedback d-block">
+                Bug fix description is required.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="d-flex justify-content-end mt-3">
+          <button type="button" class="btn btn-secondary me-2" (click)="clearForm()">
+            <svg [cIcon]="icons.cilActionUndo" class="me-1"></svg> Clear
+          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="releaseForm.invalid && !isEditMode">
+            <svg [cIcon]="icons.cilSave" class="me-1"></svg> {{ isEditMode ? 'Update' : 'Save' }} Release Note
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Release Notes List -->
+  <div class="card">
+    <div class="card-header">
+      <h4>Existing Release Notes</h4>
+    </div>
+    <div class="card-body">
+      <datatable [data]="releaseNotes" 
+                 [columns]="columns" 
+                 [sorts]="[{ prop: 'release_date', dir: 'desc' }]"
+                 (onEdit)="onEdit($event)" 
+                 (onDelete)="onDelete($event)"
+                 [showViewButton]="false">
+      </datatable>
+    </div>
+  </div>
+</div>
+
+<!-- Templates for Datatable -->
+<ng-template #forceUpdateTemplate let-value="value">
+  <span class="badge" [ngClass]="value ? 'bg-success-gradient' : 'bg-danger-gradient'">
+    {{ value ? 'Yes' : 'No' }}
+  </span>
+</ng-template>
+
+<ng-template #arrayTemplate let-value="value">
+  <ul *ngIf="value && value.length > 0" class="list-unstyled mb-0">
+    <li *ngFor="let item of value">{{ item }}</li>
+  </ul>
+  <span *ngIf="!value || value.length === 0">-</span>
+</ng-template>
+
+<ng-template #dateTemplate let-value="value">
+  {{ value | date:'yyyy-MM-dd' }}
+</ng-template> 

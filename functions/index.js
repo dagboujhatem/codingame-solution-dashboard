@@ -13,6 +13,8 @@ import dotenv from 'dotenv';
 import passport from "passport";
 import { Strategy as BearerStrategy } from "passport-http-bearer";
 import { isAdmin } from './middlewares/isAdmin.js';
+// Import routers
+import releaseNotesRouter from './routes/releaseNotes.js'; 
 
 dotenv.config();
 
@@ -47,6 +49,10 @@ app.use(cors());
 app.use(morgan('dev'));
 app.use(compression());
 app.use(passport.initialize());
+app.set('db', db);
+
+// Mount routers
+app.use('/release-notes', releaseNotesRouter(app));
 
 // register user
 app.post("/register",

@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { DefaultLayoutComponent } from './layout';
+import { DefaultLayoutComponent } from './layout/default-layout/default-layout.component';
 import { authenticationGuard } from './guards/authentication.guard';
 import { authorizationGuard } from './guards/authorization.guard';
 import { noAuthGuard } from './guards/no-auth.guard';
@@ -52,6 +52,13 @@ export const routes: Routes = [
         loadComponent: () => import('./views/pages/subscription/subscription.component').then((c) => c.SubscriptionComponent),
         data: {
           title: 'Subscriptions'
+        }
+      },
+      {
+        path: 'release-notes',
+        loadComponent: () => import('./views/pages/release-notes/release-notes.component').then(m => m.ReleaseNotesComponent),
+        data: {
+          title: 'Release Notes'
         }
       }
     ]
