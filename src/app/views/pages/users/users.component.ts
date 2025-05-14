@@ -45,10 +45,10 @@ export class UsersComponent {
       const tokensControl = this.userForm.get('tokens');
       if (isUnlimited) {
         tokensControl?.disable();
-        this.userForm.get('tokens')?.setValue(0);
+        // this.userForm.get('tokens')?.setValue(0);
       } else {
         tokensControl?.enable();
-        this.userForm.get('tokens')?.setValue(0);
+        // this.userForm.get('tokens')?.setValue(0);
       }
     });
     this.userForm.get('password')?.valueChanges.subscribe(value => {
