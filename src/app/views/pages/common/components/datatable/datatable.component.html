@@ -20,6 +20,7 @@
     [messages]="messages"
     [sorts]="sorts"
     [enableClearingSortState]="true"
+    [reorderable]="false"
     [count]="(data | search: filterQuery:searchFields).length">
     
     <ngx-datatable-column 
@@ -31,7 +32,7 @@
       [pipe]="column?.pipe!"
       [resizeable]="false"
       [canAutoResize]="true"
-      [frozenLeft]="true">
+      >
       <ng-template *ngIf="column.template" let-row="row" ngx-datatable-cell-template>
         <ng-container *ngTemplateOutlet="column.template; context: { $implicit: row }">
         </ng-container>

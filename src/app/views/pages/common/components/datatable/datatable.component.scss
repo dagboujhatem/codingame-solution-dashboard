@@ -1,45 +1,44 @@
-th{
-    cursor: pointer;
+::ng-deep .table > :not(caption) > * > * {
+  padding: 0 !important;
+}
+::ng-deep .ngx-datatable-column {
+  display: flex;
+  justify-content: space-between;
 }
 
-.Sorter{
-    width: 100%;
-    display: block;
+::ng-deep .ngx-datatable-header-cell {
+  flex: 1;
 }
 
-.Sorter:hover{
-    background-color: #f0f0f0;
+// Pagination Icons (Left, Skip, Right, Prev) 
+::ng-deep .ngx-datatable.bootstrap .datatable-footer .datatable-pager .datatable-icon-left, 
+::ng-deep .ngx-datatable.bootstrap .datatable-footer .datatable-pager .datatable-icon-skip, 
+::ng-deep .ngx-datatable.bootstrap .datatable-footer .datatable-pager .datatable-icon-right, 
+::ng-deep .ngx-datatable.bootstrap .datatable-footer .datatable-pager .datatable-icon-prev {  
+  color: var(--pagination-text-color);
 }
-// datatable pagination
-::ng-deep .datatable-footer .pager {
-    display: flex;
-    justify-content: center;
-    padding: 0.5rem;
-    gap: 0.5rem;
-  }
-  
-  ::ng-deep .datatable-footer .pager li {
-    list-style: none;
-  }
-  
-  ::ng-deep .datatable-footer .pager li a {
-    padding: 0.4rem 0.75rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    color: #333;
-    text-decoration: none;
-    background-color: #f8f9fa;
-    transition: all 0.2s ease;
-    cursor: pointer;
-  }
-  
-  ::ng-deep .datatable-footer .pager li a:hover {
-    background-color: #e2e6ea;
-  }
-  
-  ::ng-deep .datatable-footer .pager li.active a {
-    background-color: #007bff;
-    color: white;
-    border-color: #007bff;
-  }
-  
+
+// Pagination Links
+::ng-deep .ngx-datatable.bootstrap .datatable-footer .datatable-pager a {
+  background-color: var(--pagination-link-bg);
+  color: var(--pagination-text-color);
+}
+
+// Pagination List Items
+::ng-deep .ngx-datatable.bootstrap .datatable-footer .datatable-pager .pager li, 
+::ng-deep .ngx-datatable.bootstrap .datatable-footer .datatable-pager .pager li a {
+  font-weight: bold;
+  color: var(--pagination-text-color);
+}
+ 
+//  Active Pagination Link 
+::ng-deep .ngx-datatable.bootstrap .datatable-footer .datatable-pager ul li:not(.disabled).active a,
+::ng-deep .ngx-datatable.bootstrap .datatable-footer .datatable-pager ul li:not(.disabled):hover a {
+   background-color: var(--pagination-link-active-bg);
+}
+
+// Hover Effect for Pagination Links
+::ng-deep .ngx-datatable.bootstrap .datatable-footer .datatable-pager ul li:not(.disabled).active a, 
+::ng-deep .ngx-datatable.bootstrap .datatable-footer .datatable-pager ul li:not(.disabled):hover a {
+  color: var(--pagination-text-color);
+}

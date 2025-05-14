@@ -24,8 +24,23 @@
 // regular style toast
 @use 'ngx-toastr/toastr';
 
+
 :root {
   --primary-color: #5856d6;
   --btn-hover-color: #5856d6;
+   /* Pagination on datatable */
+  --pagination-link-bg: #e0e0e0;
+  --pagination-link-active-bg: #70a1ff;
+  --pagination-text-color: #000;
+}
+
+// Dark theme
+[data-theme="dark"] {
+  --primary-color: #5856d6;
+  --btn-hover-color: #5856d6;
+   /* Pagination on datatable */
+  --pagination-link-bg: #444444;
+  --pagination-link-active-bg: #666666;
+  --pagination-text-color: #ffffff;
 }
 
