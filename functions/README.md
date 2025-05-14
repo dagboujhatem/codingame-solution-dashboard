@@ -225,3 +225,9 @@ If you need more help, check out the [Firebase Functions documentation](https://
 
 - Ce `README.md` fournit un guide complet pour initialiser, tester et déployer des fonctions Firebase dans votre projet.
 - Vous trouverez des sections sur la configuration des fonctions, leur déploiement, la gestion des variables d'environnement et le test local avec Firebase Emulator.
+
+### Links: 
+
+- [Local link](http://127.0.0.1:5001/codingame-solution/europe-west9/condingameSolutionsApi/)
+
+- [Prod link](https://europe-west9-codingame-solution.cloudfunctions.net/condingameSolutionsApi/)
