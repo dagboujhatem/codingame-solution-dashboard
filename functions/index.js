@@ -254,11 +254,15 @@ app.put("/update-user/:uid",
 
       const updatedUser = await auth.updateUser(user.uid, updateData);
 
+      // fetch old tokens
+      const oldUser = await db.collection('users').doc(user.uid).get();
+      const oldTokens = oldUser.data().tokens;
+
       // Update user in firestore
       await db.collection('users').doc(user.uid).update({
         username: username,
         email: email,
-        tokens: unlimited ? 0 : tokens,
+        tokens: unlimited ? oldTokens : tokens,
         unlimited: unlimited,
       });
 
