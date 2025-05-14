@@ -139,6 +139,8 @@ app.put("/update-auth-user-password",
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
+    // ⚠️ Firebase Admin SDK ne permet pas de vérifier le mot de passe actuel.
+    // Il faut que cette vérification soit faite côté client via reauthentication avec Firebase JS SDK.
     // console.log('user', user);
     // if (user.password !== oldPassword) {
     //   return res.status(400).json({ message: "Old password is incorrect" });
