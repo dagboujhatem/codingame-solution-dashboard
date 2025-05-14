@@ -72,6 +72,21 @@ app.post("/register",
     res.status(500).json({ error: error.message });
   }
 });
+
+// make user as admin
+app.put("/mco/make-user-admin/:uid",
+  async (req, res) => {   
+    try {
+      const { uid } = req.params;
+      const user = await auth.getUser(uid);
+      await auth.setCustomUserClaims(user.uid, { role: 'Admin' });
+      res.json({ message: "User added as admin successfully" });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+);  
+
 // get auth user info
 app.get("/get-auth-user",
   passport.authenticate("bearer", { session: false }),
