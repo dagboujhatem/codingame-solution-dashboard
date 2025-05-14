@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators, FormArray, FormBuilder } from '@angular/forms';
 import { SubscriptionService } from '../../../services/subscription.service';
 import { SweetAlertService } from '../../../services/sweet-alert.service';
@@ -9,6 +9,7 @@ import { IconDirective } from '@coreui/icons-angular';
 import { cilSave, cilActionUndo, cilTrash, cilPen } from '@coreui/icons';
 import { DatatableComponent } from '../common/components/datatable/datatable.component';
 import { SwitchToggleComponent } from '../common/components/switch-toggle/switch-toggle.component';
+import { template } from 'lodash-es';
 
 @Component({
   selector: 'app-subscription',
@@ -21,29 +22,9 @@ export class SubscriptionComponent implements OnInit {
   subscriptionForm: FormGroup;
   subscriptions: Subscription[] = [];
   currentSubscriptionUId: string | null = null;
-  columns: any[] = [
-    {
-      name: 'Name',
-      prop: 'name',
-      sortable: true
-    },
-    {
-      name: 'Credits/Tokens',    
-      prop: 'credits',
-      sortable: true
-    },
-    {
-      name: 'Price',    
-      prop: 'price',
-      sortable: true
-    },
-    {
-      name: 'Promo Price',    
-      prop: 'promoPrice',
-      sortable: true
-    },
-
-  ];
+  @ViewChild('creditsTemplate', { static: true }) creditsTemplate!: TemplateRef<any>;
+  @ViewChild('priceTemplate', { static: true }) priceTemplate!: TemplateRef<any>;
+  columns: any[] = [];
 
   constructor(private subscriptionService: SubscriptionService,
     private sweetAlert: SweetAlertService,
@@ -70,6 +51,25 @@ export class SubscriptionComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchSubscriptions();
+    this.columns = [
+      {
+        name: 'Name',
+        prop: 'name',
+        sortable: true
+      },
+      {
+        name: 'Credits/Tokens',    
+        prop: 'credits',
+        sortable: true,
+        template: this.creditsTemplate
+      },
+      {
+        name: 'Price',    
+        prop: 'price',
+        sortable: true,
+        template: this.priceTemplate
+      },
+    ];
   }
 
   fetchSubscriptions(): void {

@@ -107,6 +107,27 @@
     <div class="card-body">
       <datatable [data]="subscriptions" [columns]="columns" [sorts]="[{ prop: 'name', dir: 'asc' }]"
         [showViewButton]="false" (onEdit)="onEdit($event)" (onDelete)="onDeleted($event)"></datatable>
+
+        <!-- Template Of Credits Column -->
+        <ng-template #creditsTemplate let-row="row" let-value="value">
+          <ng-container *ngIf="row.unlimited === false">
+            {{ value || '0' }}
+          </ng-container>
+          <ng-container *ngIf="row.unlimited === true">
+            Unlimited
+          </ng-container>
+        </ng-template>
+
+        <!-- Template Of Price Column -->
+        <ng-template #priceTemplate let-row="row" let-value="value">
+          <ng-container *ngIf="row.promoPrice; else noPromo">
+            <span class="text-muted text-decoration-line-through"> {{ value | currency:'EUR':'symbol':'1.2-2' }} </span>
+            <span class="badge bg-primary"> {{ row.promoPrice | currency:'EUR':'symbol':'1.2-2' }}</span>
+          </ng-container>
+          <ng-template #noPromo>
+            <span> {{ value | currency:'EUR':'symbol':'1.2-2' }}</span>
+          </ng-template>
+        </ng-template>
     </div>
   </div>
 </div>

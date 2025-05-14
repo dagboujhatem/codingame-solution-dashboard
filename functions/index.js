@@ -136,8 +136,42 @@ app.get("/get-users",
   passport.authenticate("bearer", { session: false }),
   isAdmin,
   async (req, res) => {
-    const users = await db.collection('users').get();
-    res.json(users.docs.map(doc => doc.data()));
+    // const users = await db.collection('users').get();
+    // res.json(users.docs.map(doc => doc.data()));
+    try {
+      const users = [];
+      let nextPageToken;
+
+      do {
+        const result = await auth.listUsers(1000, nextPageToken);
+        const fetches = result.users.map(async (userRecord) => {
+          const uid = userRecord.uid;
+          const role = userRecord.customClaims?.role || 'User';
+
+          // Fetch Firestore document for user
+          const userDoc = await db.collection('users').doc(uid).get();
+          const firestoreData = userDoc.exists ? userDoc.data() : {};
+
+          return {
+            uid,
+            email: userRecord.email,
+            displayName: userRecord.displayName || '',
+            role,
+            ...firestoreData  // merge additional Firestore fields
+          };
+        });
+
+        const usersPage = await Promise.all(fetches);
+        users.push(...usersPage);
+
+        nextPageToken = result.pageToken;
+      } while (nextPageToken);
+
+      res.json(users);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
   }
 );
 

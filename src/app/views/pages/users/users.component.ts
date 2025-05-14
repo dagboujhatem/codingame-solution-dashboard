@@ -25,33 +25,8 @@ export class UsersComponent {
   users$!: Observable<User[]>;
   currentUserUId: string | null = null;
   @ViewChild('roleTemplate', { static: true }) roleTemplate!: TemplateRef<any>;
-  columns: any[] = [
-    {
-      name: 'Name',
-      prop: 'username',
-      sortable: true
-    },
-    {
-      name: 'Email',
-      prop: 'email',
-      sortable: true
-    },
-    {
-      name: 'Role',
-      prop: 'role',
-      sortable: true
-    },
-    {
-      name: 'Tokens',
-      prop: 'tokens',
-      sortable: true
-    },
-    {
-      name: 'Unlimited',
-      prop: 'unlimited',
-      sortable: true
-    } 
-  ];
+  @ViewChild('tokensTemplate', { static: true }) tokensTemplate!: TemplateRef<any>;
+  columns: any[] = []
 
   constructor(private userService: UserService,
     private sweetAlert: SweetAlertService,
@@ -95,6 +70,30 @@ export class UsersComponent {
 
   ngOnInit(): void {
     this.fetchUsers();
+    this.columns = [
+      {
+        name: 'Name',
+        prop: 'username',
+        sortable: true
+      },
+      {
+        name: 'Email',
+        prop: 'email',
+        sortable: true
+      },
+      {
+        name: 'Role',
+        prop: 'role',
+        sortable: true,
+        template: this.roleTemplate
+      },
+      {
+        name: 'Tokens',
+        prop: 'tokens',
+        sortable: true,
+        template: this.tokensTemplate
+      },
+    ];
   }
 
   fetchUsers() {

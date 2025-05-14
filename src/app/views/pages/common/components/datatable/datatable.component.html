@@ -8,7 +8,7 @@
   </div>
   <div class="row">
     <ngx-datatable 
-    class="bootstrap table table-striped table-hover table-responsive-lg"
+    class="bootstrap table table-striped table-hover table-responsive-lg ngx-custom-table"
     [rows]="data | search: filterQuery:searchFields"
     [columnMode]="columnMode"
     [headerHeight]="headerHeight"
@@ -27,6 +27,7 @@
       [name]="column.name" 
       [prop]="column.prop" 
       [sortable]="column.sortable"
+      [cellTemplate]="column.template"
       [resizeable]="false">
       <ng-template *ngIf="column.template" let-row="row" ngx-datatable-cell-template>
         <ng-container *ngTemplateOutlet="column.template; context: { $implicit: row }">
@@ -68,4 +69,15 @@
       </ng-template>
     </ngx-datatable-column>
   </ngx-datatable>
+    <!-- Template for the column -->
+    <!-- <ng-template #genericTemplate let-row="row" let-column="column">
+      <ng-container *ngIf="column?.type" [ngSwitch]="column.type">
+        <ng-container *ngSwitchCase="'currency'">
+          {{ row[column.prop] | currency:'EUR':'symbol':'1.2-2' }}
+        </ng-container>
+        <ng-container *ngSwitchDefault>
+          {{ row[column.prop] }}
+        </ng-container>
+      </ng-container>
+    </ng-template> -->
   </div>
