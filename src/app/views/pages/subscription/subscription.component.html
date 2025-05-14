@@ -122,7 +122,7 @@
         <ng-template #priceTemplate let-row="row" let-value="value">
           <ng-container *ngIf="row.promoPrice; else noPromo">
             <span class="text-muted text-decoration-line-through"> {{ value | currency:'EUR':'symbol':'1.2-2' }} </span>
-            <span class="badge bg-primary"> {{ row.promoPrice | currency:'EUR':'symbol':'1.2-2' }}</span>
+            <span class="badge bg-success"> {{ row.promoPrice | currency:'EUR':'symbol':'1.2-2' }}</span>
           </ng-container>
           <ng-template #noPromo>
             <span> {{ value | currency:'EUR':'symbol':'1.2-2' }}</span>
