@@ -1,4 +1,6 @@
 import express from 'express';
+// import middlewares
+import checkReauth from '../middlewares/checkReauth.js';
 import passport from 'passport';
 
 const router = express.Router();
@@ -6,6 +8,7 @@ const router = express.Router();
 // Get authenticated user info
 router.get('/get-auth-user',
   passport.authenticate('bearer', { session: false }),
+  checkReauth,
   async (req, res) => {
     const auth = req.app.get('auth');
     const db = req.app.get('db');
@@ -40,7 +43,15 @@ router.put('/update-auth-user',
 
       await db.collection('users').doc(uid).update({ email, username });
 
-      res.json({ message: 'User info updated successfully', mustLoginAgain: isEmailChanged });
+      if (isEmailChanged) {
+        // save the user in the database
+        await db.collection('users').doc(uid).update({
+          mustLoginAgain: true,
+          isLoggedOut: false,
+          lastLogoutAt: null,
+        });
+      } 
+      res.json({ message: 'User info updated successfully' });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -52,6 +63,7 @@ router.put('/update-auth-user-password',
   passport.authenticate('bearer', { session: false }),
   async (req, res) => {
     const auth = req.app.get('auth');
+    const db = req.app.get('db');
 
     const { uid } = req.user;
     const { oldPassword, password, confirmPassword } = req.body;
@@ -69,6 +81,12 @@ router.put('/update-auth-user-password',
       // ⚠️ Cannot validate old password via Admin SDK
       await auth.updateUser(uid, { password });
 
+      // save the user in the database
+      await db.collection('users').doc(uid).update({
+        mustLoginAgain: true,
+        isLoggedOut: false,
+        lastLogoutAt: null,
+      });
       res.json({ message: 'Password updated successfully' });
     } catch (error) {
       res.status(500).json({ error: error.message });

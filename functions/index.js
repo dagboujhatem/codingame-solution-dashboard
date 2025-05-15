@@ -1,18 +1,15 @@
 import * as functions from 'firebase-functions';
-import { setGlobalOptions } from 'firebase-functions/v2'
-import { defineSecret } from 'firebase-functions/params';
-import { initializeApp } from "firebase-admin/app";
-import { getAuth } from 'firebase-admin/auth';
-import { getFirestore } from 'firebase-admin/firestore';
 import express from 'express';
 import cors from 'cors';
-import Stripe from 'stripe';
 import morgan from 'morgan';
 import compression from 'compression';
-import dotenv from 'dotenv';
 import passport from "passport";
 // Import config
+import dotenvConfig from './config/dotenv.js';
+import { auth, db } from './config/firebase.js';
 import passportConfig from './config/passport.js';
+import  * as functionsConfig from './config/function.js';
+import { stripe } from './config/stripe.js';
 // Import routers
 import welcomeRouter from './routes/welcome.js';
 import releaseNotesRouter from './routes/releaseNotes.js'; 
@@ -23,23 +20,7 @@ import userRouter from './routes/user.js';
 import subscriptionRouter from './routes/subscription.js';
 import paymentRouter from './routes/payment.js';
 import hookRouter from './routes/hook.js';
-
-dotenv.config();
-
-const stripeSecret = process.env.STRIPE_SECRET || defineSecret('STRIPE_SECRET');
-const REGION = process.env.REGION || defineSecret('REGION') || 'us-central1'; // Default region
-
-// Initialize Firebase Admin
-const firebaseApp = initializeApp();
-const auth = getAuth(firebaseApp);
-const db = getFirestore(firebaseApp);
-
-setGlobalOptions({ region: REGION })
-
-const stripe = new Stripe(stripeSecret, {
-  apiVersion: '2023-10-16',
-});
-
+import forceLogoutRouter from './routes/force-logout.js';
 // Initialize Express app
 const app = express();
 app.set('db', db);
@@ -60,5 +41,6 @@ app.use('', userRouter);
 app.use('', subscriptionRouter);
 app.use('', paymentRouter);
 app.use('', hookRouter);
+app.use('', forceLogoutRouter);
 
 export const condingameSolutionsApi = functions.https.onRequest(app);

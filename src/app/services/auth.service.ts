@@ -44,6 +44,10 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/register`, { username, email, password });
   }
 
+  forceLogout() {
+    return this.http.put(`${this.apiUrl}/save-logout`, {});
+  }
+
   forgotPassword(email: string) {
     const actionCodeSettings = {
       url: 'http://localhost:4200/#/reset-password', // Your custom reset password page

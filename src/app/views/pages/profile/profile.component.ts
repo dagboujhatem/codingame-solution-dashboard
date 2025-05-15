@@ -52,13 +52,7 @@ export class ProfileComponent implements OnInit {
       const updatedUser = this.profileForm.value;
       this.authService.updateUserProfile(updatedUser).subscribe((response:any) => {
         this.toastr.success('Profile updated successfully!', 'Success');
-        if(response.mustLoginAgain){
-          this.toastr.success('You need to login again to use the new email.', 'Success');
-          this.authService.logout();
-          this.router.navigate(['/login']);
-        }else{  
-          this.router.navigate(['/dashboard']);
-        }
+        this.router.navigate(['/dashboard']);
       },
       (error:any) => {
         const message = error.error.error || '';
@@ -97,9 +91,6 @@ export class ProfileComponent implements OnInit {
       this.authService.updateUserPassword(updatedUser).subscribe((response:any) => {
         this.passwordForm.reset();
         this.toastr.success('Password updated successfully!', 'Success');
-        this.toastr.success('You need to login again to use the new password.', 'Success');
-        this.authService.logout();
-        this.router.navigate(['/login']);
       }, (error:any) => {
         console.error('Error updating password:', error);
         const message = error.error.message || '';

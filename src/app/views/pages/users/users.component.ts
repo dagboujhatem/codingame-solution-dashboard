@@ -110,11 +110,6 @@ export class UsersComponent {
             this.toastr.success('User updated successfully!');
             this.fetchUsers();
             this.clearForm();
-            if(response.mustLoginAgain){
-              this.toastr.success('You need to login again to use the new email.', 'Success');
-              this.authService.logout();
-              this.router.navigate(['/login']);
-            }
           }, (error: any) => {
             const message = error.error.error || '';
             this.toastr.error(message, 'Error updating user!');

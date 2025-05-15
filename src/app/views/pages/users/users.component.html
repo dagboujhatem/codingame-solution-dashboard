@@ -38,7 +38,18 @@
           </div>
         </div>
         <div class="col-md-6 mt-2">
-          <label for="password">Password:</label>
+          <label for="password">Password: 
+            <!-- (leave blank to keep the same password in update)  -->
+            <!-- <span
+            class="ms-1"
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            title="Leave blank to keep the current password"
+            style="cursor: pointer;"
+          > -->
+            <!-- <i class="bi bi-question-circle-fill"></i> -->
+             
+          </label>
           <input id="password" class="form-control" formControlName="password" type="password"
             autocomplete="new-password" placeholder="Enter password" [ngClass]="{'is-invalid': userForm.get('password')?.invalid && userForm.get('password')?.touched,
                       'is-valid': userForm.get('password')?.valid && userForm.get('password')?.touched}">

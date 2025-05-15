@@ -1,7 +1,7 @@
 import {HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpRequest,} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {Router} from '@angular/router';
-import {catchError} from 'rxjs/operators';
+import {catchError, switchMap} from 'rxjs/operators';
 import {ToastrService} from 'ngx-toastr';
 import {inject} from '@angular/core';
 import { AuthService } from '../services/auth.service';
@@ -26,6 +26,28 @@ export function responseInterceptor(
         );
         // redirect to the login route
         router.navigate(['/login']);
+      }
+
+      // Custom 403 error: user must re-authenticate
+      if (error.status === 403 && error.error?.mustLoginAgain) {
+        return authService.forceLogout().pipe(
+          switchMap(() => {
+            authService.logout();
+            toasterService.info(
+              'You have been logged out.',
+              'Your session has expired. Please login again.'
+            );
+            authService.logout();
+            router.navigate(['/login']);
+            return throwError(() => error);
+          }),
+          catchError(() => {
+            // Even if /force-logout fails, log the user out
+            authService.logout();
+            router.navigate(['/login']);
+            return throwError(() => error);
+          })
+        );
       }
       // Not Found error
       if (error.status === 404) {

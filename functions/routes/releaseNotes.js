@@ -2,6 +2,8 @@ import express from 'express';
 import passport from 'passport';
 import { DateTime } from 'luxon';
 import { isAdmin } from '../middlewares/isAdmin.js';
+import checkReauth from '../middlewares/checkReauth.js';
+
 
 const releaseNotesCollection = 'release_notes';
 
@@ -10,7 +12,7 @@ export default function releaseNotesRouter(app) {
   const db = app.get('db');
 
   // Middleware global : authentification + admin
-  router.use(passport.authenticate('bearer', { session: false }), isAdmin);
+  router.use(passport.authenticate('bearer', { session: false }), isAdmin, checkReauth);
 
   // Créer une release note
   router.post('/', async (req, res) => {

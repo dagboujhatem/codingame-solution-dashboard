@@ -1,6 +1,8 @@
 import express from 'express';
 import passport from 'passport';
 import { isAdmin } from '../middlewares/isAdmin.js';
+import checkReauth from '../middlewares/checkReauth.js';
+
 
 const router = express.Router();
 
@@ -8,6 +10,7 @@ const router = express.Router();
 router.get('/get-users',
   passport.authenticate('bearer', { session: false }),
   isAdmin,
+  checkReauth,
   async (req, res) => {
     const auth = req.app.get('auth');
     const db = req.app.get('db');
@@ -19,7 +22,7 @@ router.get('/get-users',
         const result = await auth.listUsers(1000, nextPageToken);
         const fetches = result.users.map(async (userRecord) => {
           const uid = userRecord.uid;
-          const role = userRecord.customClaims?.role || 'User';
+          const role = userRecord.customClaims?.role || null;
           const userDoc = await db.collection('users').doc(uid).get();
           const firestoreData = userDoc.exists ? userDoc.data() : {};
           return {
@@ -48,6 +51,7 @@ router.get('/get-users',
 router.post('/add-user',
   passport.authenticate('bearer', { session: false }),
   isAdmin,
+  checkReauth,
   async (req, res) => {
     const auth = req.app.get('auth');
     const db = req.app.get('db');
@@ -73,6 +77,7 @@ router.post('/add-user',
 router.get('/get-user/:uid',
   passport.authenticate('bearer', { session: false }),
   isAdmin,
+  checkReauth,
   async (req, res) => {
     const auth = req.app.get('auth');
     const db = req.app.get('db');
@@ -94,6 +99,7 @@ router.get('/get-user/:uid',
 router.put('/update-user/:uid',
   passport.authenticate('bearer', { session: false }),
   isAdmin,
+  checkReauth,
   async (req, res) => {
     const auth = req.app.get('auth');
     const db = req.app.get('db');
@@ -101,6 +107,10 @@ router.put('/update-user/:uid',
       const { username, email, password, role, tokens, unlimited } = req.body;
       const uid = req.params.uid;
       const user = await auth.getUser(uid);
+      // check if the user exist in auth 
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
 
       const isSameUser = uid === req.user.uid;
 
@@ -124,24 +134,38 @@ router.put('/update-user/:uid',
         await auth.setCustomUserClaims(uid, { role });
         if (isSameUser) req.user.role = role;
       }
-
-      let mustLoginAgain = false;
+      // check if the user has changed the email or username 
+      // if the user has changed the email or username, we need to update the user in the session 
       const isEmailChanged = email !== req.user.email;
       const isUsernameChanged = username !== req.user.name;
-
       if (isSameUser) {
         if (isEmailChanged) {
           req.user.email = email;
-          mustLoginAgain = true;
         }
-        if (isUsernameChanged) req.user.name = username;
+        if (isUsernameChanged){ 
+          req.user.name = username;
+        }
       }
-
+      
+      // detect if the user has changed the password or role
+      let mustLoginAgain = false;
       if (password || isRoleChanged || isEmailChanged) {
         mustLoginAgain = true;
       }
-
-      res.json({ message: 'User infos updated successfully', mustLoginAgain });
+      if (mustLoginAgain) { 
+        // save the user in the database
+        await db.collection('users').doc(uid).update({
+          mustLoginAgain,
+          isLoggedOut: false,
+          lastLogoutAt: null,
+        });
+      }
+      // send the response
+      if(mustLoginAgain && isSameUser){
+        res.status(403).json({ message: 'User infos updated successfully', mustLoginAgain: true });
+      }else{
+        res.status(200).json({ message: 'User infos updated successfully' });
+      }
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -151,7 +175,8 @@ router.put('/update-user/:uid',
 // DELETE user by UID
 router.delete('/delete-user/:uid',
   passport.authenticate('bearer', { session: false }),
-  isAdmin,
+  isAdmin,  
+  checkReauth,
   async (req, res) => {
     const auth = req.app.get('auth');
     const db = req.app.get('db');

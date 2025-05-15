@@ -1,7 +1,7 @@
 import express from 'express';
 import passport from 'passport';
 import { isAdmin } from '../middlewares/isAdmin.js'; 
-import Stripe from 'stripe';
+import checkReauth from '../middlewares/checkReauth.js';
 
 const router = express.Router();
 
@@ -9,6 +9,7 @@ const router = express.Router();
 router.post("/create-product",
   passport.authenticate("bearer", { session: false }),
   isAdmin,
+  checkReauth,
   async (req, res) => {
     try {
       const stripe = req.app.get('stripe');
@@ -39,6 +40,7 @@ router.post("/create-product",
 router.put("/update-product/:productId",
   passport.authenticate("bearer", { session: false }),
   isAdmin,
+  checkReauth,
   async (req, res) => {
     try {
       const stripe = req.app.get('stripe');
@@ -77,6 +79,7 @@ router.put("/update-product/:productId",
 router.delete("/delete-product/:productId",
   passport.authenticate("bearer", { session: false }),
   isAdmin,
+  checkReauth,
   async (req, res) => {
     try {
       const { productId } = req.params;
