@@ -49,7 +49,7 @@ Puis collez-y ce contenu :
 
 ```
 
-**NOTE:** En production, remplacez "*" par votre domaine réel (ex : "https://votresite.com").
+**NOTE:** En production, remplacez "*" par votre domaine réel (ex : "https://codingamesolutions.com").
 
 ### 5. Appliquer la configuration CORS au bucket:
 
@@ -84,6 +84,8 @@ gsutil cors get gs://codingame-solution.firebasestorage.app
 # Si vous etes en GCP Terminal (check all config)
 gcloud storage buckets list
 ```
+
+![Demo](./screenshot-result.png)
 
 ### Utils Script: 
 
