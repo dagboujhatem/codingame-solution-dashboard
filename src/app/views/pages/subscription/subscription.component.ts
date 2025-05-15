@@ -9,7 +9,6 @@ import { IconDirective } from '@coreui/icons-angular';
 import { cilSave, cilActionUndo, cilTrash, cilPen } from '@coreui/icons';
 import { DatatableComponent } from '../common/components/datatable/datatable.component';
 import { SwitchToggleComponent } from '../common/components/switch-toggle/switch-toggle.component';
-import { template } from 'lodash-es';
 
 @Component({
   selector: 'app-subscription',
@@ -40,10 +39,8 @@ export class SubscriptionComponent implements OnInit {
     });
     this.subscriptionForm.get('unlimited')?.valueChanges.subscribe((isUnlimited) => {
       if (isUnlimited) {
-        this.subscriptionForm.get('credits')?.setValue(0);
         this.subscriptionForm.get('credits')?.disable();
       } else {
-        this.subscriptionForm.get('credits')?.setValue(0);
         this.subscriptionForm.get('credits')?.enable();
       }
     });
