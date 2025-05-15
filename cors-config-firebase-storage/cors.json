@@ -1,6 +1,6 @@
 [
     {
-      "origin": ["*"],
+      "origin": ["https://codingamesolutions.com"],
       "method": ["GET", "POST", "PUT", "DELETE"],
       "allowedHeader": ["Content-Type"],
       "maxAgeSeconds": 3600
