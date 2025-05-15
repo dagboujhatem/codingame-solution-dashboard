@@ -8,10 +8,11 @@ import { IconDirective } from '@coreui/icons-angular';
 import { cilSave, cilActionUndo, cilTrash, cilPen } from '@coreui/icons';
 import { Setting } from '../../../models/setting.interface';
 import { DatatableComponent } from '../common/components/datatable/datatable.component';
+import { TruncatePipe } from '../common/pipes/truncate.pipe';
 
 @Component({
   selector: 'app-setting',
-  imports: [CommonModule, FormsModule, IconDirective, DatatableComponent],
+  imports: [CommonModule, FormsModule, IconDirective, DatatableComponent, TruncatePipe],
   templateUrl: './setting.component.html',
   styleUrl: './setting.component.scss'
 })
@@ -29,7 +30,9 @@ export class SettingComponent implements OnInit {
     {
       name: 'Value',    
       prop: 'value',
-      sortable: true
+      sortable: true, 
+      pipe: new TruncatePipe(), 
+      pipeArgs: [20, '...']
     }
   ];
 
