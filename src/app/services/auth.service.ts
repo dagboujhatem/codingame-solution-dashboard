@@ -14,7 +14,7 @@ import {
 } from 'rxjs';
 import { User } from '../models/user.interface';
 import { getIdTokenResult } from 'firebase/auth';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
